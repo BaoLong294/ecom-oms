@@ -1,0 +1,74 @@
+* {
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto,
+    "Open Sans", "Helvetica Neue", sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.header {
+  padding: 15px 40px;
+  position: fixed;
+  width: 100%;
+}
+
+.header-inner {
+  max-width: 1170px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-inner .uniqlo-icon {
+  margin-right: auto;
+}
+
+.header .uniqlo-icon svg {
+  height: 35px;
+  width: 90px;
+}
+
+.header .menu ul {
+  list-style-type: none;
+  display: flex;
+  gap: 5vw;
+}
+
+.header .menu ul li {
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  letter-spacing: 0.01rem;
+  text-shadow: rgba(0, 0, 0, 0.8) 0px 1px 1px;
+  transition: color 0.15s ease;
+}
+
+.header .menu ul li:hover {
+  color: rgb(0, 0, 0);
+}
+
+.header .shopping-icon {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  margin-left: auto;
+}
+
+.header .shopping-icon svg {
+  width: 24px;
+  height: 24px;
+  color: white;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.header .shopping-icon svg:hover {
+  color: rgb(106, 106, 106);
+}
+
+.main-content .product-banner img {
+  max-width: 100%;
+  width: 100vw;
+}
