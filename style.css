@@ -10,6 +10,7 @@
   padding: 15px 40px;
   position: fixed;
   width: 100%;
+  z-index: 10;
 }
 
 .header-inner {
@@ -72,9 +73,10 @@
 .main-content .product-banner {
   width: 100%;
   height: 100vh;
+  position: relative;
 }
 
-.main-content .product-banner img {
+.product-banner img {
   width: 100%;
   height: 100%;
   min-height: fit-content;
@@ -82,9 +84,77 @@
   object-position: center;
 }
 
+.product-banner .product-info {
+  position: absolute;
+  top: 52%;
+  left: 8vw;
+  max-width: 480px;
+}
+
+.product-banner .product-name {
+  color: #ffffff;
+  font-size: 1.7rem;
+  margin-bottom: 1rem;
+  text-shadow: rgba(0, 0, 0, 0.7) 0px 1px 2px;
+}
+
+.product-banner .key-feature {
+  color: #ffffff;
+  font-size: 1.2rem;
+  font-weight: 500;
+  letter-spacing: 0.001rem;
+  margin-bottom: 1rem;
+  text-shadow: rgba(0, 0, 0, 0.7) 0px 1px 2px;
+}
+
+.product-banner .slogan {
+  color: #ffffff;
+  font-size: 1.2rem;
+  font-weight: 500;
+  line-height: 1.6rem;
+  letter-spacing: 0.001rem;
+  margin-bottom: 1rem;
+  text-shadow: rgba(0, 0, 0, 0.7) 0px 1px 2px;
+}
+
+.product-banner .price .original {
+  color: #ffffff;
+  font-size: 2.3rem;
+  font-weight: 500;
+  text-shadow: rgba(0, 0, 0, 0.5) 0px 1px 1px;
+}
+
+.product-banner .price-discount .original {
+  font-size: 1rem;
+  font-weight: 500;
+  text-shadow: rgba(0, 0, 0, 0.5) 0px 1px 1px;
+  text-decoration-line: line-through;
+}
+
+.product-banner .price-discount .discount {
+  color: #ee0000;
+  font-size: 2.3rem;
+  font-weight: 500;
+  text-shadow: rgba(0, 0, 0, 0.5) 0px 1px 1px;
+}
+
+.product-banner .price .end-day {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: #ee0000;
+  text-shadow: rgba(0, 0, 0, 0.5) 0px 1px 1px;
+}
+
+.product-banner .key-feature:empty,
+.product-banner .price .discount:empty,
+.product-banner .price .end-day:empty {
+  display: none;
+}
+
 .bottom-nav {
   position: fixed;
   bottom: 20px;
+  z-index: 10;
   width: 100%;
   display: flex;
 }
