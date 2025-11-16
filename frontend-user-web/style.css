@@ -62,6 +62,7 @@
   color: white;
   cursor: pointer;
   transition: color 0.15s ease;
+  filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.7));
 }
 
 .header .shopping-icon svg:hover {
@@ -79,4 +80,42 @@
   min-height: fit-content;
   object-fit: cover;
   object-position: center;
+}
+
+.bottom-nav {
+  position: fixed;
+  bottom: 20px;
+  width: 100%;
+  display: flex;
+}
+
+.bottom-inner {
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: min(13vw, 155px);
+}
+
+.bottom-inner .search-button {
+  width: 64px;
+  height: 64px;
+  background-color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.bottom-inner .home-button,
+.bottom-inner .user-button {
+  width: 48px;
+  height: 48px;
+  background-color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.bottom-inner svg {
+  width: 24px;
+  height: 24px;
 }
