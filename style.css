@@ -189,3 +189,59 @@
   width: 24px;
   height: 24px;
 }
+
+@media (max-width: 768px) {
+  .header {
+    padding: 15px 20px;
+  }
+
+  .header .header-inner {
+    display: grid;
+    grid-template: auto auto / 1fr 1fr;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .header-inner .menu {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+
+  .header-inner .menu ul {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .header-inner .shopping-icon {
+    grid-area: 1 / 2 / 2 / 3;
+  }
+
+  .header .uniqlo-icon svg {
+    height: 30px;
+    width: 70px;
+  }
+
+  .product-banner .product-info {
+    position: absolute;
+    top: 50%;
+    left: 8vw;
+    max-width: 340px;
+  }
+
+  .product-banner .product-name {
+    color: #ffffff;
+    font-size: 1.5rem;
+    font-weight: 400;
+    margin-bottom: 1rem;
+    text-shadow: rgba(0, 0, 0, 0.7) 0px 1px 2px;
+  }
+
+  .product-banner .key-feature {
+    font-size: 1.1rem;
+  }
+
+  .product-banner .slogan {
+    font-size: 1.1rem;
+  }
+}
