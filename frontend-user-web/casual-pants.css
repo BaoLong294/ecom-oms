@@ -1,0 +1,169 @@
+* {
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto,
+    "Open Sans", "Helvetica Neue", sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.header {
+  padding: 15px 40px;
+  background-color: white;
+  position: fixed;
+  width: 100%;
+  z-index: 10;
+  top: 0;
+}
+
+.header-inner {
+  max-width: 1170px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-inner .uniqlo-icon {
+  margin-right: auto;
+}
+
+.header .uniqlo-icon svg {
+  height: 35px;
+  width: 90px;
+}
+
+.header .menu ul {
+  list-style-type: none;
+  display: flex;
+  gap: 5vw;
+}
+
+.header .menu ul li {
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  letter-spacing: 0.01rem;
+  text-shadow: rgba(0, 0, 0, 0.8) 0px 1px 1px;
+  transition: color 0.15s ease;
+}
+
+.header .menu ul li:hover {
+  color: rgb(0, 0, 0);
+}
+
+.header .shopping-icon {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  margin-left: auto;
+}
+
+.header .shopping-icon svg {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.header .shopping-icon svg:hover {
+  color: rgb(106, 106, 106);
+}
+
+.main-content {
+  width: 1170px;
+  margin: 80px auto 0 auto;
+}
+
+.main-content h1 {
+  font-size: 2rem;
+  font-weight: 400;
+  margin: 25px 0px;
+}
+
+.all-products {
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+}
+
+.all-products h2 {
+  font-size: 1.5rem;
+  font-weight: 400;
+  margin-bottom: 15px;
+}
+
+.all-products img {
+  max-width: 100%;
+  height: auto;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 295px);
+  grid-auto-rows: 615px;
+}
+
+.product-card .product-name {
+  font-size: 1rem;
+  line-height: 1.8;
+  margin-bottom: 5px;
+}
+
+.product-card .price-original {
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.product-card .price-discount {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #ff0000;
+  margin-bottom: 7px;
+}
+
+.product-card .discount-description {
+  font-size: 0.8rem;
+  color: #ff0000;
+}
+
+.bottom-nav {
+  position: fixed;
+  bottom: 20px;
+  z-index: 10;
+  width: 100%;
+  display: flex;
+}
+
+.bottom-inner {
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: min(13vw, 155px);
+}
+
+.bottom-inner .search-button {
+  width: 64px;
+  height: 64px;
+  background-color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+.bottom-inner .home-button,
+.bottom-inner .user-button {
+  width: 48px;
+  height: 48px;
+  background-color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+.bottom-inner svg {
+  width: 24px;
+  height: 24px;
+}
