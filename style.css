@@ -173,6 +173,7 @@
   border: none;
   border-radius: 50%;
   cursor: pointer;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
 }
 
 .bottom-inner .home-button,
@@ -183,6 +184,7 @@
   border: none;
   border-radius: 50%;
   cursor: pointer;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
 }
 
 .bottom-inner svg {
