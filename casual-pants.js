@@ -109,7 +109,7 @@ cottonProducts.forEach((product) => {
   `;
 
   card.addEventListener("click", () => {
-    window.location.href = `product-detail.html?id=${product.id}`;
+    window.location.href = `product-details.html?id=${product.id}`;
   });
 
   cottonGrid.appendChild(card);
@@ -206,7 +206,7 @@ flannelProducts.forEach((product) => {
   `;
 
   card.addEventListener("click", () => {
-    window.location.href = `product-detail.html?id=${product.id}`;
+    window.location.href = `product-details.html?id=${product.id}`;
   });
 
   flannelGrid.appendChild(card);
@@ -295,7 +295,7 @@ knitProducts.forEach((product) => {
   `;
 
   card.addEventListener("click", () => {
-    window.location.href = `product-detail.html?id=${product.id}`;
+    window.location.href = `product-details.html?id=${product.id}`;
   });
 
   knitGrid.appendChild(card);
@@ -366,7 +366,7 @@ sweatProducts.forEach((product) => {
   `;
 
   card.addEventListener("click", () => {
-    window.location.href = `product-detail.html?id=${product.id}`;
+    window.location.href = `product-details.html?id=${product.id}`;
   });
 
   sweatGrid.appendChild(card);
@@ -542,7 +542,7 @@ othersProducts.forEach((product) => {
   `;
 
   card.addEventListener("click", () => {
-    window.location.href = `product-detail.html?id=${product.id}`;
+    window.location.href = `product-details.html?id=${product.id}`;
   });
 
   othersGrid.appendChild(card);
