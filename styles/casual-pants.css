@@ -60,6 +60,7 @@
 }
 
 .header .shopping-icon svg {
+  color: #1b1b1b;
   width: 24px;
   height: 24px;
   cursor: pointer;
