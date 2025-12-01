@@ -11,7 +11,7 @@ const products = [
   {
     id: 1,
     name: "Cotton Relaxed Ankle Pants | Denim",
-    gender: "WOMEN",
+    gender: "Women",
     price: 39.9,
     discount: null,
     description: null,
@@ -148,7 +148,7 @@ function renderInfo(product) {
 
     <div class="product-sizes">
         <div class="size-buttons">${sizesHTML}</div>
-        <p class="size-description">Size: ${product.gender} ${selectedSizeDescription}</p>
+        <p class="size-description">Size: <span class="gender">${product.gender}</span> ${selectedSizeDescription}</p>
     </div>
 
     <div class="product-price">${priceHTML}</div>
@@ -232,6 +232,39 @@ function renderInfo(product) {
   plusButton.addEventListener("click", () => {
     currentQuantity++;
     updateQuantityUI();
+  });
+
+  // HANDLE ADD TO CART BUTTON
+  const addButton = infoContainer.querySelector(".product-add");
+
+  addButton.addEventListener("click", () => {
+    const activeColorBtn = infoContainer.querySelector(
+      ".color-button.is-active"
+    );
+    const colorName = activeColorBtn?.dataset.color;
+    const colorImage = activeColorBtn?.dataset.image;
+
+    const activeSizeBtn = infoContainer.querySelector(".size.is-active");
+    const sizeValue = activeSizeBtn?.dataset.size;
+
+    const quantity = currentQuantity;
+
+    const newItem = {
+      id: product.id,
+      name: product.name,
+      gender: product.gender,
+      price: product.price,
+      discount: product.discount,
+      description: product.description,
+      color: colorName,
+      image: colorImage,
+      size: sizeValue,
+      quantity: quantity,
+    };
+
+    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+    cart.push(newItem);
+    localStorage.setItem("cart", JSON.stringify(cart));
   });
 }
 
