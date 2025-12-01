@@ -210,6 +210,10 @@
   color: #6a6a6a;
 }
 
+.size-description .gender {
+  text-transform: uppercase;
+}
+
 .product-price {
   margin-bottom: 25px;
 }
