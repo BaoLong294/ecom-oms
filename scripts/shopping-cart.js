@@ -82,6 +82,10 @@ function renderCartItems(cart) {
         renderCartItems(currentCart);
         renderCartSummary(currentCart);
       }
+
+      if (typeof updateCartBadge === "function") {
+        updateCartBadge();
+      }
     });
 
     // HANDLE HANDLE INCREASE AND DECREASE QUANTITY VALUE
