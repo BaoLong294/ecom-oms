@@ -282,6 +282,8 @@ function renderInfo(product) {
     if (typeof updateCartBadge === "function") {
       updateCartBadge();
     }
+
+    displayProductPopup();
   });
 }
 
@@ -307,3 +309,45 @@ function renderDescription(product) {
     </div>
   `;
 }
+
+// Handle popup screen when click ADD TO CART button
+const popupOverlay = document.querySelector(".product-popup-overlay");
+
+const popupItem = popupOverlay.querySelector(".popup-item");
+const subtotalItem = popupOverlay.querySelector(".subtotal-item");
+const subtotalPrice = popupOverlay.querySelector(".subtotal-price");
+
+const popupClose = popupOverlay.querySelector(".popup-close");
+const viewCart = popupOverlay.querySelector(".view-cart");
+const continueShopping = popupOverlay.querySelector(".continue-shopping");
+
+function displayProductPopup() {
+  const quantityElement = infoContainer.querySelector(".quantity-value");
+  const quantity = quantityElement.textContent;
+  popupItem.textContent = `${quantity} Items added to your cart`;
+
+  let totalItem = 0;
+  let totalPrice = 0;
+  const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+  cart.forEach((item) => {
+    totalItem += item.quantity;
+    totalPrice += item.quantity * item.price;
+  });
+
+  subtotalItem.textContent = `${totalItem} item(s)`;
+  subtotalPrice.textContent = `$${totalPrice.toFixed(2)}`;
+
+  popupOverlay.classList.remove("hidden");
+}
+
+popupClose.addEventListener("click", () => {
+  popupOverlay.classList.add("hidden");
+});
+
+viewCart.addEventListener("click", () => {
+  window.location.href = "./shopping-cart.html";
+});
+
+continueShopping.addEventListener("click", () => {
+  popupOverlay.classList.add("hidden");
+});
