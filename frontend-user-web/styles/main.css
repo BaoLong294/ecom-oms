@@ -55,6 +55,7 @@
   align-items: center;
   gap: 30px;
   margin-left: auto;
+  position: relative;
 }
 
 .header .shopping-icon svg {
@@ -68,6 +69,18 @@
 
 .header .shopping-icon svg:hover {
   color: rgb(106, 106, 106);
+}
+
+.shopping-icon .cart-badge {
+  font-size: 0.7rem;
+  color: #ffffff;
+  background-color: #1b1b1b;
+  padding: 2px 5px;
+  border-radius: 50%;
+
+  position: absolute;
+  top: -6px;
+  right: -9px;
 }
 
 .main-content .product-banner {

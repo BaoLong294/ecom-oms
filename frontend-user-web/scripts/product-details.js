@@ -278,6 +278,10 @@ function renderInfo(product) {
     }
 
     localStorage.setItem("cart", JSON.stringify(cart));
+
+    if (typeof updateCartBadge === "function") {
+      updateCartBadge();
+    }
   });
 }
 
