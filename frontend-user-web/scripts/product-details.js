@@ -263,7 +263,20 @@ function renderInfo(product) {
     };
 
     const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-    cart.push(newItem);
+
+    const existingItemIndex = cart.findIndex(
+      (item) =>
+        item.id === newItem.id &&
+        item.color === newItem.color &&
+        item.size === newItem.size
+    );
+
+    if (existingItemIndex !== -1) {
+      cart[existingItemIndex].quantity += newItem.quantity;
+    } else {
+      cart.push(newItem);
+    }
+
     localStorage.setItem("cart", JSON.stringify(cart));
   });
 }
