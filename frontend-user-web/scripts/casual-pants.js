@@ -448,7 +448,7 @@ const othersProducts = [
     colorSwatches: [
       "./images/color-swatches/cotton-relaxed/07-gray.avif",
       "./images/color-swatches/cotton-relaxed/63-blue.avif",
-      "./images/color-swatches/brown-sweat/36.avif",
+      "./images/color-swatches/cotton-relaxed/68-blue.avif",
     ],
   },
   {
@@ -479,8 +479,8 @@ const othersProducts = [
     description: null,
     img: "./images/all-products/women/casual-pants/others/fleece-easy.avif",
     colorSwatches: [
+      "./images/color-swatches/knitted-fleece/09-black.avif",
       "./images/color-swatches/knitted-fleece/04-gray.avif",
-      "./images/color-swatches/knitted-fleece/05-dark-gray.avif",
       "./images/color-swatches/knitted-fleece/68-blue.avif",
     ],
   },
