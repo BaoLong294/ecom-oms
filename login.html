@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles/login.css" />
+    <script src="./scripts/login.js" defer></script>
+  </head>
+  <body>
+    <div class="header">
+      <div class="header-inner">
+        <div class="uniqlo-icon">
+          <a href="./index.html">
+            <svg>
+              <use
+                href="./assets/icons/landing-page-icons.svg#uniqlo-icon"
+              ></use>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <div class="login-create-wrapper">
+        <div class="login">
+          <div class="login-header">
+            <h1>LOGIN</h1>
+            <span class="required">* Required</span>
+          </div>
+
+          <p>Log in with your email address and password.</p>
+
+          <form class="login-form" action="" method="post" novalidate>
+            <div class="input-group">
+              <span class="error-message email-error"></span>
+              <label for="user-email"
+                >EMAIL ADDRESS <span class="required-symbol">*</span></label
+              >
+              <input
+                id="user-email"
+                type="email"
+                name="email"
+                placeholder="Enter a valid email"
+                required
+              />
+            </div>
+
+            <div class="input-group">
+              <span class="error-message password-error"></span>
+              <label for="user-password"
+                >PASSWORD <span class="required-symbol">*</span></label
+              >
+              <input
+                id="user-password"
+                type="password"
+                name="password"
+                required
+              />
+              <p class="password-hint">
+                Password must be 8-20 letters and contain both letters and
+                numbers. The following symbols can be used
+                !#$%&()'*+,-./:;<=?>@[\]^_`{|}~
+              </p>
+            </div>
+
+            <div class="checkbox-wrapper">
+              <input id="show-password" type="checkbox" />
+              <label for="show-password">Show my password</label>
+            </div>
+
+            <button type="submit" class="submit-button">LOG IN</button>
+          </form>
+        </div>
+
+        <div class="create-account">
+          <h1>CREATE AN ACCOUNT</h1>
+          <p>
+            If you create an account, you can get personalized services like
+            checking purchase history and getting discount coupons with your
+            membership. Register today for free!
+          </p>
+          <button class="create-button">CREATE AN ACCOUNT</button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

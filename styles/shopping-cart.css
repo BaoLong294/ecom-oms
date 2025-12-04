@@ -33,7 +33,9 @@
   width: 90px;
 }
 
-.header .user-icon {
+.user-icon a {
+  color: #1b1b1b;
+  text-decoration: none;
   display: flex;
   flex-direction: column;
   align-items: center;
