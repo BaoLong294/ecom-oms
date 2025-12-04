@@ -162,6 +162,12 @@ function renderCartSummary(cart) {
   }, 0);
   totalPrice.textContent = `$${price.toFixed(2)}`;
 
+  // HANDLE CHECKOUT BUTTON
+  const checkoutButton = document.querySelector(".checkout-button");
+  checkoutButton.addEventListener("click", () => {
+    window.location.href = "./login.html";
+  });
+
   //   HANDLE CONTINUE SHOPPING BUTTON
   const continueButton = document.querySelector(".continue-button");
   continueButton.addEventListener("click", () => {

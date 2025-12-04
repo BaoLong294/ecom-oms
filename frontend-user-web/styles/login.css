@@ -1,0 +1,255 @@
+* {
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto,
+    "Open Sans", "Helvetica Neue", sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.header {
+  padding: 15px 40px;
+  width: 100%;
+  background-color: #ffffff;
+  border-bottom: 1px solid #cccccc;
+  position: fixed;
+  top: 0;
+  z-index: 10;
+}
+
+.header-inner {
+  max-width: 1170px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-inner .uniqlo-icon {
+  margin-right: auto;
+}
+
+.header .uniqlo-icon svg {
+  height: 35px;
+  width: 90px;
+}
+
+.main-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.main-content .login-create-wrapper {
+  width: 1200px;
+  padding: 28px 20px;
+  border: 1px solid rgb(218, 218, 218);
+  margin-top: 70px;
+  display: flex;
+  gap: 20px;
+}
+
+.login-create-wrapper .login {
+  flex: 1;
+  padding-right: 20px;
+  border-right: 1px solid rgb(218, 218, 218);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.login .login-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.login-header h1 {
+  font-size: 2.2rem;
+}
+
+.login-header .required {
+  font-size: 0.9rem;
+  color: rgb(55, 134, 148);
+}
+
+.login p {
+  font-size: 1rem;
+}
+
+.login .login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.login-form .input-group:focus-within label {
+  color: #388694;
+}
+
+.login-form .input-group.error label,
+.login-form .input-group.error .required-symbol {
+  color: #ff0000;
+}
+
+.input-group.error input {
+  background-color: rgb(247, 247, 247);
+  border-bottom: 2px solid #ff0000;
+}
+
+.input-group.error input:focus {
+  background-color: #ffffff;
+  outline: 2px solid #ebcccc;
+  outline-offset: 3px;
+  border-bottom: 2px solid #ff0000;
+  border-radius: 1px;
+}
+
+.input-group.error .error-message:not(:empty) {
+  font-size: 1rem;
+  display: block;
+  position: relative;
+  width: 100%;
+  padding: 16px 50px;
+  margin-bottom: 10px;
+  border: 1px solid rgb(255, 0, 0);
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px 0px;
+}
+
+.input-group.error .error-message:not(:empty)::before {
+  content: "";
+  position: absolute;
+  background-color: #ffffff;
+  width: 14px;
+  height: 14px;
+  border-right: 1px solid rgb(255, 0, 0);
+  border-bottom: 1px solid rgb(255, 0, 0);
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px 0px;
+  left: 3px;
+  bottom: -9px;
+  transform: rotate(45deg);
+}
+
+.login-form label {
+  display: block;
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.login-form .required-symbol {
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: rgb(55, 134, 148);
+}
+
+.login-form input {
+  width: 100%;
+  padding: 12px 15px;
+  font-size: 0.8rem;
+  color: rgb(27, 27, 27);
+  background-color: rgb(247, 247, 247);
+  border: none;
+  outline: none;
+  border-bottom: 1px solid rgb(171, 171, 171);
+}
+
+.login-form input:focus {
+  background-color: #ffffff;
+  outline: 2px solid #cde1e4;
+  outline-offset: 3px;
+  border-bottom: 2px solid #378694;
+  border-radius: 1px;
+}
+
+.login-form .password-hint {
+  color: rgb(125, 125, 125);
+  font-size: 0.9rem;
+  margin-top: 10px;
+}
+
+.login-form .checkbox-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.checkbox-wrapper input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.checkbox-wrapper label {
+  font-size: 1rem;
+  font-weight: 400;
+  padding-left: 20px;
+  margin-bottom: 0;
+  position: relative;
+}
+
+.checkbox-wrapper label::before {
+  content: "";
+  height: 18px;
+  width: 18px;
+  border: 2px solid #ababab;
+  position: absolute;
+  left: -10px;
+}
+
+.checkbox-wrapper input:checked + label::before {
+  background-color: #1b1b1b;
+  border-color: #1b1b1b;
+}
+
+.checkbox-wrapper input:checked + label::after {
+  content: "\2714";
+  font-size: 0.7rem;
+  color: #ffffff;
+  position: absolute;
+  left: -3px;
+  top: 3px;
+}
+
+.login-form .submit-button {
+  font-size: 1.1rem;
+  font-weight: 700;
+  width: 300px;
+  padding: 10px 5px;
+  color: #ffffff;
+  background-color: #1b1b1b;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.login-form .submit-button:hover {
+  opacity: 0.7;
+}
+
+.login-create-wrapper .create-account {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.create-account h1 {
+  font-size: 2.2rem;
+}
+
+.create-account .create-button {
+  font-size: 1.1rem;
+  font-weight: 700;
+  width: 300px;
+  padding: 10px 5px;
+  color: #ffffff;
+  background-color: #1b1b1b;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.create-account .create-button:hover {
+  opacity: 0.7;
+}
