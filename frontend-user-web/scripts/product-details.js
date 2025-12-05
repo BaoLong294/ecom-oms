@@ -558,7 +558,7 @@ const products = [
 
     size: ["XS", "S", "M", "L", "XL", "XXL"],
 
-    features: null,
+    features: "",
   },
   {
     id: 12,
@@ -858,7 +858,7 @@ const products = [
 
     size: ["XS", "S", "M", "L", "XL", "XXL"],
 
-    features: null,
+    features: "",
   },
 ];
 
