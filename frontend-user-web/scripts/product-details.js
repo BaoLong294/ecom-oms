@@ -358,9 +358,9 @@ const products = [
     id: 8,
     name: "Washable Knit Ribbed Pants",
     gender: "Women",
-    price: 39.9,
-    discount: null,
-    description: null,
+    price: 59.9,
+    discount: 29.9,
+    description: "Online + App-Only Offer",
 
     galleryImages: [
       "./images/product-details/knit-ribbed/07-gray.avif",
