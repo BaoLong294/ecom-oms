@@ -60,10 +60,12 @@ function renderCartItems(cart) {
             </div>
         </div>
       
-        <div class="item-subtotal">
-            <p>SUBTOTAL: <span class="item-subtotal-price">$${(
-              item.quantity * item.price
-            ).toFixed(2)}</span></p>
+        <div class="item-subtotal ${item.discount ? "price-discount" : ""}">
+          <p>SUBTOTAL: 
+            <span class="item-subtotal-price">
+              $${(item.quantity * (item.discount ?? item.price)).toFixed(2)}
+            </span>
+          </p>
         </div>
       </div>
     `;
@@ -107,7 +109,9 @@ function renderCartItems(cart) {
       currentCart[index].quantity = Number(currentQuantity);
       localStorage.setItem("cart", JSON.stringify(currentCart));
 
-      const newSubtotal = (currentQuantity * item.price).toFixed(2);
+      const newSubtotal = (
+        currentQuantity * (item.discount ?? item.price)
+      ).toFixed(2);
       subtotalPrice.textContent = `$${newSubtotal}`;
 
       renderCartSummary(currentCart);
@@ -157,7 +161,7 @@ function renderCartSummary(cart) {
   // CALCULATE ORDER TOTAL
   const totalPrice = document.querySelector(".total-price");
   const price = cart.reduce((total, item) => {
-    const itemPrice = item.quantity * item.price;
+    const itemPrice = item.quantity * (item.discount ?? item.price);
     return total + itemPrice;
   }, 0);
   totalPrice.textContent = `$${price.toFixed(2)}`;
