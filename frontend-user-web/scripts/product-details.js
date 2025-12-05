@@ -1131,7 +1131,12 @@ function displayProductPopup() {
   const cart = JSON.parse(localStorage.getItem("cart") || "[]");
   cart.forEach((item) => {
     totalItem += item.quantity;
-    totalPrice += item.quantity * item.price;
+
+    if (item.discount) {
+      totalPrice += item.quantity * item.discount;
+    } else {
+      totalPrice += item.quantity * item.price;
+    }
   });
 
   subtotalItem.textContent = `${totalItem} item(s)`;
