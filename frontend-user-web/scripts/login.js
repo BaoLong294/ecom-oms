@@ -29,12 +29,19 @@ function validateEmail() {
 emailInput.addEventListener("blur", () => {
   const input = emailInput.value.trim();
 
-  if (input !== "") {
-    if (!emailRegex.test(input)) {
-      emailGroup.classList.add("error");
-      emailErrorText.textContent = "Please enter a valid email address.";
+  if (input === "") {
+    if (isFormSubmitted) {
+      validateEmail();
     } else {
       emailGroup.classList.remove("error");
+      emailErrorText.textContent = "";
+    }
+  } else if (!emailRegex.test(input)) {
+    emailGroup.classList.add("error");
+
+    if (isFormSubmitted) {
+      emailErrorText.textContent = "Please enter a valid email address.";
+    } else {
       emailErrorText.textContent = "";
     }
   } else {
@@ -78,12 +85,19 @@ function validatePassword() {
 passwordInput.addEventListener("blur", () => {
   const input = passwordInput.value.trim();
 
-  if (input !== "") {
-    if (!passwordRegex.test(input)) {
-      passwordGroup.classList.add("error");
-      passwordErrorText.textContent = "Please input valid password.";
+  if (input === "") {
+    if (isFormSubmitted) {
+      validatePassword();
     } else {
       passwordGroup.classList.remove("error");
+      passwordErrorText.textContent = "";
+    }
+  } else if (!passwordRegex.test(input)) {
+    passwordGroup.classList.add("error");
+
+    if (isFormSubmitted) {
+      passwordErrorText.textContent = "Please input valid password.";
+    } else {
       passwordErrorText.textContent = "";
     }
   } else {
@@ -100,9 +114,12 @@ showPassword.addEventListener("change", () => {
 });
 
 // Handle log in button
+let isFormSubmitted = false;
 const loginForm = document.querySelector(".login-form");
+
 loginForm.addEventListener("submit", (event) => {
   event.preventDefault();
+  isFormSubmitted = true;
 
   const isEmailValid = validateEmail();
   const isPasswordValid = validatePassword();
