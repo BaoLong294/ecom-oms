@@ -1,6 +1,6 @@
 import { getCart, getCartItemCount } from "./cart/cart.js";
 
-function updateCartBadge() {
+export function updateCartBadge() {
   const cartBadge = document.querySelector(".cart-badge");
 
   const currentCart = getCart();

@@ -832,9 +832,7 @@ export function fetchProducts() {
       if (isSuccess) {
         resolve(products);
       } else {
-        reject(
-          new Error("Unable to connect to the server to retrieve products!"),
-        );
+        reject(new Error("Unable to connect to the server!"));
       }
     }, 800);
   });
