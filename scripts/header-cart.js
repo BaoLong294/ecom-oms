@@ -1,18 +1,19 @@
+import { getCart, getCartItemCount } from "./cart/cart.js";
+
 function updateCartBadge() {
   const cartBadge = document.querySelector(".cart-badge");
-  const currentCart = JSON.parse(localStorage.getItem("cart") || "[]");
 
-  const totalQuantity = currentCart.reduce((total, item) => {
-    return total + item.quantity;
-  }, 0);
+  const currentCart = getCart();
+  const totalCartItems = getCartItemCount(currentCart);
 
-  if (currentCart.length === 0) {
+  if (totalCartItems === 0) {
     cartBadge.style.display = "none";
   } else {
     cartBadge.style.display = "block";
-    cartBadge.textContent = totalQuantity;
+    cartBadge.textContent = totalCartItems;
   }
 }
 
-// Call function when page loads to display initial quantity
+// Ta cẩn gọi hàm updateCartBadge mỗi lần các trang được load lại từ đầu
+// để hiển thị cho người dùng số sản phẩm hiện đang có trong giỏ hàng
 document.addEventListener("DOMContentLoaded", updateCartBadge);
