@@ -28,7 +28,7 @@ function saveCart(cart) {
 /**
  * Nguời dùng sau khi ấn nút "ADD TO CART" để thêm sản phẩm vào giỏ ở bất kỳ đâu
  * Ta sẽ thêm sản phẩm vào giỏ hàng hoặc tăng số lượng sản phẩm lên nếu đã có trong giỏ hàng
- * @param {object} item - Sản phẩm cùng các thông tin của sản phẩm {id, name, price, discount, color, image, size, quantity}
+ * @param {object} item - Sản phẩm cùng các thông tin của sản phẩm {id, name, price, discountPercent, color, image, size, quantity}
  * @returns {array} Mảng mới chứa sản phẩm vừa thêm hoặc số lượng đã tăng lên
  */
 export function addToCart(item) {

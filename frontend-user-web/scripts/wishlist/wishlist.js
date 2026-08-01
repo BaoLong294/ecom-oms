@@ -24,7 +24,7 @@ function saveWishlist(wishlist) {
 /**
  * Khi người dùng tick icon tim vào màu và size của sản phẩm họ yêu thích
  * gọi hàm để thêm sản phẩm vào mảng wishlist và lưu lại mảng mới này
- * @param {object} item - đối tượng sản phẩm chứa  {id, name, price, discount, color, image, size}
+ * @param {object} item - đối tượng sản phẩm chứa  {id, name, price, discountPercent, color, image, size}
  * @returns {array} mảng wishlist đã được thêm sản phẩm mới
  */
 export function addToWishlist(item) {
