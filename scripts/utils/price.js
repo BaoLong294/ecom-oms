@@ -29,13 +29,13 @@ export function convertToNumber(string) {
 }
 
 /**
- * Sản phẩm có thể giảm giá theo phần trăm (discount là số %, ví dụ 30 nghĩa là giảm 30%) hoặc không giảm (discount là null).
- * Gom logic "giá nào mới là giá thật sự tính tiền" về 1 chỗ, tránh mỗi file tự viết lại công thức và hiểu sai ý nghĩa discount
- * @param {{price: number, discount: number|null}} item - Object sản phẩm, ví dụ {price: 29.9, discount: 50}
+ * Sản phẩm có thể giảm giá theo phần trăm (discountPercent là số %, ví dụ 30 nghĩa là giảm 30%) hoặc không giảm (discountPercent là null).
+ * Gom logic "giá nào mới là giá thật sự tính tiền" về 1 chỗ, tránh mỗi file tự viết lại công thức và hiểu sai ý nghĩa discountPercent
+ * @param {{price: number, discountPercent: number|null}} item - Object sản phẩm, ví dụ {price: 30, discountPercent: 50}
  * @returns {number} Giá thực tế sau giảm giá (nếu có), ví dụ 14.95
  */
 export function getEffectivePrice(item) {
-  if (item.discount === null) return item.price;
+  if (item.discountPercent === null) return item.price;
 
-  return item.price - (item.price * item.discount) / 100;
+  return item.price - (item.price * item.discountPercent) / 100;
 }
