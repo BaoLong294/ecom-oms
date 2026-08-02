@@ -13,7 +13,11 @@ import {
   getCartItemCount,
 } from "./cart/cart.js";
 import { updateCartBadge } from "./header-cart.js";
-import { formatToUSD, getEffectivePrice } from "./utils/price.js";
+import {
+  formatToUSD,
+  convertToNumber,
+  getEffectivePrice,
+} from "./utils/price.js";
 import { addToWishlist } from "./wishlist/wishlist.js";
 
 // =========================================== DOM QUERIES ===========================================
@@ -161,91 +165,12 @@ function renderInfo(product) {
     <button class="product-add">ADD TO CART</button>
     `;
 
-  // --- Xử lý nút chọn màu ---
-  const colorButtons = infoContainer.querySelectorAll(".color-button");
-  const colorLabel = infoContainer.querySelector(".color-label");
-  const productImage = imagesContainer.querySelector("img");
-
-  if (colorButtons[0]) {
-    colorButtons[0].classList.add("is-active");
-  }
-
-  colorButtons.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      colorButtons.forEach((b) => b.classList.remove("is-active"));
-      btn.classList.add("is-active");
-
-      colorLabel.textContent = `Color: ${btn.dataset.color}`;
-      productImage.src = btn.dataset.image;
-    });
-  });
-
-  // --- Xử lý nút chọn size ---
-  const sizeButtons = infoContainer.querySelectorAll(".size");
-  const selectedSizeSpan = infoContainer.querySelector(".selected-size");
-
-  if (sizeButtons[0]) {
-    sizeButtons[0].classList.add("is-active");
-  }
-
-  sizeButtons.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      sizeButtons.forEach((b) => b.classList.remove("is-active"));
-      btn.classList.add("is-active");
-      selectedSizeSpan.textContent = btn.dataset.size;
-    });
-  });
-
-  // --- Xử lý tăng/giảm số lượng ---
-  const minusButton = infoContainer.querySelector(".minus-button");
-  const plusButton = infoContainer.querySelector(".plus-button");
-  const quantityValue = infoContainer.querySelector(".quantity-value");
-
-  let currentQuantity = 1;
-  function updateQuantityUI() {
-    quantityValue.textContent = currentQuantity;
-    minusButton.classList.toggle("disabled", currentQuantity <= 1);
-  }
-  updateQuantityUI();
-
-  minusButton.addEventListener("click", () => {
-    if (currentQuantity > 1) {
-      currentQuantity--;
-      updateQuantityUI();
-    }
-  });
-
-  plusButton.addEventListener("click", () => {
-    currentQuantity++;
-    updateQuantityUI();
-  });
-
-  // --- Xử lý nút ADD TO CART ---
-  const addButton = infoContainer.querySelector(".product-add");
-
-  addButton.addEventListener("click", () => {
-    const activeColorBtn = infoContainer.querySelector(
-      ".color-button.is-active",
-    );
-    const activeSizeBtn = infoContainer.querySelector(".size.is-active");
-
-    const newItem = {
-      id: product.id,
-      name: product.name,
-      gender: product.gender,
-      price: product.price,
-      discountPercent: product.discountPercent,
-      description: product.description,
-      color: activeColorBtn?.dataset.color,
-      image: activeColorBtn?.dataset.image,
-      size: activeSizeBtn?.dataset.size,
-      quantity: currentQuantity,
-    };
-
-    addToCart(newItem);
-    updateCartBadge();
-    displayProductPopup();
-  });
+  // gọi 4 hàm để setup event Listener cho
+  // màu, size, tăng/giảm số lượng và thêm vào giỏ hàng
+  setupColorSelection();
+  setupSizeSelection();
+  setupQuantityStepper();
+  setupAddToCart(product);
 
   // TODO: icon trái tim (heart-icon) trong .product-title hiện CHƯA gắn sự kiện gì cả.
   // Theo luồng UNIQLO đã thống nhất: click vào -> mở popup chọn size muốn lưu wishlist
@@ -278,6 +203,120 @@ function renderDescription(product) {
         ${featuresHTML}
     </div>
   `;
+}
+
+// ========================================= HELPER FUNCTIONS =========================================
+/**
+ * Gắn event Listener cho các nút chọn màu sản phẩm bắt đầu mặc định đang chọn màu đầu tiên.
+ * Nếu người dùng click vào màu khác color label và hình ảnh sản phẩm sẽ hiển thị đúng màu đã chọn,
+ * và toàn bộ màu sản phẩm sẽ được reset để chỉ is-active màu được người dùng click vào.
+ */
+function setupColorSelection() {
+  const colorButtons = infoContainer.querySelectorAll(".color-button");
+  const colorLabel = infoContainer.querySelector(".color-label");
+  const productImage = imagesContainer.querySelector("img");
+
+  if (colorButtons[0]) {
+    colorButtons[0].classList.add("is-active");
+  }
+
+  colorButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      colorButtons.forEach((b) => b.classList.remove("is-active"));
+      btn.classList.add("is-active");
+
+      colorLabel.textContent = `Color: ${btn.dataset.color}`;
+      productImage.src = btn.dataset.image;
+    });
+  });
+}
+
+/**
+ * Gắn event Listener cho các nút chọn size sản phẩm bắt đầu mặc định đang chọn size đầu tiên.
+ * Nếu người dùng click vào size khác size label sẽ hiển thị đúng size đã được chọn,
+ * và toàn bộ size sản phẩm sẽ được reset để chỉ is-active size được người dùng click vào.
+ */
+function setupSizeSelection() {
+  const sizeButtons = infoContainer.querySelectorAll(".size");
+  const selectedSizeSpan = infoContainer.querySelector(".selected-size");
+
+  if (sizeButtons[0]) {
+    sizeButtons[0].classList.add("is-active");
+  }
+
+  sizeButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      sizeButtons.forEach((b) => b.classList.remove("is-active"));
+      btn.classList.add("is-active");
+      selectedSizeSpan.textContent = btn.dataset.size;
+    });
+  });
+}
+
+/**
+ * Gắn event Listener cho 2 nút tăng và giảm số lượng sản phẩm,
+ * số lượng sản phẩm mặc định sẽ là 1, và người dùng có thể tăng giảm số lượng sản phẩm.
+ * Tuy nhiên không thể giảm số lượng sản phẩm thêm nữa nếu số lượng sản phẩm đang là 1.
+ */
+function setupQuantityStepper() {
+  const minusButton = infoContainer.querySelector(".minus-button");
+  const plusButton = infoContainer.querySelector(".plus-button");
+  const quantityValue = infoContainer.querySelector(".quantity-value");
+
+  let currentQuantity = 1;
+  function updateQuantityUI() {
+    quantityValue.textContent = currentQuantity;
+    minusButton.classList.toggle("disabled", currentQuantity <= 1);
+  }
+  updateQuantityUI();
+
+  minusButton.addEventListener("click", () => {
+    if (currentQuantity > 1) {
+      currentQuantity--;
+      updateQuantityUI();
+    }
+  });
+
+  plusButton.addEventListener("click", () => {
+    currentQuantity++;
+    updateQuantityUI();
+  });
+}
+
+/**
+ * Gắn event Listener cho nút ADD TO CART để thêm sản phẩm mới vào giỏ hàng.
+ * Ta sẽ lấy màu và số lượng sản phẩm cần thêm để tạo ra một đối tượng sản phẩm mới,
+ * thêm vào giỏ hàng, cập nhật số lượng lên cart badge và hiển thị popup để thông báo cho người dùng.
+ * @param {object} product - sản phẩm được người dùng thêm vào giỏ hàng
+ */
+function setupAddToCart(product) {
+  const addButton = infoContainer.querySelector(".product-add");
+  const quantityValue = infoContainer.querySelector(".quantity-value");
+
+  addButton.addEventListener("click", () => {
+    const activeColorBtn = infoContainer.querySelector(
+      ".color-button.is-active",
+    );
+    const activeSizeBtn = infoContainer.querySelector(".size.is-active");
+    const currentQuantity = convertToNumber(quantityValue.textContent);
+
+    const newItem = {
+      id: product.id,
+      name: product.name,
+      gender: product.gender,
+      price: product.price,
+      discountPercent: product.discountPercent,
+      description: product.description,
+      color: activeColorBtn?.dataset.color,
+      image: activeColorBtn?.dataset.image,
+      size: activeSizeBtn?.dataset.size,
+      quantity: currentQuantity,
+    };
+
+    addToCart(newItem);
+    updateCartBadge();
+    displayProductPopup();
+  });
 }
 
 // =============================== POPUP XÁC NHẬN "ĐÃ THÊM VÀO GIỎ HÀNG" ===============================
