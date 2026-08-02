@@ -2,7 +2,7 @@ const products = [
   {
     id: 1,
     name: "Cotton Relaxed Ankle Pants | Denim",
-    category: "Cotton",
+    category: "cotton",
     gender: "Women",
     price: 40,
     discountPercent: null,
@@ -52,7 +52,7 @@ const products = [
   {
     id: 2,
     name: "Cotton Relaxed Ankle Pants",
-    category: "Cotton",
+    category: "cotton",
     gender: "Women",
     price: 40,
     discountPercent: null,
@@ -100,7 +100,7 @@ const products = [
   {
     id: 3,
     name: "Jersey Easy Cargo Pants",
-    category: "Cotton",
+    category: "cotton",
     gender: "Unisex",
     price: 40,
     discountPercent: 20,
@@ -155,7 +155,7 @@ const products = [
   {
     id: 4,
     name: "Flannel Pants | Gingham",
-    category: "Flannel",
+    category: "flannel",
     gender: "Women",
     price: 40,
     discountPercent: null,
@@ -200,7 +200,7 @@ const products = [
   {
     id: 5,
     name: "Flannel Pants | Check",
-    category: "Flannel",
+    category: "flannel",
     gender: "Women",
     price: 40,
     discountPercent: null,
@@ -245,7 +245,7 @@ const products = [
   {
     id: 6,
     name: "Flannel Pants | Solid",
-    category: "Flannel",
+    category: "flannel",
     gender: "Women",
     price: 40,
     discountPercent: null,
@@ -291,7 +291,7 @@ const products = [
   {
     id: 7,
     name: "Washable Knit Cable Pants",
-    category: "Knit",
+    category: "knit",
     gender: "Women",
     price: 40,
     discountPercent: 50,
@@ -334,7 +334,7 @@ const products = [
   {
     id: 8,
     name: "Washable Knit Ribbed Pants",
-    category: "Knit",
+    category: "knit",
     gender: "Women",
     price: 60,
     discountPercent: 50,
@@ -401,7 +401,7 @@ const products = [
   {
     id: 9,
     name: "Dry Sweat Curve Pants",
-    category: "Sweat",
+    category: "sweat",
     gender: "Women",
     price: 40,
     discountPercent: 60,
@@ -458,7 +458,7 @@ const products = [
   {
     id: 10,
     name: "Linen Blend Easy Pants | Striped | Short",
-    category: "Others",
+    category: "others",
     gender: "Women",
     price: 40,
     discountPercent: null,
@@ -499,7 +499,7 @@ const products = [
   {
     id: 11,
     name: "Linen Blend Easy Pants | Striped",
-    category: "Others",
+    category: "others",
     gender: "Women",
     price: 40,
     discountPercent: null,
@@ -533,7 +533,7 @@ const products = [
   {
     id: 12,
     name: "Culottes",
-    category: "Others",
+    category: "others",
     gender: "Unisex",
     price: 50,
     discountPercent: null,
@@ -582,7 +582,7 @@ const products = [
   {
     id: 13,
     name: "Nylon Culottes",
-    category: "Others",
+    category: "others",
     gender: "Women",
     price: 50,
     discountPercent: 20,
@@ -633,7 +633,7 @@ const products = [
   {
     id: 14,
     name: "Cotton Relaxed Ankle Pants | Denim",
-    category: "Others",
+    category: "others",
     gender: "Unisex",
     price: 40,
     discountPercent: null,
@@ -682,7 +682,7 @@ const products = [
   {
     id: 15,
     name: "Corduroy Easy Pants",
-    category: "Others",
+    category: "others",
     gender: "Unisex",
     price: 40,
     discountPercent: null,
@@ -737,7 +737,7 @@ const products = [
   {
     id: 16,
     name: "Knitted Fleece Easy Ankle Pants",
-    category: "Others",
+    category: "others",
     gender: "Unisex",
     price: 40,
     discountPercent: null,
@@ -785,7 +785,7 @@ const products = [
   {
     id: 17,
     name: "Geared Pants",
-    category: "Others",
+    category: "others",
     gender: "Unisex",
     price: 50,
     discountPercent: null,
