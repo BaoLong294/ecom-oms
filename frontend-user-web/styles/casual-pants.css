@@ -1,11 +1,20 @@
+/* ==================================== RESET ==================================== */
 * {
-  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto,
-    "Open Sans", "Helvetica Neue", sans-serif;
+  font-family:
+    "Inter",
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    "Open Sans",
+    "Helvetica Neue",
+    sans-serif;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+/* =================================== HEADER ==================================== */
 .header {
   padding: 15px 40px;
   background-color: white;
@@ -84,6 +93,7 @@
   right: -9px;
 }
 
+/* ================================= MAIN LAYOUT ================================= */
 .main-content {
   width: 1170px;
   margin: 80px auto 0 auto;
@@ -95,10 +105,19 @@
   margin: 25px 0px;
 }
 
+/* ================================ PRODUCT GRID ================================= */
+/* .all-products bắt đầu ở trạng thái ẩn ngay từ CSS (không phải do JS thêm class
+   sau khi trang đã vẽ) để tránh hiện tượng "giật hình" — banner/tiêu đề xuất hiện
+   1 khoảnh khắc trước khi JS kịp ẩn đi. JS chỉ gỡ class này khi fetchProducts()
+   thành công. */
 .all-products {
   display: flex;
   flex-direction: column;
   gap: 50px;
+}
+
+.all-products.hidden {
+  display: none;
 }
 
 .all-products h2 {
@@ -119,6 +138,7 @@
   grid-auto-rows: 615px;
 }
 
+/* ================================ PRODUCT CARD ================================= */
 .product-grid .product-card {
   cursor: pointer;
   transition: transform 0.15s ease;
@@ -179,14 +199,16 @@
   margin-bottom: 7px;
 }
 
-.product-card .price-original {
+/* Đổi tên class giá từ price-original/price-discount (kiểu cũ, 1 class nối gạch
+   ngang) sang price/price.discount — khớp với class mà renderProductCard() thực
+   sự tạo ra (2 class cách nhau bằng khoảng trắng), cùng convention với
+   product-details.css. */
+.product-card .price {
   font-size: 1.1rem;
   font-weight: bold;
 }
 
-.product-card .price-discount {
-  font-size: 1.1rem;
-  font-weight: bold;
+.product-card .price.discount {
   color: #ff0000;
   margin-bottom: 7px;
 }
@@ -196,6 +218,39 @@
   color: #ff0000;
 }
 
+/* =========================== LOADING & ERROR STATES ============================ */
+.main-content .loading,
+.main-content .loading-error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 400px;
+  font-size: 1rem;
+  color: #6a6a6a;
+}
+
+.main-content .loading-error {
+  color: #ff0000;
+}
+
+/* Vòng tròn xoay đơn giản cho <span class="icon"> đã có sẵn trong JS */
+.loading .icon {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #dadada;
+  border-top-color: #1b1b1b;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ================ BOTTOM NAVIGATION (mobile-style floating nav) ================ */
 .bottom-nav {
   position: fixed;
   bottom: 20px;
