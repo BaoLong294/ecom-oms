@@ -1,0 +1,146 @@
+* {
+  font-family:
+    "Inter",
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    "Open Sans",
+    "Helvetica Neue",
+    sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.wishlist-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(27, 27, 27, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+
+.wishlist-popup-overlay.hidden {
+  display: none;
+}
+
+.wishlist-popup {
+  width: 650px;
+  max-height: 80vh;
+  overflow-y: auto;
+  padding: 25px;
+  background-color: #fff;
+}
+
+.wishlist-popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.wishlist-popup-header p {
+  font-size: 1.1rem;
+}
+
+.wishlist-popup-close {
+  font-size: 2rem;
+  line-height: 0;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.wishlist-popup-top-section {
+  display: flex;
+  gap: 15px;
+}
+
+.wishlist-popup-img {
+  width: 160px;
+  height: auto;
+  margin-bottom: 20px;
+}
+
+.wishlist-popup-color-label {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.wishlist-popup-color-swatches {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.wishlist-popup-color-swatches .color-button {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: none;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.wishlist-popup-color-swatches .color-button:hover {
+  outline: 1px solid #6a6a6a;
+  outline-offset: 2px;
+}
+
+.wishlist-popup-color-swatches .color-button.is-active {
+  outline: 2px solid black;
+  outline-offset: 2px;
+}
+
+.wishlist-popup-sizes {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  column-gap: 25px;
+  margin-bottom: 30px;
+}
+
+.wishlist-popup-sizes .product-size {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.wishlist-popup-sizes .product-size:nth-child(-n + 2) {
+  border-top: 1px solid #e0e0e0;
+}
+
+.wishlist-popup-sizes .product-size p {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.wishlist-popup-sizes svg {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  color: #1b1b1b;
+}
+
+.wishlist-popup-sizes svg.is-active {
+  color: #ff0000;
+}
+
+.wishlist-popup-close-button {
+  padding: 14px 120px;
+  background-color: #1b1b1b;
+  color: #fff;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 1rem;
+  display: block;
+  margin: 0 auto;
+}
