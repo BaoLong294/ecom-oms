@@ -3,6 +3,7 @@
 
 // Ta cần hiển thị giá của sản phẩm trong card sản phẩm
 import { formatToUSD, getEffectivePrice } from "../utils/price.js";
+import { openWishlistPopup } from "./render-wishlist-popup.js";
 
 /**
  * Ta sẽ tạo ra một phần tử HTML đã dựng sẵn một sản phẩm,
@@ -66,6 +67,14 @@ export function renderProductCard(product) {
         <p class="product-price">${priceHTML}</p>
     </div>
   `;
+
+  // Gắn sự kiện riêng cho icon tim, chặn nổi bọt lên card để tránh
+  // vừa mở popup wishlist vừa bị điều hướng sang trang chi tiết sản phẩm.
+  const heartIcon = card.querySelector(".product-color-options svg");
+  heartIcon.addEventListener("click", (event) => {
+    event.stopPropagation();
+    openWishlistPopup(product);
+  });
 
   // Sau khi đã có card sản phẩm ta sẽ gắn eventListener
   // để khi người dùng click vào sản phẩm sẽ điều hướng đến trang chi tiết sản phẩm
