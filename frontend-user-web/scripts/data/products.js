@@ -744,12 +744,17 @@ const products = [
     description: null,
     size: ["XS", "S", "M", "L", "XL", "XXL"],
     galleryImages: [
-      "./images/product-details/knitted-fleece/09-black.avif",
+      "./images/product-details/knitted-fleece/68-blue.avif",
       "./images/product-details/knitted-fleece/detail-1.avif",
       "./images/product-details/knitted-fleece/detail-2.avif",
       "./images/product-details/knitted-fleece/detail-3.avif",
     ],
     color: [
+      {
+        name: "68 BLUE",
+        swatch: "./images/color-swatches/knitted-fleece/68-blue.avif",
+        image: "./images/product-details/knitted-fleece/68-blue.avif",
+      },
       {
         name: "09 BLACK",
         swatch: "./images/color-swatches/knitted-fleece/09-black.avif",
@@ -759,11 +764,6 @@ const products = [
         name: "04 GRAY",
         swatch: "./images/color-swatches/knitted-fleece/04-gray.avif",
         image: "./images/product-details/knitted-fleece/04-gray.avif",
-      },
-      {
-        name: "68 BLUE",
-        swatch: "./images/color-swatches/knitted-fleece/68-blue.avif",
-        image: "./images/product-details/knitted-fleece/68-blue.avif",
       },
     ],
     features: [
