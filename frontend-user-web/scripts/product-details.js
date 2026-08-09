@@ -25,6 +25,8 @@ import {
   isInWishlist,
 } from "./wishlist/wishlist.js";
 import { HEART_EMPTY, HEART_FILLED } from "./ui/wishlist-icons.js";
+import { isLoggedIn } from "./auth/auth.js";
+import { openLoginRequiredPopup } from "./ui/login-required-popup.js";
 
 // =========================================== DOM QUERIES ===========================================
 const imagesContainer = document.querySelector(".product-images");
@@ -366,6 +368,11 @@ function setupWishlistToggle(product) {
   const heartIcons = infoContainer.querySelector(".wishlist-heart");
 
   heartIcons.addEventListener("click", () => {
+    if (!isLoggedIn()) {
+      openLoginRequiredPopup();
+      return;
+    }
+
     const activeColorBtn = infoContainer.querySelector(
       ".color-button.is-active",
     );
