@@ -6,13 +6,9 @@ import {
   addToWishlist,
   removeFromWishlist,
   getWishlist,
+  isInWishlist,
 } from "../wishlist/wishlist.js";
-
-// ============================================ CONSTANTS =============================================
-// Ta sẽ cần chuyển đổi qua lại giữa 2 icon trái tim rỗng và đặc,
-// để có thể chuyển qua icon đặc và fill màu đỏ vào bên trong khi người dùng click.
-const HEART_EMPTY = "./assets/icons/landing-page-icons.svg#heart-icon";
-const HEART_FILLED = "./assets/icons/landing-page-icons.svg#heart-icon-filled";
+import { HEART_EMPTY, HEART_FILLED } from "./wishlist-icons.js";
 
 // ============================================== STATE ================================================
 // Ta sẽ tạo ra popup 1 lần duy nhất trong body HTML,
@@ -94,9 +90,11 @@ function renderWishlistPopup(product) {
       (size) => `
     <div class="product-size">
         <p>${size}</p>
-        <svg data-size="${size}">
-            <use href="${HEART_EMPTY}"></use>
-        </svg>
+        ${
+          isInWishlist(product.id, product.color[0].name, size)
+            ? `<svg data-size="${size}" class="is-active"><use href="${HEART_FILLED}"></use></svg>`
+            : `<svg data-size="${size}"><use href="${HEART_EMPTY}"></use></svg>`
+        }
     </div>
   `,
     )
@@ -104,7 +102,7 @@ function renderWishlistPopup(product) {
 
   popupSizeList.innerHTML = `${sizesHTML}`;
 
-  setupColorSwatches();
+  setupColorSwatches(product);
   setupSizeHearts(product);
 }
 
@@ -128,7 +126,7 @@ export function openWishlistPopup(product) {
  * hình ảnh và label của color sẽ tự động thay đổi theo đúng màu sản phẩm đó,
  * và icon hình trái tim của mỗi size cũng sẽ được reset lại để đảm bảo UX.
  */
-function setupColorSwatches() {
+function setupColorSwatches(product) {
   const colorButtons = popupElement.querySelectorAll(".color-button");
   const colorImage = popupElement.querySelector(".wishlist-popup-img");
   const colorLabel = popupElement.querySelector(".wishlist-popup-color-label");
@@ -146,8 +144,13 @@ function setupColorSwatches() {
       heartIcons.forEach((icon) => {
         const useTag = icon.querySelector("use");
 
-        useTag.setAttribute("href", HEART_EMPTY);
-        icon.classList.remove("is-active");
+        if (isInWishlist(product.id, button.dataset.color, icon.dataset.size)) {
+          useTag.setAttribute("href", HEART_FILLED);
+          icon.classList.add("is-active");
+        } else {
+          useTag.setAttribute("href", HEART_EMPTY);
+          icon.classList.remove("is-active");
+        }
       });
 
       button.classList.add("is-active");
@@ -201,6 +204,7 @@ function setupSizeHearts(product) {
             item.color === activeColorBtn?.dataset.color &&
             item.size === icon.dataset.size,
         );
+
         removeFromWishlist(itemIndex);
       }
     });

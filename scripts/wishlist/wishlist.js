@@ -22,18 +22,32 @@ function saveWishlist(wishlist) {
 }
 
 /**
+ * Ta cần một hàm để check xem sản phẩm với size và màu đã có trong wishlist chưa,
+ * hàm này sẽ dùng cho việc hiển thị icon trái tim ứng với đúng size và màu của sản phẩm
+ * @param {number} id - id của sản phẩm, ví dụ 6
+ * @param {string} color - màu của sản phẩm , ví dụ "09 BLACK"
+ * @param {string} size - kích thức của sản phẩm, ví dụ "M"
+ * @returns {boolean} true nếu có trong wishlist và false nếu không có
+ */
+export function isInWishlist(id, color, size) {
+  const currentWishlist = getWishlist();
+  const findItem = currentWishlist.find(
+    (i) => i.id === id && i.color === color && i.size === size,
+  );
+
+  return findItem !== undefined;
+}
+
+/**
  * Khi người dùng tick icon tim vào màu và size của sản phẩm họ yêu thích
  * gọi hàm để thêm sản phẩm vào mảng wishlist và lưu lại mảng mới này
- * @param {object} item - đối tượng sản phẩm chứa  {id, name, price, discountPercent, color, image, size}
+ * @param {object} item - đối tượng sản phẩm chứa {id, name, gender, price, discountPercent, description, color, image, size}
  * @returns {array} mảng wishlist đã được thêm sản phẩm mới
  */
 export function addToWishlist(item) {
   const currentWishlist = getWishlist();
-  const findItem = currentWishlist.find(
-    (i) => i.id === item.id && i.color === item.color && i.size === item.size,
-  );
 
-  if (findItem) return currentWishlist;
+  if (isInWishlist(item.id, item.color, item.size)) return currentWishlist;
 
   currentWishlist.push(item);
 

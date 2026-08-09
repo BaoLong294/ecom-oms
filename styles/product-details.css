@@ -149,7 +149,10 @@
   color: rgb(106, 106, 106);
 }
 
-/* ==================================== RESET ==================================== */
+.product-title svg.is-active {
+  color: #ff0000;
+}
+
 /* ======================== PRODUCT INFO — COLOR SWATCHES ======================== */
 .product-info .product-colors {
   margin-bottom: 25px;

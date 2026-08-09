@@ -18,7 +18,13 @@ import {
   convertToNumber,
   getEffectivePrice,
 } from "./utils/price.js";
-import { addToWishlist } from "./wishlist/wishlist.js";
+import {
+  getWishlist,
+  addToWishlist,
+  removeFromWishlist,
+  isInWishlist,
+} from "./wishlist/wishlist.js";
+import { HEART_EMPTY, HEART_FILLED } from "./ui/wishlist-icons.js";
 
 // =========================================== DOM QUERIES ===========================================
 const imagesContainer = document.querySelector(".product-images");
@@ -139,9 +145,11 @@ function renderInfo(product) {
   infoContainer.innerHTML = `
     <div class="product-title">
         <h1>${product.name}</h1>
-        <svg>
-            <use href="./assets/icons/landing-page-icons.svg#heart-icon"></use>
-        </svg>
+        ${
+          isInWishlist(product.id, selectedColorName, selectedSizeDescription)
+            ? `<svg class="wishlist-heart is-active"><use href="${HEART_FILLED}"></use></svg>`
+            : `<svg class="wishlist-heart"><use href="${HEART_EMPTY}"></use></svg>`
+        }
     </div>
 
     <div class="product-colors">
@@ -165,17 +173,13 @@ function renderInfo(product) {
     <button class="product-add">ADD TO CART</button>
     `;
 
-  // gọi 4 hàm để setup event Listener cho
-  // màu, size, tăng/giảm số lượng và thêm vào giỏ hàng
-  setupColorSelection();
-  setupSizeSelection();
+  // gọi 5 hàm để setup event Listener cho
+  // icon trái tim, màu, size, tăng/giảm số lượng và thêm vào giỏ hàng
+  setupWishlistToggle(product);
+  setupColorSelection(product);
+  setupSizeSelection(product);
   setupQuantityStepper();
   setupAddToCart(product);
-
-  // TODO: icon trái tim (heart-icon) trong .product-title hiện CHƯA gắn sự kiện gì cả.
-  // Theo luồng UNIQLO đã thống nhất: click vào -> mở popup chọn size muốn lưu wishlist
-  // (không cần đăng nhập check ở đây vì đã ở trang chi tiết, hoặc vẫn check tùy quyết định) ->
-  // gọi addToWishlist() cho từng size được tick. Đây là việc làm sau, không phải bây giờ.
 }
 
 /**
@@ -210,8 +214,9 @@ function renderDescription(product) {
  * Gắn event Listener cho các nút chọn màu sản phẩm bắt đầu mặc định đang chọn màu đầu tiên.
  * Nếu người dùng click vào màu khác color label và hình ảnh sản phẩm sẽ hiển thị đúng màu đã chọn,
  * và toàn bộ màu sản phẩm sẽ được reset để chỉ is-active màu được người dùng click vào.
+ * @param {object} product - đối tượng sản phẩm hiện tại
  */
-function setupColorSelection() {
+function setupColorSelection(product) {
   const colorButtons = infoContainer.querySelectorAll(".color-button");
   const colorLabel = infoContainer.querySelector(".color-label");
   const productImage = imagesContainer.querySelector("img");
@@ -223,10 +228,13 @@ function setupColorSelection() {
   colorButtons.forEach((btn) => {
     btn.addEventListener("click", () => {
       colorButtons.forEach((b) => b.classList.remove("is-active"));
+
       btn.classList.add("is-active");
 
       colorLabel.textContent = `Color: ${btn.dataset.color}`;
       productImage.src = btn.dataset.image;
+
+      syncWishlistHeart(product);
     });
   });
 }
@@ -235,8 +243,9 @@ function setupColorSelection() {
  * Gắn event Listener cho các nút chọn size sản phẩm bắt đầu mặc định đang chọn size đầu tiên.
  * Nếu người dùng click vào size khác size label sẽ hiển thị đúng size đã được chọn,
  * và toàn bộ size sản phẩm sẽ được reset để chỉ is-active size được người dùng click vào.
+ * @param {object} product - đối tượng sản phẩm hiện tại
  */
-function setupSizeSelection() {
+function setupSizeSelection(product) {
   const sizeButtons = infoContainer.querySelectorAll(".size");
   const selectedSizeSpan = infoContainer.querySelector(".selected-size");
 
@@ -247,8 +256,12 @@ function setupSizeSelection() {
   sizeButtons.forEach((btn) => {
     btn.addEventListener("click", () => {
       sizeButtons.forEach((b) => b.classList.remove("is-active"));
+
       btn.classList.add("is-active");
+
       selectedSizeSpan.textContent = btn.dataset.size;
+
+      syncWishlistHeart(product);
     });
   });
 }
@@ -316,6 +329,81 @@ function setupAddToCart(product) {
     addToCart(newItem);
     updateCartBadge();
     displayProductPopup();
+  });
+}
+
+/**
+ * Ta cần hiển thị icon trái tim phù hợp với size và màu sản phẩm,
+ * nếu size và màu đó đã được thêm vào wishlist thì icon trái tim màu đỏ,
+ * còn nếu size và màu đó chưa được thêm vào wishlist thì icon trái tim rỗng.
+ * @param {object} product - sản phẩm được người dùng thêm vào wishlist
+ */
+function syncWishlistHeart(product) {
+  const activeColorBtn = infoContainer.querySelector(".color-button.is-active");
+  const activeSizeBtn = infoContainer.querySelector(".size.is-active");
+
+  const productColor = activeColorBtn?.dataset.color;
+  const productSize = activeSizeBtn?.dataset.size;
+
+  const heartIcons = infoContainer.querySelector(".wishlist-heart");
+  const useTag = heartIcons.querySelector("use");
+
+  if (isInWishlist(product.id, productColor, productSize)) {
+    heartIcons.classList.add("is-active");
+    useTag.setAttribute("href", HEART_FILLED);
+  } else {
+    heartIcons.classList.remove("is-active");
+    useTag.setAttribute("href", HEART_EMPTY);
+  }
+}
+
+/**
+ * Người dùng có thể click vào icon trái tim rỗng để thêm sản phẩm với màu và size đã chọn vào wishlist,
+ * và cũng có thể click lại vào icon trái tim màu đỏ để bỏ sản phẩm với màu và size đó ra khỏi wishlist.
+ * @param {object} product - sản phẩm người dùng thêm vào hoặc bỏ đi với wishlist
+ */
+function setupWishlistToggle(product) {
+  const heartIcons = infoContainer.querySelector(".wishlist-heart");
+
+  heartIcons.addEventListener("click", () => {
+    const activeColorBtn = infoContainer.querySelector(
+      ".color-button.is-active",
+    );
+    const productColor = activeColorBtn?.dataset.color;
+    const productImage = activeColorBtn?.dataset.image;
+
+    const activeSizeBtn = infoContainer.querySelector(".size.is-active");
+    const productSize = activeSizeBtn?.dataset.size;
+
+    const isNowActive = heartIcons.classList.toggle("is-active");
+    const useTag = heartIcons.querySelector("use");
+    useTag.setAttribute("href", isNowActive ? HEART_FILLED : HEART_EMPTY);
+
+    if (isNowActive) {
+      const newItem = {
+        id: product.id,
+        name: product.name,
+        gender: product.gender,
+        price: product.price,
+        discountPercent: product.discountPercent,
+        description: product.description,
+        color: productColor,
+        image: productImage,
+        size: productSize,
+      };
+
+      addToWishlist(newItem);
+    } else {
+      const currentWishlist = getWishlist();
+      const itemIndex = currentWishlist.findIndex(
+        (item) =>
+          item.id === product.id &&
+          item.color === productColor &&
+          item.size === productSize,
+      );
+
+      removeFromWishlist(itemIndex);
+    }
   });
 }
 
