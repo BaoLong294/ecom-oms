@@ -3,15 +3,16 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Product Details</title>
+    <title>Wishlist</title>
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./styles/product-details.css" />
-    <script type="module" src="./scripts/product-details.js"></script>
+    <link rel="stylesheet" href="./styles/shopping-wishlist.css" />
+    <script type="module" src="./scripts/shopping-wishlist.js"></script>
     <script type="module" src="./scripts/header-cart.js"></script>
   </head>
+
   <body>
     <div class="header">
       <div class="header-inner">
@@ -47,11 +48,25 @@
     </div>
 
     <div class="main-content">
-      <div class="product-page">
-        <div class="product-images"></div>
-        <div class="product-description"></div>
+      <div class="breadcrumbs">
+        <p><a href="./index.html">UNIQLO</a> / WISHLIST</p>
       </div>
-      <div class="product-info"></div>
+
+      <h1>WISHLIST</h1>
+
+      <div class="wishlist-empty">
+        <p>Your wishlist is currently empty.</p>
+        <a href="./index.html">
+          <button>CONTINUE SHOPPING</button>
+        </a>
+      </div>
+
+      <div class="wishlist-filled">
+        <div class="wishlist-summary">
+          <p class="wishlist-count"></p>
+        </div>
+        <div class="wishlist-items"></div>
+      </div>
     </div>
 
     <div class="product-popup-overlay hidden">
@@ -68,30 +83,6 @@
           <button class="view-cart">VIEW CART</button>
           <button class="continue-shopping">CONTINUE SHOPPING</button>
         </div>
-      </div>
-    </div>
-
-    <div class="bottom-nav">
-      <div class="bottom-inner">
-        <button class="home-button">
-          <a href="./index.html">
-            <svg>
-              <use href="./assets/icons/landing-page-icons.svg#home-icon" />
-            </svg>
-          </a>
-        </button>
-        <button class="search-button">
-          <svg>
-            <use href="./assets/icons/landing-page-icons.svg#search-icon" />
-          </svg>
-        </button>
-        <a href="./login.html">
-          <button class="user-button">
-            <svg>
-              <use href="./assets/icons/landing-page-icons.svg#user-icon" />
-            </svg>
-          </button>
-        </a>
       </div>
     </div>
   </body>

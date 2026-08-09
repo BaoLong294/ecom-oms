@@ -416,7 +416,7 @@ function displayProductPopup() {
   const totalItem = getCartItemCount(currentCart);
   const totalPrice = getCartTotal(currentCart);
 
-  popupItem.textContent = `${quantity} Items added to your cart`;
+  popupItem.textContent = `${quantity} item(s) added to your cart`;
   subtotalItem.textContent = `${totalItem} item(s)`;
   subtotalPrice.textContent = `${formatToUSD(totalPrice)}`;
 
