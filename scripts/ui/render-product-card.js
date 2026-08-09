@@ -4,6 +4,8 @@
 // Ta cần hiển thị giá của sản phẩm trong card sản phẩm
 import { formatToUSD, getEffectivePrice } from "../utils/price.js";
 import { openWishlistPopup } from "./render-wishlist-popup.js";
+import { isLoggedIn } from "../auth/auth.js";
+import { openLoginRequiredPopup } from "./login-required-popup.js";
 
 /**
  * Ta sẽ tạo ra một phần tử HTML đã dựng sẵn một sản phẩm,
@@ -73,7 +75,11 @@ export function renderProductCard(product) {
   const heartIcon = card.querySelector(".product-color-options svg");
   heartIcon.addEventListener("click", (event) => {
     event.stopPropagation();
-    openWishlistPopup(product);
+    if (isLoggedIn()) {
+      openWishlistPopup(product);
+    } else {
+      openLoginRequiredPopup();
+    }
   });
 
   // Sau khi đã có card sản phẩm ta sẽ gắn eventListener
