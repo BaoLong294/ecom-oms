@@ -145,7 +145,12 @@
 }
 
 .product-grid .product-card:hover {
-  transform: scale(1.03);
+  transform: scale(1.04);
+}
+
+.product-grid .product-card:focus-visible {
+  transform: scale(1.04);
+  outline: 1px solid #0060df;
 }
 
 .product-card .product-color-options {
@@ -169,8 +174,17 @@
 .product-color-options .heart-button {
   border: none;
   background: transparent;
-  padding: 0;
+  padding: 6px;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  top: -5px;
+}
+
+.product-color-options .heart-button:focus-visible {
+  outline: 1px solid #0060df;
 }
 
 .product-color-options svg {

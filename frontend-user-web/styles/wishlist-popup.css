@@ -125,8 +125,15 @@
 .wishlist-popup-sizes .heart-button {
   border: none;
   background: transparent;
-  padding: 0;
+  padding: 4px;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wishlist-popup-sizes .heart-button:focus-visible {
+  outline: 1px solid #0060df;
 }
 
 .wishlist-popup-sizes svg {
