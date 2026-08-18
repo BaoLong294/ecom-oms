@@ -180,6 +180,7 @@
 .item-info .item-title {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   gap: 12px;
   margin-bottom: 8px;
 }
@@ -191,8 +192,15 @@
 .item-title .heart-button {
   border: none;
   background: transparent;
-  padding: 0;
+  padding: 4px;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.item-title .heart-button:focus-visible {
+  outline: 1px solid #0060df;
 }
 
 .item-title .item-heart {

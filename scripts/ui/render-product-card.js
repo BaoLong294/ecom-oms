@@ -47,6 +47,8 @@ export function renderProductCard(product) {
   // Chuyển tất cả thông tin của sản phẩm thành HTML để hiển thị lên UI
   const card = document.createElement("div");
   card.classList.add("product-card");
+  card.setAttribute("role", "link");
+  card.setAttribute("tabindex", "0");
 
   card.innerHTML = `
     <img src="${productImg}" alt="${product.name}">
@@ -84,10 +86,22 @@ export function renderProductCard(product) {
     }
   });
 
+  // Ta cần ngăn việc người dùng sử dụng nút Enter thay cho việc click vào icon tim
+  heartIcon.addEventListener("keydown", (event) => {
+    event.stopPropagation();
+  });
+
   // Sau khi đã có card sản phẩm ta sẽ gắn eventListener
   // để khi người dùng click vào sản phẩm sẽ điều hướng đến trang chi tiết sản phẩm
   card.addEventListener("click", () => {
     window.location.href = `product-details.html?id=${product.id}`;
+  });
+
+  // Gắn event listener cho nút Enter cho người dùng sử dụng bàn phím
+  card.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      window.location.href = `product-details.html?id=${product.id}`;
+    }
   });
 
   return card;
