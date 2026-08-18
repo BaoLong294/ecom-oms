@@ -15,6 +15,7 @@ import {
 import { updateCartBadge } from "./header-cart.js";
 import { formatToUSD, getEffectivePrice } from "./utils/price.js";
 import { HEART_FILLED } from "./ui/wishlist-icons.js";
+import { trapFocusOutside, releaseFocusTrap } from "./ui/focus-trap.js";
 
 // =========================================== DOM QUERIES ===========================================
 const emptyState = document.querySelector(".wishlist-empty");
@@ -92,9 +93,11 @@ function createWishlistItemCard(item) {
     <div class="item-info">
         <div class="item-title">
             <h2>${item.name}</h2>
-            <svg class="item-heart">
-                <use href="${HEART_FILLED}"></use>
-            </svg>
+            <button type="button" class="heart-button">
+              <svg class="item-heart">
+                  <use href="${HEART_FILLED}"></use>
+              </svg>
+            </button>
         </div>
 
         <p>Color: ${item.color}</p>
@@ -115,7 +118,7 @@ function createWishlistItemCard(item) {
  * @param {number} index - vị trí của sản phẩm trong mảng wishlist
  */
 function setupItemHeart(card, index) {
-  const heartIcon = card.querySelector(".item-heart");
+  const heartIcon = card.querySelector(".heart-button");
 
   heartIcon.addEventListener("click", () => {
     const wishlistAfterRemove = removeFromWishlist(index);
@@ -164,10 +167,12 @@ function displayAddToCartPopup() {
   subtotalPrice.textContent = `${formatToUSD(totalPrice)}`;
 
   popupOverlay.classList.remove("hidden");
+  trapFocusOutside(popupOverlay);
 }
 
 popupClose.addEventListener("click", () => {
   popupOverlay.classList.add("hidden");
+  releaseFocusTrap();
 });
 
 viewCart.addEventListener("click", () => {
@@ -176,4 +181,5 @@ viewCart.addEventListener("click", () => {
 
 continueShopping.addEventListener("click", () => {
   popupOverlay.classList.add("hidden");
+  releaseFocusTrap();
 });

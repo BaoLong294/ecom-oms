@@ -1,6 +1,9 @@
 // Module này hiển thị popup yêu cầu đăng nhập mỗi khi người dùng chưa đăng nhập
 // mà cố gắng thao tác với wishlist (bấm icon trái tim ở bất kỳ đâu trong app).
 
+// ============================================= IMPORT ================================================
+import { trapFocusOutside, releaseFocusTrap } from "./focus-trap.js";
+
 // ============================================== STATE ================================================
 // Tạo popup 1 lần duy nhất trong body, các lần gọi sau chỉ hiển thị lại, không tạo lại DOM.
 let popupElement = null;
@@ -48,6 +51,7 @@ function setupPopupButtons() {
 
   cancelButton.addEventListener("click", () => {
     popupElement.classList.add("hidden");
+    releaseFocusTrap();
   });
 }
 
@@ -60,4 +64,5 @@ function setupPopupButtons() {
 export function openLoginRequiredPopup() {
   getOrCreatePopup();
   popupElement.classList.remove("hidden");
+  trapFocusOutside(popupElement);
 }
