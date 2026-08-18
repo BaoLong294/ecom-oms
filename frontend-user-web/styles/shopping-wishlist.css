@@ -188,11 +188,17 @@
   font-size: 1.1rem;
 }
 
+.item-title .heart-button {
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+}
+
 .item-title .item-heart {
   width: 22px;
   height: 22px;
   color: #ff0000;
-  cursor: pointer;
   flex-shrink: 0;
   transition: opacity 0.15s;
 }

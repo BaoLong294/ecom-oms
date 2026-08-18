@@ -166,10 +166,16 @@
   border-radius: 50%;
 }
 
+.product-color-options .heart-button {
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+}
+
 .product-color-options svg {
   width: 24px;
   height: 24px;
-  cursor: pointer;
   transition: color 0.15s ease;
 }
 

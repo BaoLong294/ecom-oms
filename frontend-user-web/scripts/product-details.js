@@ -27,6 +27,7 @@ import {
 import { HEART_EMPTY, HEART_FILLED } from "./ui/wishlist-icons.js";
 import { isLoggedIn } from "./auth/auth.js";
 import { openLoginRequiredPopup } from "./ui/login-required-popup.js";
+import { trapFocusOutside, releaseFocusTrap } from "./ui/focus-trap.js";
 
 // =========================================== DOM QUERIES ===========================================
 const imagesContainer = document.querySelector(".product-images");
@@ -149,8 +150,12 @@ function renderInfo(product) {
         <h1>${product.name}</h1>
         ${
           isInWishlist(product.id, selectedColorName, selectedSizeDescription)
-            ? `<svg class="wishlist-heart is-active"><use href="${HEART_FILLED}"></use></svg>`
-            : `<svg class="wishlist-heart"><use href="${HEART_EMPTY}"></use></svg>`
+            ? `<button type="button" class="heart-button">
+               <svg class="wishlist-heart is-active"><use href="${HEART_FILLED}"></use></svg>
+             </button>`
+            : `<button type="button" class="heart-button">
+               <svg class="wishlist-heart"><use href="${HEART_EMPTY}"></use></svg>
+             </button>`
         }
     </div>
 
@@ -365,9 +370,10 @@ function syncWishlistHeart(product) {
  * @param {object} product - sản phẩm người dùng thêm vào hoặc bỏ đi với wishlist
  */
 function setupWishlistToggle(product) {
-  const heartIcons = infoContainer.querySelector(".wishlist-heart");
+  const heartButton = infoContainer.querySelector(".heart-button");
+  const heartIcons = heartButton.querySelector(".wishlist-heart");
 
-  heartIcons.addEventListener("click", () => {
+  heartButton.addEventListener("click", () => {
     if (!isLoggedIn()) {
       openLoginRequiredPopup();
       return;
@@ -428,10 +434,12 @@ function displayProductPopup() {
   subtotalPrice.textContent = `${formatToUSD(totalPrice)}`;
 
   popupOverlay.classList.remove("hidden");
+  trapFocusOutside(popupOverlay);
 }
 
 popupClose.addEventListener("click", () => {
   popupOverlay.classList.add("hidden");
+  releaseFocusTrap();
 });
 
 viewCart.addEventListener("click", () => {
@@ -440,4 +448,5 @@ viewCart.addEventListener("click", () => {
 
 continueShopping.addEventListener("click", () => {
   popupOverlay.classList.add("hidden");
+  releaseFocusTrap();
 });

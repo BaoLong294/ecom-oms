@@ -55,9 +55,11 @@ export function renderProductCard(product) {
         <div class="color-swatches-group">
             ${colorSwatchesHTML}
         </div>
-        <svg>
-            <use href="./assets/icons/landing-page-icons.svg#heart-icon"></use>
-        </svg>
+        <button type="button" class="heart-button">
+          <svg>
+              <use href="./assets/icons/landing-page-icons.svg#heart-icon"></use>
+          </svg>
+        </button>
     </div>
 
     <div class="product-details">
@@ -72,7 +74,7 @@ export function renderProductCard(product) {
 
   // Gắn sự kiện riêng cho icon tim, chặn nổi bọt lên card để tránh
   // vừa mở popup wishlist vừa bị điều hướng sang trang chi tiết sản phẩm.
-  const heartIcon = card.querySelector(".product-color-options svg");
+  const heartIcon = card.querySelector(".product-color-options .heart-button");
   heartIcon.addEventListener("click", (event) => {
     event.stopPropagation();
     if (isLoggedIn()) {

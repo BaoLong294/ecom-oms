@@ -9,6 +9,7 @@ import {
   isInWishlist,
 } from "../wishlist/wishlist.js";
 import { HEART_EMPTY, HEART_FILLED } from "./wishlist-icons.js";
+import { trapFocusOutside, releaseFocusTrap } from "./focus-trap.js";
 
 // ============================================== STATE ================================================
 // Ta sẽ tạo ra popup 1 lần duy nhất trong body HTML,
@@ -89,12 +90,12 @@ function renderWishlistPopup(product) {
     .map(
       (size) => `
     <div class="product-size">
-        <p>${size}</p>
-        ${
-          isInWishlist(product.id, product.color[0].name, size)
-            ? `<svg data-size="${size}" class="is-active"><use href="${HEART_FILLED}"></use></svg>`
-            : `<svg data-size="${size}"><use href="${HEART_EMPTY}"></use></svg>`
-        }
+      <p>${size}</p>
+      <button type="button" class="heart-button" data-size="${size}">
+        <svg class="${isInWishlist(product.id, product.color[0].name, size) ? "is-active" : ""}">
+          <use href="${isInWishlist(product.id, product.color[0].name, size) ? HEART_FILLED : HEART_EMPTY}"></use>
+        </svg>
+      </button>
     </div>
   `,
     )
@@ -117,6 +118,7 @@ export function openWishlistPopup(product) {
   getOrCreatePopup();
   renderWishlistPopup(product);
   popupElement.classList.remove("hidden");
+  trapFocusOutside(popupElement);
 }
 
 // ========================================= HELPER FUNCTIONS =========================================
@@ -130,8 +132,9 @@ function setupColorSwatches(product) {
   const colorButtons = popupElement.querySelectorAll(".color-button");
   const colorImage = popupElement.querySelector(".wishlist-popup-img");
   const colorLabel = popupElement.querySelector(".wishlist-popup-color-label");
-
-  const heartIcons = popupElement.querySelectorAll("svg[data-size]");
+  const heartButtons = popupElement.querySelectorAll(
+    ".heart-button[data-size]",
+  );
 
   colorButtons.forEach((button) => {
     button.addEventListener("click", () => {
@@ -141,10 +144,13 @@ function setupColorSwatches(product) {
         b.classList.remove("is-active");
       });
 
-      heartIcons.forEach((icon) => {
+      heartButtons.forEach((heartBtn) => {
+        const icon = heartBtn.querySelector("svg");
         const useTag = icon.querySelector("use");
 
-        if (isInWishlist(product.id, button.dataset.color, icon.dataset.size)) {
+        if (
+          isInWishlist(product.id, button.dataset.color, heartBtn.dataset.size)
+        ) {
           useTag.setAttribute("href", HEART_FILLED);
           icon.classList.add("is-active");
         } else {
@@ -169,10 +175,13 @@ function setupColorSwatches(product) {
  * @param {object} product - đối tượng sản phẩm để lấy các thuộc tính của sản phẩm
  */
 function setupSizeHearts(product) {
-  const heartIcons = popupElement.querySelectorAll("svg[data-size]");
+  const heartButtons = popupElement.querySelectorAll(
+    ".heart-button[data-size]",
+  );
 
-  heartIcons.forEach((icon) => {
-    icon.addEventListener("click", () => {
+  heartButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const icon = button.querySelector("svg");
       const isNowActive = icon.classList.toggle("is-active");
       const useTag = icon.querySelector("use");
 
@@ -192,7 +201,7 @@ function setupSizeHearts(product) {
           description: product.description,
           color: activeColorBtn?.dataset.color,
           image: activeColorBtn?.dataset.image,
-          size: icon.dataset.size,
+          size: button.dataset.size,
         };
 
         addToWishlist(newItem);
@@ -202,7 +211,7 @@ function setupSizeHearts(product) {
           (item) =>
             item.id === product.id &&
             item.color === activeColorBtn?.dataset.color &&
-            item.size === icon.dataset.size,
+            item.size === button.dataset.size,
         );
 
         removeFromWishlist(itemIndex);
@@ -222,10 +231,13 @@ function setupPopupClose() {
     ".wishlist-popup-close-button",
   );
 
-  closePopupX.addEventListener("click", () =>
-    popupElement.classList.add("hidden"),
-  );
-  closePopupButton.addEventListener("click", () =>
-    popupElement.classList.add("hidden"),
-  );
+  closePopupX.addEventListener("click", () => {
+    popupElement.classList.add("hidden");
+    releaseFocusTrap();
+  });
+
+  closePopupButton.addEventListener("click", () => {
+    popupElement.classList.add("hidden");
+    releaseFocusTrap();
+  });
 }

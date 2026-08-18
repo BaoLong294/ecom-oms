@@ -122,10 +122,16 @@
   font-weight: 600;
 }
 
+.wishlist-popup-sizes .heart-button {
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+}
+
 .wishlist-popup-sizes svg {
   width: 20px;
   height: 20px;
-  cursor: pointer;
   color: #1b1b1b;
 }
 
