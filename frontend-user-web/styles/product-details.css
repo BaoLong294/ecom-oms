@@ -94,7 +94,7 @@
 }
 
 /* ================================= MAIN LAYOUT ================================= */
-/* =========== Khung 2 cột - ảnh sản phẩm bên trái, thông tin bên phải ===========  */
+/* =========== Khung 2 cột - ảnh sản phẩm bên trái, thông tin bên phải ===========  */
 .main-content {
   width: 1160px;
   margin: 80px auto;
@@ -345,7 +345,7 @@
 .product-images .loading,
 .product-images .loading-error {
   /* Trước khi có rule này, đoạn text loading chỉ chiếm 1 nửa lưới (do
-     .product-images là grid 2 cột) — span cả 2 cột để nằm giữa trang. */
+     .product-images là grid 2 cột) — span cả 2 cột để nằm giữa trang. */
   grid-column: 1 / -1;
   display: flex;
   align-items: center;
@@ -430,17 +430,32 @@
   justify-content: center;
   align-items: center;
   z-index: 100;
+  visibility: visible;
+  opacity: 1;
+  transition:
+    opacity 0.3s ease,
+    visibility 0.3s ease;
 }
 
 .product-popup-overlay.hidden {
-  display: none;
+  visibility: hidden;
+  opacity: 0;
+  transition:
+    opacity 0.3s ease,
+    visibility 0.3s ease 0.3s;
 }
 
-.product-popup {
+.product-popup-overlay .product-popup {
   width: 750px;
   padding: 28px;
   background-color: rgb(255, 255, 255);
   position: relative;
+  transform: scale(1);
+  transition: transform 0.3s ease;
+}
+
+.product-popup-overlay.hidden .product-popup {
+  transform: scale(0.8);
 }
 
 .product-popup .popup-item {

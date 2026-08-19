@@ -117,8 +117,10 @@ function renderWishlistPopup(product) {
 export function openWishlistPopup(product) {
   getOrCreatePopup();
   renderWishlistPopup(product);
-  popupElement.classList.remove("hidden");
-  trapFocusOutside(popupElement);
+  requestAnimationFrame(() => {
+    popupElement.classList.remove("hidden");
+    trapFocusOutside(popupElement);
+  });
 }
 
 // ========================================= HELPER FUNCTIONS =========================================
