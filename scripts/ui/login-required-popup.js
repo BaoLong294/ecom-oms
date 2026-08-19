@@ -63,6 +63,8 @@ function setupPopupButtons() {
  */
 export function openLoginRequiredPopup() {
   getOrCreatePopup();
-  popupElement.classList.remove("hidden");
-  trapFocusOutside(popupElement);
+  requestAnimationFrame(() => {
+    popupElement.classList.remove("hidden");
+    trapFocusOutside(popupElement);
+  });
 }

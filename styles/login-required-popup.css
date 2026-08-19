@@ -1,14 +1,14 @@
 /* ==================================== RESET ==================================== */
 * {
   font-family:
-    "Inter",
-    system-ui,
-    -apple-system,
-    "Segoe UI",
-    Roboto,
-    "Open Sans",
-    "Helvetica Neue",
-    sans-serif;
+      "Inter",
+      system-ui,
+      -apple-system,
+      "Segoe UI",
+      Roboto,
+      "Open Sans",
+      "Helvetica Neue",
+      sans-serif;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -26,16 +26,31 @@
   justify-content: center;
   align-items: center;
   z-index: 200;
+  visibility: visible;
+  opacity: 1;
+  transition:
+    opacity 0.2s ease,
+    visibility 0.2s ease;
 }
 
 .login-required-popup-overlay.hidden {
-  display: none;
+  visibility: hidden;
+  opacity: 0;
+  transition:
+    opacity 0.2s ease,
+    visibility 0.2s ease 0.2s;
 }
 
-.login-required-popup {
+.login-required-popup-overlay .login-required-popup {
   width: 500px;
   padding: 20px;
   background-color: #ffffff;
+  transform: scale(1);
+  transition: transform 0.2s ease;
+}
+
+.login-required-popup-overlay.hidden .login-required-popup {
+  transform: scale(0.9);
 }
 
 .login-required-title {

@@ -266,17 +266,32 @@
   justify-content: center;
   align-items: center;
   z-index: 100;
+  visibility: visible;
+  opacity: 1;
+  transition:
+    opacity 0.3s ease,
+    visibility 0.3s ease;
 }
 
 .product-popup-overlay.hidden {
-  display: none;
+  visibility: hidden;
+  opacity: 0;
+  transition:
+    opacity 0.3s ease,
+    visibility 0.3s ease 0.3s;
 }
 
-.product-popup {
+.product-popup-overlay .product-popup {
   width: 750px;
   padding: 28px;
   background-color: rgb(255, 255, 255);
   position: relative;
+  transform: scale(1);
+  transition: transform 0.3s ease;
+}
+
+.product-popup-overlay.hidden .product-popup {
+  transform: scale(0.8);
 }
 
 .product-popup .popup-item {
