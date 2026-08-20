@@ -96,7 +96,8 @@
 /* ================================= MAIN LAYOUT ================================= */
 /* =========== Khung 2 cột - ảnh sản phẩm bên trái, thông tin bên phải ===========  */
 .main-content {
-  width: 1160px;
+  width: 100%;
+  max-width: 1160px;
   margin: 80px auto;
   display: grid;
   grid-template-columns: 2fr 1fr;
