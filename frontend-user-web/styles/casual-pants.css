@@ -316,3 +316,27 @@
   width: 24px;
   height: 24px;
 }
+
+/* ==================== MEDIA QUERY TO STYLE FOR MOBILE LAYOUT =================== */
+@media (max-width: 480px) {
+  .main-content h1 {
+    margin-left: 15px;
+  }
+
+  .all-products h2 {
+    margin-left: 15px;
+  }
+
+  .product .product-grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: 460px;
+    column-gap: 0;
+    row-gap: 50px;
+  }
+
+  .product-card .product-details,
+  .product-card .product-color-options {
+    max-width: 220px;
+    margin: 0 auto;
+  }
+}
