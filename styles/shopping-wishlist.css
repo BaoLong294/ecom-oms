@@ -75,7 +75,8 @@
 
 /* ================================= MAIN CONTENT ================================= */
 .main-content {
-  width: 1160px;
+  width: 100%;
+  max-width: 1160px;
   margin: 90px auto 0 auto;
 }
 
