@@ -586,3 +586,54 @@
   fill: #1b1b1b;
   color: #1b1b1b;
 }
+
+/* =================== MEDIA QUERY TO STYLE FOR MOBILE LAYOUT ==================== */
+
+@media (max-width: 480px) {
+  .main-content {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .main-content .product-info,
+  .main-content .product-description {
+    padding: 0 20px;
+  }
+
+  .main-content .product-page {
+    display: contents;
+  }
+
+  .main-content .product-images {
+    order: 1;
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    margin-bottom: 0;
+  }
+
+  .product-images img {
+    scroll-snap-align: center;
+    flex-shrink: 0;
+    width: 100%;
+  }
+
+  .main-content .product-info {
+    order: 2;
+    position: static;
+    margin-bottom: 10px;
+  }
+
+  .product-title h1 {
+    width: 100%;
+    padding-right: 50px;
+  }
+
+  .main-content .product-description {
+    order: 3;
+  }
+
+  .product-description .feature-grid {
+    grid-template-columns: 1fr;
+  }
+}
