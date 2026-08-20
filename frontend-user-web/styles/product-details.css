@@ -636,4 +636,24 @@
   .product-description .feature-grid {
     grid-template-columns: 1fr;
   }
+
+  .product-popup-overlay .product-popup {
+    width: 80%;
+    max-width: 750px;
+  }
+
+  .product-popup .popup-button {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .popup-button button {
+    flex: none;
+  }
+
+  .product-images .loading,
+  .product-images .loading-error {
+    width: 100%;
+  }
 }
