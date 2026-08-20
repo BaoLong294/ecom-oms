@@ -374,3 +374,22 @@
 .popup-button .continue-shopping:hover {
   opacity: 0.6;
 }
+
+/* =================== MEDIA QUERY TO STYLE FOR MOBILE LAYOUT ==================== */
+
+@media (max-width: 480px) {
+  .product-popup-overlay .product-popup {
+    width: 80%;
+    max-width: 750px;
+  }
+
+  .product-popup .popup-button {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .popup-button button {
+    flex: none;
+  }
+}
