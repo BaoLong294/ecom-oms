@@ -317,7 +317,7 @@
   height: 24px;
 }
 
-/* ==================== MEDIA QUERY TO STYLE FOR MOBILE LAYOUT =================== */
+/* =================== MEDIA QUERY TO STYLE FOR MOBILE LAYOUT ==================== */
 @media (max-width: 480px) {
   .main-content h1 {
     margin-left: 15px;

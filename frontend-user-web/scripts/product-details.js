@@ -240,6 +240,7 @@ function setupColorSelection(product) {
 
       colorLabel.textContent = `Color: ${btn.dataset.color}`;
       productImage.src = btn.dataset.image;
+      imagesContainer.scrollTo({ left: 0, behavior: "smooth" });
 
       syncWishlistHeart(product);
     });
