@@ -378,6 +378,37 @@
 /* =================== MEDIA QUERY TO STYLE FOR MOBILE LAYOUT ==================== */
 
 @media (max-width: 480px) {
+  .main-content {
+    padding: 0 20px;
+  }
+
+  .main-content .wishlist-filled {
+    grid-template-columns: 1fr;
+    gap: 50px;
+  }
+
+  .wishlist-filled .wishlist-summary {
+    position: static;
+    max-width: 160px;
+    padding: 15px;
+  }
+
+  .wishlist-items .item-card {
+    height: auto;
+  }
+
+  .item-card .item-image {
+    flex: 1;
+  }
+
+  .item-card .item-info {
+    flex: 2;
+  }
+
+  .item-image img {
+    width: 100%;
+  }
+
   .product-popup-overlay .product-popup {
     width: 80%;
     max-width: 750px;
