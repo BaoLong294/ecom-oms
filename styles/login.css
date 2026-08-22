@@ -261,3 +261,36 @@
 .create-account .create-button:hover {
   opacity: 0.7;
 }
+
+/* =================== MEDIA QUERY TO STYLE FOR MOBILE LAYOUT ==================== */
+
+@media (max-width: 480px) {
+  .main-content .login-create-wrapper {
+    border: none;
+    flex-direction: column;
+  }
+
+  .login-create-wrapper .login {
+    padding-right: 0;
+    padding-bottom: 20px;
+    border-right: none;
+    border-bottom: 1px solid rgb(218, 218, 218);
+  }
+
+  .login-create-wrapper .login,
+  .login-create-wrapper .create-account {
+    flex: none;
+  }
+
+  .create-account h1,
+  .create-account p {
+    display: none;
+  }
+
+  .login-form .submit-button,
+  .create-account .create-button {
+    padding: 15px;
+    width: 100%;
+    border-radius: 25px;
+  }
+}
