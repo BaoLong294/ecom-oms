@@ -41,6 +41,10 @@
   width: 90px;
 }
 
+.header-inner .uniqlo-icon a:focus-visible {
+  outline: 1px solid #0060df;
+}
+
 .header .menu ul {
   list-style-type: none;
   display: flex;
@@ -79,6 +83,10 @@
 
 .header .shopping-icon svg:hover {
   color: rgb(106, 106, 106);
+}
+
+.header .shopping-icon a:focus-visible {
+  outline: 1px solid #0060df;
 }
 
 .shopping-icon .cart-badge {
@@ -315,6 +323,13 @@
 .bottom-inner svg {
   width: 24px;
   height: 24px;
+}
+
+.bottom-inner .home-button:focus-visible,
+.bottom-inner .search-button:focus-visible,
+.bottom-inner .user-button:focus-visible {
+  outline: 2px solid #0060df;
+  outline-offset: 3px;
 }
 
 /* =================== MEDIA QUERY TO STYLE FOR MOBILE LAYOUT ==================== */
