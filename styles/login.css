@@ -35,9 +35,13 @@
   margin-right: auto;
 }
 
-.header .uniqlo-icon svg {
+.header-inner .uniqlo-icon svg {
   height: 35px;
   width: 90px;
+}
+
+.header-inner .uniqlo-icon a:focus-visible {
+  outline: 1px solid #0060df;
 }
 
 .main-content {
@@ -210,6 +214,11 @@
   border-color: #1b1b1b;
 }
 
+.checkbox-wrapper input:focus-visible + label::before {
+  outline: 1px solid #0060df;
+  outline-offset: 3px;
+}
+
 .checkbox-wrapper input:checked + label::after {
   content: "\2714";
   font-size: 0.7rem;
@@ -233,6 +242,11 @@
 
 .login-form .submit-button:hover {
   opacity: 0.7;
+}
+
+.login-form .submit-button:focus-visible {
+  outline: 1px solid #0060df;
+  outline-offset: 3px;
 }
 
 .login-create-wrapper .create-account {
@@ -260,6 +274,11 @@
 
 .create-account .create-button:hover {
   opacity: 0.7;
+}
+
+.create-account .create-button:focus-visible {
+  outline: 1px solid #0060df;
+  outline-offset: 3px;
 }
 
 /* =================== MEDIA QUERY TO STYLE FOR MOBILE LAYOUT ==================== */

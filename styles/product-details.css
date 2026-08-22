@@ -36,9 +36,13 @@
   margin-right: auto;
 }
 
-.header .uniqlo-icon svg {
+.header-inner .uniqlo-icon svg {
   height: 35px;
   width: 90px;
+}
+
+.header-inner .uniqlo-icon a:focus-visible {
+  outline: 1px solid #0060df;
 }
 
 .header .menu ul {
@@ -79,6 +83,10 @@
 
 .header .shopping-icon svg:hover {
   color: rgb(106, 106, 106);
+}
+
+.header .shopping-icon a:focus-visible {
+  outline: 1px solid #0060df;
 }
 
 .shopping-icon .cart-badge {
@@ -209,6 +217,11 @@
   outline-offset: 3px;
 }
 
+.product-colors .color-button:focus-visible {
+  outline: 1px solid #0060df;
+  outline-offset: 3px;
+}
+
 .product-colors .color-label {
   font-size: 0.8rem;
   color: #6a6a6a;
@@ -246,6 +259,11 @@
   color: white;
   background-color: rgb(27, 27, 27);
   outline: 2px solid black;
+  outline-offset: 3px;
+}
+
+.size-buttons .size:focus-visible {
+  outline: 1px solid #0060df;
   outline-offset: 3px;
 }
 
@@ -309,6 +327,10 @@
   color: #c5c5c5;
 }
 
+.product-quantity .quantity-button:focus-visible {
+  outline: 1px solid #0060df;
+}
+
 .product-quantity .minus-button {
   font-size: 2rem;
 }
@@ -340,6 +362,11 @@
 
 .product-info .product-add:hover {
   background-color: #363636;
+}
+
+.product-info .product-add:focus-visible {
+  outline: 1px solid #0060df;
+  outline-offset: 3px;
 }
 
 /* =========================== LOADING & ERROR STATES ============================ */
@@ -466,13 +493,19 @@
 
 .product-popup .popup-close {
   position: absolute;
-  top: 35px;
+  top: 25px;
   right: 28px;
   font-size: 2.5rem;
   line-height: 0;
   border: none;
   background-color: transparent;
   cursor: pointer;
+  padding: 10px 0px 15px;
+}
+
+.product-popup .popup-close:focus-visible {
+  outline: 1px solid #0060df;
+  outline-offset: 3px;
 }
 
 .product-popup .popup-subtotal {
@@ -521,6 +554,11 @@
   background-color: #363636;
 }
 
+.popup-button .view-cart:focus-visible {
+  outline: 1px solid #0060df;
+  outline-offset: 3px;
+}
+
 .popup-button .continue-shopping {
   height: 50px;
   background-color: #ffffff;
@@ -537,6 +575,11 @@
 
 .popup-button .continue-shopping:hover {
   opacity: 0.6;
+}
+
+.popup-button .continue-shopping:focus-visible {
+  outline: 1px solid #0060df;
+  outline-offset: 3px;
 }
 
 /* ================ BOTTOM NAVIGATION (mobile-style floating nav) ================ */
@@ -585,6 +628,13 @@
   height: 24px;
   fill: #1b1b1b;
   color: #1b1b1b;
+}
+
+.bottom-inner .home-button:focus-visible,
+.bottom-inner .search-button:focus-visible,
+.bottom-inner .user-button:focus-visible {
+  outline: 2px solid #0060df;
+  outline-offset: 3px;
 }
 
 /* =================== MEDIA QUERY TO STYLE FOR MOBILE LAYOUT ==================== */

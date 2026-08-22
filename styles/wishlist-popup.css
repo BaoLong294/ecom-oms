@@ -70,6 +70,12 @@
   border: none;
   background-color: transparent;
   cursor: pointer;
+  padding: 10px 0px 15px;
+}
+
+.wishlist-popup-close:focus-visible {
+  outline: 1px solid #0060df;
+  outline-offset: 3px;
 }
 
 .wishlist-popup-top-section {
@@ -105,12 +111,17 @@
 
 .wishlist-popup-color-swatches .color-button:hover {
   outline: 1px solid #6a6a6a;
-  outline-offset: 2px;
+  outline-offset: 3px;
 }
 
 .wishlist-popup-color-swatches .color-button.is-active {
   outline: 2px solid black;
-  outline-offset: 2px;
+  outline-offset: 3px;
+}
+
+.wishlist-popup-color-swatches .color-button:focus-visible {
+  outline: 1px solid #0060df;
+  outline-offset: 3px;
 }
 
 .wishlist-popup-sizes {
@@ -171,6 +182,11 @@
   font-size: 1rem;
   display: block;
   margin: 0 auto;
+}
+
+.wishlist-popup-close-button:focus-visible {
+  outline: 1px solid #0060df;
+  outline-offset: 3px;
 }
 
 /* =================== MEDIA QUERY TO STYLE FOR MOBILE LAYOUT ==================== */

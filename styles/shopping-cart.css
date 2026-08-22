@@ -35,9 +35,13 @@
   margin-right: auto;
 }
 
-.header .uniqlo-icon svg {
+.header-inner .uniqlo-icon svg {
   height: 35px;
   width: 90px;
+}
+
+.header-inner .uniqlo-icon a:focus-visible {
+  outline: 1px solid #0060df;
 }
 
 .user-icon a {
@@ -46,6 +50,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.user-icon a:focus-visible {
+  outline: 1px solid #0060df;
 }
 
 .user-icon svg {
@@ -83,6 +91,10 @@
   color: rgb(117, 117, 117);
 }
 
+.breadcrumbs a:focus-visible {
+  outline: 1px solid #0060df;
+}
+
 .main-content h1 {
   font-size: 2rem;
   margin-bottom: 85px;
@@ -93,11 +105,14 @@
   margin-bottom: 40px;
 }
 
-.cart-empty button {
+.cart-empty a {
   font-size: 1.1rem;
   font-weight: 700;
   color: #ffffff;
   background-color: #1b1b1b;
+  display: inline-block;
+  text-decoration: none;
+  text-align: center;
   padding: 10px 5px;
   width: 288px;
   line-height: 25px;
@@ -106,8 +121,13 @@
   transition: opacity 0.15s;
 }
 
-.cart-empty button:hover {
+.cart-empty a:hover {
   opacity: 0.7;
+}
+
+.cart-empty a:focus-visible {
+  outline: 1px solid #0060df;
+  outline-offset: 3px;
 }
 
 .main-content .cart-filled {
@@ -228,6 +248,10 @@
   background-color: transparent;
 }
 
+.quantity-button button:focus-visible {
+  outline: 1px solid #0060df;
+}
+
 .quantity-button button:hover {
   color: #c5c5c5;
 }
@@ -306,6 +330,11 @@
   opacity: 0.6;
 }
 
+.cart-summary .continue-button:focus-visible {
+  outline: 1px solid #0060df;
+  outline-offset: 3px;
+}
+
 /* =================== MEDIA QUERY TO STYLE FOR MOBILE LAYOUT ==================== */
 
 @media (max-width: 480px) {
@@ -348,19 +377,11 @@
     height: auto;
   }
 
-  .item-card .item-quantity {
-    margin-top: 0;
-  }
-
-  .item-quantity h2 {
-    display: none;
-  }
-
-  .item-subtotal {
-    margin-top: 15px;
-  }
-
   .item-subtotal p {
     position: static;
+  }
+
+  .item-card .item-quantity {
+    margin-top: 0;
   }
 }
