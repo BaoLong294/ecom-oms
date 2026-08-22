@@ -172,3 +172,27 @@
   display: block;
   margin: 0 auto;
 }
+
+/* =================== MEDIA QUERY TO STYLE FOR MOBILE LAYOUT ==================== */
+
+@media (max-width: 480px) {
+  .wishlist-popup-overlay {
+    align-items: flex-end;
+  }
+
+  .wishlist-popup-overlay .wishlist-popup {
+    width: 100%;
+    max-height: 65vh;
+    transform: translateY(0%);
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .wishlist-popup-overlay.hidden .wishlist-popup {
+    transform: translateY(100%);
+  }
+
+  .wishlist-popup-close-button {
+    padding: 14px;
+    width: 100%;
+  }
+}
