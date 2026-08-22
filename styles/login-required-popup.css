@@ -14,7 +14,7 @@
   box-sizing: border-box;
 }
 
-/* ========================= LOGIN REQUIRED POPUP ========================= */
+/* ============================ LOGIN REQUIRED POPUP ============================= */
 .login-required-popup-overlay {
   position: fixed;
   top: 0;
@@ -67,7 +67,7 @@
 
 .login-required-buttons {
   display: flex;
-  gap: 15px;
+  gap: 20px;
 }
 
 .login-required-buttons button {
@@ -99,4 +99,16 @@
 
 .login-required-cancel:hover {
   opacity: 0.7;
+}
+
+/* ======================= MEDIA QUERY TO STYLE FOR MOBILE ======================= */
+@media (max-width: 480px) {
+  .login-required-popup-overlay .login-required-popup {
+    width: 80%;
+    max-width: 750px;
+  }
+
+  .login-required-buttons {
+    flex-direction: column;
+  }
 }
