@@ -175,7 +175,6 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  position: relative;
 }
 
 .item-info .item-title {
@@ -382,6 +381,15 @@
     padding: 0 20px;
   }
 
+  .main-content h1 {
+    margin-bottom: 40px;
+  }
+
+  .wishlist-empty button {
+    max-width: 288px;
+    width: 100%;
+  }
+
   .main-content .wishlist-filled {
     grid-template-columns: 1fr;
     gap: 50px;
@@ -391,6 +399,7 @@
     position: static;
     max-width: 160px;
     padding: 15px;
+    overflow-wrap: break-word;
   }
 
   .wishlist-items .item-card {
@@ -407,6 +416,7 @@
 
   .item-image img {
     width: 100%;
+    height: auto;
   }
 
   .product-popup-overlay .product-popup {
