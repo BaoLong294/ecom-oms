@@ -22,7 +22,7 @@ export function renderProductCard(product) {
   const colorSwatches = product.color
     ?.map(
       (c) =>
-        `<img class="color-swatch-img" src="${c.swatch}" alt="Color Swatch"></img>`,
+        `<img class="color-swatch-img" src="${c.swatch}" alt="${c.name}"></img>`,
     )
     .join("");
   const colorSwatchesHTML = colorSwatches || "";

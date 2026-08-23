@@ -23,6 +23,33 @@
   z-index: 10;
 }
 
+.header .skip-link {
+  background-color: rgba(27, 27, 27, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  text-decoration: none;
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  transition: opacity 0.15s ease;
+}
+
+.header .skip-link:focus {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.skip-link span {
+  font-size: 0.9rem;
+  color: #1b1b1b;
+  background-color: #ffffff;
+  padding: 3px 8px;
+  border-radius: 10px;
+}
+
 .header-inner {
   max-width: 1170px;
   margin: 0 auto;
