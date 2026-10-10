@@ -50,12 +50,16 @@ export function addToCart(item) {
  * Nên ta cần xóa bỏ sản phẩm đó khỏi giỏ hàng hiện tại và cập nhật lại giỏ hàng mới
  * Người dùng sẽ ấn "X" để xóa sản phẩm vậy nên ta sẽ nhận được index của sản phẩm đó
  * @param {number} index - chỉ mục của sản phẩm trong mảng giỏ hàng ví dụ 1 hay 2 hay 3...
- * @returns {array} mảng giỏ hàng đã xóa bỏ sản phẩm tại chỉ mục được cung cấp
+ * @returns {array} mảng giỏ hàng đã xóa bỏ sản phẩm tại chỉ mục được cung cấp hoặc mảng hiện tại nếu index không hợp lệ
  */
 export function removeFromCart(index) {
   const currentCart = getCart();
-  currentCart.splice(index, 1);
 
+  if (!Number.isInteger(index) || index < 0 || index >= currentCart.length) {
+    return currentCart;
+  }
+
+  currentCart.splice(index, 1);
   return saveCart(currentCart);
 }
 
@@ -65,12 +69,16 @@ export function removeFromCart(index) {
  * Mà hoàn toàn có thể tăng hoặc giảm số lượng sản phẩm bằng "+" hoặc "-" ngay tại giỏ hàng
  * @param {number} index - chỉ mục của sản phẩm trong mảng giỏ hàng
  * @param {number} quantity - số lượng mới của sản phẩm sau khi tăng/giảm
- * @returns {array} mảng giỏ hàng mới đã được cập nhật số lượng sản phẩm
+ * @returns {array} mảng giỏ hàng mới đã được cập nhật số lượng sản phẩm hoặc mảng giỏ hàng hiện tại nếu index không hợp lệ
  */
 export function updateQuantity(index, quantity) {
   const currentCart = getCart();
-  currentCart[index].quantity = quantity;
 
+  if (!Number.isInteger(index) || index < 0 || index >= currentCart.length) {
+    return currentCart;
+  }
+
+  currentCart[index].quantity = quantity;
   return saveCart(currentCart);
 }
 
