@@ -70,7 +70,7 @@ export function renderProductCard(product) {
             <p class="product-size">${sizeHTML}</p>
         </div>
         <p class="product-name">${product.name}</p>
-        <p class="product-price">${priceHTML}</p>
+        <div class="product-price">${priceHTML}</div>
     </div>
   `;
 
