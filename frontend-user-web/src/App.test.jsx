@@ -5,7 +5,7 @@ import App from './App';
 describe('App', () => {
   it('should display correct heading', () => {
     render(<App />);
-    const heading = screen.getByRole('heading', { name: 'Get started' });
+    const heading = screen.getByRole('heading', { name: 'Hello World!' });
 
     expect(heading).toBeInTheDocument();
   });

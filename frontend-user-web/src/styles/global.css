@@ -1,0 +1,37 @@
+:root {
+  /* Các mã màu */
+  --color-dark: #1b1b1b;
+  --color-white: #ffffff;
+  --color-red: #ff0000;
+  --color-gray: #6a6a6a;
+  --color-gray-light: #e0e0e0;
+  --color-focus: #0060df;
+
+  /* Các font chữ */
+  --font-sans:
+    'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Open Sans',
+    'Helvetica Neue', sans-serif;
+
+  /* Các kiểu còn lại */
+  --content-max-width: 1170px;
+}
+
+/* CSS reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: var(--font-sans);
+}
+
+/* Nội dung cho screen reader đọc, nhưng không hiển thị trên giao diện. */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  white-space: nowrap;
+  border: 0;
+}
