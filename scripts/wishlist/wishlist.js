@@ -58,11 +58,19 @@ export function addToWishlist(item) {
  * Nguời dùng bỏ tim sản phẩm ta sẽ xóa sản phẩm khỏi mảng wishlist
  * Sau khi xóa sẽ cập nhật wishlist mới không còn sản phẩm đó nữa
  * @param {number} index - chỉ mục của phần tử trong mảng để biết phần tử nào cần xóa
- * @returns {array} mảng wishlist mới đã xóa sản phẩm
+ * @returns {array} mảng wishlist mới đã xóa sản phẩm hoặc mảng được giữ nguyên nếu index không hợp lệ
  */
 export function removeFromWishlist(index) {
   const currentWishlist = getWishlist();
-  currentWishlist.splice(index, 1);
 
+  if (
+    !Number.isInteger(index) ||
+    index < 0 ||
+    index >= currentWishlist.length
+  ) {
+    return currentWishlist;
+  }
+
+  currentWishlist.splice(index, 1);
   return saveWishlist(currentWishlist);
 }
