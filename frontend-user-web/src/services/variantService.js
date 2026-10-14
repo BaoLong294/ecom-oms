@@ -1,5 +1,6 @@
 import products from '../data/products.js';
 import variants from '../data/variants.js';
+import { simulateRequest } from './mockApi.js';
 
 /**
  * Lấy thông tin hiển thị của các variant theo danh sách id, dùng cho trang Cart
@@ -23,8 +24,8 @@ import variants from '../data/variants.js';
  * }>>} Mảng thông tin variant; mảng rỗng nếu variantIds rỗng
  *   hoặc không id nào tồn tại.
  */
-export async function getVariantsByIds(variantIds) {
-  return variantIds.flatMap((id) => {
+export function getVariantsByIds(variantIds) {
+  const result = variantIds.flatMap((id) => {
     const variant = variants.find((v) => v.id === id);
 
     if (!variant) return [];
@@ -42,4 +43,6 @@ export async function getVariantsByIds(variantIds) {
       colorImage: color.image,
     };
   });
+
+  return simulateRequest(result);
 }

@@ -1,15 +1,19 @@
-import landingBanners from '../data/landingBanners';
+import landingBanners from '../data/landingBanners.js';
+import { simulateRequest } from './mockApi.js';
 
 /**
- * Lấy các banner landing của 1 category gốc, sắp xếp theo thứ tự position tăng dần.
- * Tương ứng với việc request API bằng /api/landing-banners?categoryId=:categoryId
- * @param {number} categoryId - id của category gốc như Women, Men, Kids và Baby
- * Tham số này phải là kiểu Number, nếu lấy giá trị từ URL phải chuyển từ string sang number
- * @returns {Promise<object[]>} mảng banner đã sắp xếp theo position tăng dần hoặc
- * mảng rỗng nếu tham số category không có banner.
+ * Lấy các banner landing của một category gốc, sắp theo position tăng dần.
+ * Tương ứng với API: GET /api/landing-banners?categoryId=:categoryId
+ *
+ * @param {number} categoryId - id của category gốc (Women, Men, Kids, Baby).
+ *   Phải là số; giá trị lấy từ URL là chuỗi, nơi gọi phải chuyển sang số trước.
+ * @returns {Promise<object[]>} Mảng banner đã sắp theo position,
+ *   mảng rỗng nếu category không có banner.
  */
-export async function getLandingBanners(categoryId) {
-  return landingBanners
+export function getLandingBanners(categoryId) {
+  const result = landingBanners
     .filter((banner) => banner.categoryId === categoryId)
     .sort((a, b) => a.position - b.position);
+
+  return simulateRequest(result);
 }

@@ -1,6 +1,7 @@
 import categories from '../data/categories.js';
 import categoryBanners from '../data/categoryBanners.js';
 import products from '../data/products.js';
+import { simulateRequest } from './mockApi.js';
 
 /**
  * Lấy dữ liệu cho trang danh sách của một category: thông tin category
@@ -17,10 +18,10 @@ import products from '../data/products.js';
  * } | null>} Object category kèm mảng groups; groups là mảng rỗng nếu category
  *   không có con. Trả null nếu category không tồn tại.
  */
-export async function getCategoryListing(categoryId) {
+export function getCategoryListing(categoryId) {
   const category = categories.find((category) => category.id === categoryId);
 
-  if (!category) return null;
+  if (!category) return simulateRequest(null);
 
   const childrenCategories = categories
     .filter((category) => category.parentId === categoryId)
@@ -39,5 +40,5 @@ export async function getCategoryListing(categoryId) {
     };
   });
 
-  return { id: category.id, name: category.name, groups };
+  return simulateRequest({ id: category.id, name: category.name, groups });
 }
