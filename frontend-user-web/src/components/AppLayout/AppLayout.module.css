@@ -1,26 +1,4 @@
-.skipLink {
-  background-color: rgba(27, 27, 27, 0.85);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  opacity: 0;
-  text-decoration: none;
-  pointer-events: none;
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  transition: opacity 0.15s ease;
-}
-
-.skipLink:focus {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.skipLink span {
-  font-size: 0.9rem;
-  color: #1b1b1b;
-  background-color: #ffffff;
-  padding: 3px 8px;
-  border-radius: 10px;
+.belowFixedHeader {
+  /* padding top được tính từ chiều cao header */
+  padding-top: 70px;
 }

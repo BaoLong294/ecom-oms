@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
+import userEvent from '@testing-library/user-event';
 import { routes } from './routes.jsx';
 
 function renderWithRouter(url) {
@@ -74,5 +75,134 @@ describe('routes', () => {
     expect(skipLink).toHaveAttribute('href', '#main-content');
     expect(mainContent).toHaveAttribute('id', 'main-content');
     expect(mainContent).toHaveAttribute('tabindex', '-1');
+  });
+});
+
+describe('Header', () => {
+  it('shows the Categories menu on the landing page', () => {
+    renderWithRouter('/');
+
+    expect(
+      screen.getByRole('navigation', { name: 'Categories' })
+    ).toBeInTheDocument();
+  });
+
+  it('hides the Categories menu on the category page', () => {
+    renderWithRouter('/categories/5');
+
+    expect(
+      screen.queryByRole('navigation', { name: 'Categories' })
+    ).not.toBeInTheDocument();
+  });
+
+  it('hides the Categories menu on the cart page', () => {
+    renderWithRouter('/cart');
+
+    expect(
+      screen.queryByRole('navigation', { name: 'Categories' })
+    ).not.toBeInTheDocument();
+  });
+
+  it('shows logo, Account, Wishlist and Cart links on the login page', () => {
+    renderWithRouter('/login');
+    const links = ['UNIQLO home', 'Account', 'Wishlist', 'Cart'];
+
+    links.forEach((link) => {
+      expect(screen.getByRole('link', { name: link })).toBeInTheDocument();
+    });
+  });
+
+  it('navigates to the landing page when the logo is clicked', async () => {
+    const user = userEvent.setup();
+    renderWithRouter('/categories/5');
+    const logoLink = screen.getByRole('link', { name: 'UNIQLO home' });
+    await user.click(logoLink);
+
+    expect(screen.getByRole('heading', { name: 'Home' })).toBeInTheDocument();
+  });
+
+  it('navigates to the login page when Account is clicked', async () => {
+    const user = userEvent.setup();
+    renderWithRouter('/categories/5');
+    const header = screen.getByRole('banner');
+    const accountLink = within(header).getByRole('link', { name: 'Account' });
+    await user.click(accountLink);
+
+    expect(screen.getByRole('heading', { name: 'Login' })).toBeInTheDocument();
+  });
+
+  it('navigates to the wishlist page when Wishlist is clicked', async () => {
+    const user = userEvent.setup();
+    renderWithRouter('/categories/5');
+    const wishlistLink = screen.getByRole('link', { name: 'Wishlist' });
+    await user.click(wishlistLink);
+
+    expect(
+      screen.getByRole('heading', { name: 'Wishlist' })
+    ).toBeInTheDocument();
+  });
+
+  it('navigates to the cart page when Cart is clicked', async () => {
+    const user = userEvent.setup();
+    renderWithRouter('/categories/5');
+    const cartLink = screen.getByRole('link', { name: 'Cart' });
+    await user.click(cartLink);
+
+    expect(screen.getByRole('heading', { name: 'Cart' })).toBeInTheDocument();
+  });
+});
+
+describe('BottomNav', () => {
+  it('shows the Shortcuts nav on the landing page', () => {
+    renderWithRouter('/');
+
+    expect(
+      screen.getByRole('navigation', { name: 'Shortcuts' })
+    ).toBeInTheDocument();
+  });
+
+  it('shows the Shortcuts nav on the product page', () => {
+    renderWithRouter('/products/1');
+
+    expect(
+      screen.getByRole('navigation', { name: 'Shortcuts' })
+    ).toBeInTheDocument();
+  });
+
+  it('hides the Shortcuts nav on the cart page', () => {
+    renderWithRouter('/cart');
+
+    expect(
+      screen.queryByRole('navigation', { name: 'Shortcuts' })
+    ).not.toBeInTheDocument();
+  });
+
+  it('hides the Shortcuts nav on the not found page', () => {
+    renderWithRouter('/does-not-exist');
+
+    expect(
+      screen.queryByRole('navigation', { name: 'Shortcuts' })
+    ).not.toBeInTheDocument();
+  });
+
+  it('navigates to the landing page when Home is clicked', async () => {
+    const user = userEvent.setup();
+    renderWithRouter('/products/1');
+    const homeLink = screen.getByRole('link', { name: 'Home' });
+    await user.click(homeLink);
+
+    expect(screen.getByRole('heading', { name: 'Home' })).toBeInTheDocument();
+  });
+
+  it('navigates to the login page when Account is clicked', async () => {
+    const user = userEvent.setup();
+    renderWithRouter('/products/1');
+    const bottomNav = screen.getByRole('navigation', { name: 'Shortcuts' });
+    const accountLink = within(bottomNav).getByRole('link', {
+      name: 'Account',
+    });
+    await user.click(accountLink);
+
+    expect(screen.getByRole('heading', { name: 'Login' })).toBeInTheDocument();
   });
 });

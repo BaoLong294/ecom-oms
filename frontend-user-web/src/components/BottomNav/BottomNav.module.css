@@ -1,0 +1,43 @@
+.bottomNav {
+  position: fixed;
+  bottom: 30px;
+  z-index: 10;
+  width: 100%;
+  display: flex;
+  pointer-events: none;
+}
+
+.bottomInner {
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: min(13vw, 155px);
+}
+
+.bottomInner a,
+.bottomInner button {
+  width: 48px;
+  height: 48px;
+  background-color: var(--color-white);
+  padding: 0;
+  border-radius: 50%;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-dark);
+  pointer-events: auto;
+}
+
+.bottomInner button {
+  width: 64px;
+  height: 64px;
+  border: none;
+  cursor: pointer;
+}
+
+.bottomInner a:focus-visible,
+.bottomInner button:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 3px;
+}
