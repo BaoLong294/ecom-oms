@@ -95,7 +95,7 @@ describe('getVariantsByIds', () => {
   });
 
   it('should not modify the original data', async () => {
-    const result = await getVariantsByIds([1]);
+    await getVariantsByIds([1]);
 
     expect(variants[0]).not.toHaveProperty('productName');
   });
