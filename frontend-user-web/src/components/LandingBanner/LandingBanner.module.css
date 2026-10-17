@@ -1,0 +1,116 @@
+.link {
+  position: relative;
+  display: block;
+  text-decoration: none;
+}
+
+.link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 2px solid transparent;
+  pointer-events: none;
+}
+
+.link:focus-visible::after {
+  border-color: var(--color-focus);
+}
+
+.banner {
+  width: 100%;
+  height: 100vh;
+  position: relative;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  display: block;
+  min-height: fit-content;
+  object-fit: cover;
+  object-position: center;
+}
+
+.info {
+  position: absolute;
+  top: 52%;
+  left: 8vw;
+  max-width: 480px;
+}
+
+.title {
+  color: var(--color-white);
+  font-size: 1.7rem;
+  margin-bottom: 1rem;
+  text-shadow: rgba(0, 0, 0, 0.7) 0px 1px 2px;
+}
+
+.subtitle {
+  color: var(--color-white);
+  font-size: 1.2rem;
+  font-weight: 500;
+  letter-spacing: 0.001rem;
+  margin-bottom: 1rem;
+  text-shadow: rgba(0, 0, 0, 0.7) 0px 1px 2px;
+}
+
+.description {
+  color: var(--color-white);
+  font-size: 1.2rem;
+  font-weight: 500;
+  line-height: 1.6rem;
+  letter-spacing: 0.001rem;
+  margin-bottom: 1rem;
+  text-shadow: rgba(0, 0, 0, 0.7) 0px 1px 2px;
+}
+
+.regularPrice {
+  color: var(--color-white);
+  font-size: 2.3rem;
+  font-weight: 500;
+  text-shadow: rgba(0, 0, 0, 0.5) 0px 1px 1px;
+}
+
+.originalPrice {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--color-white);
+  text-shadow: rgba(0, 0, 0, 0.5) 0px 1px 1px;
+  text-decoration-line: line-through;
+}
+
+.discountPrice {
+  color: var(--color-red);
+  font-size: 2.3rem;
+  font-weight: 500;
+  text-shadow: rgba(0, 0, 0, 0.5) 0px 1px 1px;
+}
+
+.discountInfo {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--color-red);
+  text-shadow: rgba(0, 0, 0, 0.5) 0px 1px 1px;
+}
+
+/* =================== MEDIA QUERY TO STYLE FOR MOBILE LAYOUT ==================== */
+
+@media (max-width: 480px) {
+  .info {
+    top: 50%;
+    max-width: 340px;
+  }
+
+  .title {
+    font-size: 1.5rem;
+    font-weight: 400;
+  }
+
+  .subtitle {
+    font-size: 1.1rem;
+  }
+
+  .description {
+    font-size: 1.1rem;
+  }
+}

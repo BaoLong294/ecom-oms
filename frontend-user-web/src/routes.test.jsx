@@ -13,7 +13,7 @@ describe('routes', () => {
   it('should render the home page at /', () => {
     renderWithRouter('/');
 
-    expect(screen.getByRole('heading', { name: 'Home' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'UNIQLO' })).toBeInTheDocument();
   });
 
   it('should render the category page at /categories/5', () => {
@@ -118,7 +118,7 @@ describe('Header', () => {
     const logoLink = screen.getByRole('link', { name: 'UNIQLO home' });
     await user.click(logoLink);
 
-    expect(screen.getByRole('heading', { name: 'Home' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'UNIQLO' })).toBeInTheDocument();
   });
 
   it('navigates to the login page when Account is clicked', async () => {
@@ -191,7 +191,7 @@ describe('BottomNav', () => {
     const homeLink = screen.getByRole('link', { name: 'Home' });
     await user.click(homeLink);
 
-    expect(screen.getByRole('heading', { name: 'Home' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'UNIQLO' })).toBeInTheDocument();
   });
 
   it('navigates to the login page when Account is clicked', async () => {
