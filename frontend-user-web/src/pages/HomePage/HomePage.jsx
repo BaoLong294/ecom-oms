@@ -1,14 +1,14 @@
-import styles from './HomePage.module.css';
 import { useState, useEffect } from 'react';
 import { getLandingBanners } from '../../services/bannerService';
 import LandingBanner from '../../components/LandingBanner/LandingBanner';
+import StatusMessage from '../../components/StatusMessage/StatusMessage';
 
 const WOMEN_CATEGORY_ID = 1;
 
 /**
- * Trang chủ: lấy banner landing của category Women từ service và hiển thị toàn màn hình.
- * Trong lúc chờ dữ liệu hiện thông báo loading, gặp lỗi thì hiện thông báo lỗi.
- * Tiêu đề trang (ẩn, dành cho screen reader) luôn được render ở mọi trạng thái.
+ * - Trang chủ: lấy banner landing của category Women từ service và hiển thị toàn màn hình.
+ * - Trong lúc chờ dữ liệu hiện thông báo loading, gặp lỗi thì hiện thông báo lỗi.
+ * - Tiêu đề trang (ẩn, dành cho screen reader) luôn được render ở mọi trạng thái.
  */
 function HomePage() {
   const [banners, setBanners] = useState([]);
@@ -38,13 +38,9 @@ function HomePage() {
 
   let content;
   if (isLoading) {
-    content = (
-      <p className={styles.loadingText}>
-        <span className={styles.loadingIcon}></span>Loading...
-      </p>
-    );
+    content = <StatusMessage variant="loading" />;
   } else if (errorMessage) {
-    content = <p className={styles.errorMessage}>{errorMessage}</p>;
+    content = <StatusMessage variant="error" message={errorMessage} />;
   } else {
     content = banners.map((banner) => (
       <LandingBanner key={banner.id} banner={banner} />
@@ -53,7 +49,7 @@ function HomePage() {
 
   return (
     <>
-      <h1 className={styles.visuallyHidden}>UNIQLO</h1>
+      <h1 className="visually-hidden">UNIQLO</h1>
       {content}
     </>
   );
