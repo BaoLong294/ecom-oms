@@ -1,9 +1,9 @@
 import styles from './CategoryPage.module.css';
-import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { getCategoryListing } from '../../services/categoryService';
 import ProductCard from '../../components/ProductCard/ProductCard';
 import StatusMessage from '../../components/StatusMessage/StatusMessage';
+import { useFetch } from '../../hooks/useFetch';
 
 /**
  * Trang danh sách sản phẩm của một category: lấy id từ URL (/categories/:id),
@@ -11,37 +11,18 @@ import StatusMessage from '../../components/StatusMessage/StatusMessage';
  * banner đầu tiên và lưới ProductCard.
  * Mỗi nhóm là một <section> đặt tên bằng aria-labelledby theo <h2> của nhóm.
  * Tiêu đề <h1> luôn được render:
- * - Đang tải hoặc lỗi: "Category" (ẩn, chỉ dành cho screen reader), kèm StatusMessage.
- * - Category không tồn tại (service trả null): "Category not found".
- * - Có dữ liệu: tên category.
+ * Đang tải hoặc lỗi: "Category" (ẩn, chỉ dành cho screen reader), kèm StatusMessage.
+ * Category không tồn tại (service trả null): "Category not found".
+ * Có dữ liệu: tên category.
  */
 function CategoryPage() {
   const { id } = useParams();
 
-  const [listing, setListing] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [errorMessage, setErrorMessage] = useState(null);
-
-  useEffect(() => {
-    let ignore = false;
-
-    async function loadListing() {
-      try {
-        const result = await getCategoryListing(Number(id));
-        if (!ignore) setListing(result);
-      } catch (err) {
-        if (!ignore) setErrorMessage(err.message);
-      } finally {
-        if (!ignore) setIsLoading(false);
-      }
-    }
-
-    loadListing();
-
-    return () => {
-      ignore = true;
-    };
-  }, [id]);
+  const {
+    data: listing,
+    isLoading,
+    errorMessage,
+  } = useFetch(getCategoryListing, Number(id));
 
   let content = null;
   let headingText = 'Category';
