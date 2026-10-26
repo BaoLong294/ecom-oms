@@ -101,7 +101,7 @@ function LoginPage() {
     <div className={styles.page}>
       <div className={styles.login}>
         <div className={styles.header}>
-          <h1>LOGIN</h1>
+          <h1 className={styles.loginTitle}>LOGIN</h1>
           <p className={styles.required}>* Required</p>
         </div>
 
@@ -116,7 +116,7 @@ function LoginPage() {
                 {emailError.message}
               </p>
             )}
-            <label htmlFor="login-email">
+            <label htmlFor="login-email" className={styles.label}>
               EMAIL ADDRESS <span className={styles.symbol}>*</span>
             </label>
             <input
@@ -125,6 +125,7 @@ function LoginPage() {
               name="email"
               value={email}
               placeholder="Enter a valid email"
+              className={styles.input}
               aria-invalid={emailError.isInvalid}
               aria-describedby={emailDescribedBy}
               onChange={(event) => setEmail(event.target.value)}
@@ -139,7 +140,7 @@ function LoginPage() {
                 {passwordError.message}
               </p>
             )}
-            <label htmlFor="login-password">
+            <label htmlFor="login-password" className={styles.label}>
               PASSWORD <span className={styles.symbol}>*</span>
             </label>
             <input
@@ -147,6 +148,7 @@ function LoginPage() {
               type={showPassword ? 'text' : 'password'}
               name="password"
               value={password}
+              className={styles.input}
               aria-invalid={passwordError.isInvalid}
               aria-describedby={passwordDescribedBy}
               onChange={(event) => setPassword(event.target.value)}
@@ -162,10 +164,11 @@ function LoginPage() {
             <input
               id="show-password"
               type="checkbox"
+              className={styles.checkboxInput}
               checked={showPassword}
               onChange={(event) => setShowPassword(event.target.checked)}
             />
-            <label htmlFor="show-password" className={styles.checkbox}>
+            <label htmlFor="show-password" className={styles.checkboxLabel}>
               Show my password
             </label>
           </div>
@@ -177,7 +180,7 @@ function LoginPage() {
       </div>
 
       <div className={styles.createAccount}>
-        <h2>CREATE AN ACCOUNT</h2>
+        <h2 className={styles.createTitle}>CREATE AN ACCOUNT</h2>
         <p className={styles.createDescription}>
           If you create an account, you can get personalized services like
           checking purchase history and getting discount coupons with your

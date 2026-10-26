@@ -1,0 +1,535 @@
+/* =============================== PAGE - LAYOUT ================================= */
+
+.page {
+  width: 100%;
+  max-width: var(--content-max-width);
+  padding: 28px 20px;
+  border: 1px solid var(--color-gray-light);
+  margin: 40px auto 80px;
+  display: flex;
+  gap: 20px;
+}
+
+.login {
+  flex: 1;
+  padding-right: 20px;
+  border-right: 1px solid var(--color-gray-light);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.createAccount {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* =============================== LOGIN - BEGIN ================================= */
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.loginTitle {
+  font-size: 2.2rem;
+}
+
+.required {
+  font-size: 0.9rem;
+  color: var(--color-teal);
+}
+
+.loginDescription,
+.createDescription {
+  font-size: 1rem;
+}
+
+/* ============================ LOGIN - INPUT FIELDS ============================= */
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.label {
+  display: block;
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.group:focus-within .label {
+  color: var(--color-teal);
+}
+
+.symbol {
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: var(--color-teal);
+}
+
+.input {
+  width: 100%;
+  padding: 12px 15px;
+  font-size: 0.8rem;
+  color: var(--color-dark);
+  background-color: rgb(247, 247, 247);
+  border: none;
+  outline: none;
+  border-bottom: 1px solid rgb(171, 171, 171);
+}
+
+.input:focus {
+  background-color: var(--color-white);
+  outline: 2px solid #cde1e4;
+  outline-offset: 3px;
+  border-bottom: 2px solid var(--color-teal);
+  border-radius: 1px;
+}
+
+.hint {
+  color: var(--color-gray);
+  font-size: 0.9rem;
+  margin-top: 10px;
+}
+
+/* ============================ LOGIN - ERROR STATE ============================== */
+
+.group:has(.input[aria-invalid='true']) .label,
+.group:has(.input[aria-invalid='true']) .symbol {
+  color: var(--color-red);
+}
+
+.input[aria-invalid='true'] {
+  border-bottom: 2px solid var(--color-red);
+}
+
+.input[aria-invalid='true']:focus {
+  outline: 2px solid #ebcccc;
+  border-bottom: 2px solid var(--color-red);
+}
+
+.errorMessage {
+  font-size: 1rem;
+  position: relative;
+  width: 100%;
+  padding: 16px 50px;
+  margin-bottom: 10px;
+  border: 1px solid var(--color-red);
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px 0px;
+}
+
+.errorMessage::before {
+  content: '';
+  position: absolute;
+  background-color: var(--color-white);
+  width: 14px;
+  height: 14px;
+  border-right: 1px solid var(--color-red);
+  border-bottom: 1px solid var(--color-red);
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px 0px;
+  left: 3px;
+  bottom: -9px;
+  transform: rotate(45deg);
+}
+
+/* ============================== LOGIN — CHECKBOX =============================== */
+
+.checkboxWrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.checkboxInput {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.checkboxLabel {
+  font-size: 1rem;
+  font-weight: 400;
+  padding-left: 20px;
+  position: relative;
+  cursor: pointer;
+}
+
+.checkboxLabel::before {
+  content: '';
+  height: 18px;
+  width: 18px;
+  border: 2px solid #ababab;
+  position: absolute;
+  left: -10px;
+}
+
+.checkboxInput:checked + .checkboxLabel::before {
+  background-color: var(--color-dark);
+  border-color: var(--color-dark);
+}
+
+.checkboxInput:checked + .checkboxLabel::after {
+  content: '\2714';
+  font-size: 0.7rem;
+  color: var(--color-white);
+  position: absolute;
+  left: -3px;
+  top: 3px;
+}
+
+.checkboxInput:focus-visible + .checkboxLabel::before {
+  outline: 1px solid var(--color-focus);
+  outline-offset: 3px;
+}
+
+/* ============================== CREATE - BUTTONS =============================== */
+
+.createTitle {
+  font-size: 2.2rem;
+}
+
+/* =============================== PAGE - BUTTONS ================================ */
+
+/* Tạm thời dùng style này vì nút CREATE ACCOUNT đang disabled, khi nút đã hoạt động ở giai đoạn sau 
+hãy thêm cursor pointer, transition vào cho cả 2 nút, và thêm các selector cho createButton giống như 
+loginButton (.createButton:hover và .createButton:focus-visible vì 2 nút này giống y hệt nhau. */
+.loginButton,
+.createButton {
+  font-size: 1.1rem;
+  font-weight: 700;
+  width: 300px;
+  padding: 10px 5px;
+  color: var(--color-white);
+  background-color: var(--color-dark);
+  border: none;
+}
+
+.loginButton {
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.loginButton:hover {
+  opacity: 0.7;
+}
+
+.loginButton:focus-visible {
+  outline: 1px solid var(--color-focus);
+  outline-offset: 3px;
+}
+
+/* =================== MEDIA QUERY TO STYLE FOR MOBILE LAYOUT ==================== */
+
+@media (max-width: 480px) {
+  .page {
+    border: none;
+    flex-direction: column;
+  }
+
+  .login {
+    padding-right: 0;
+    padding-bottom: 20px;
+    border-right: none;
+    border-bottom: 1px solid var(--color-gray-light);
+  }
+
+  .login,
+  .createAccount {
+    flex: none;
+  }
+
+  .createTitle {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .createDescription {
+    display: none;
+  }
+
+  .loginButton,
+  .createButton {
+    padding: 15px;
+    width: 100%;
+    border-radius: 25px;
+  }
+} /* =============================== PAGE - LAYOUT ================================= */
+
+.page {
+  width: 100%;
+  max-width: var(--content-max-width);
+  padding: 28px 20px;
+  border: 1px solid var(--color-gray-light);
+  margin: 40px auto 80px;
+  display: flex;
+  gap: 20px;
+}
+
+.login {
+  flex: 1;
+  padding-right: 20px;
+  border-right: 1px solid var(--color-gray-light);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.createAccount {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* =============================== LOGIN - BEGIN ================================= */
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.loginTitle {
+  font-size: 2.2rem;
+}
+
+.required {
+  font-size: 0.9rem;
+  color: var(--color-teal);
+}
+
+.loginDescription,
+.createDescription {
+  font-size: 1rem;
+}
+
+/* ============================ LOGIN - INPUT FIELDS ============================= */
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.label {
+  display: block;
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.group:focus-within .label {
+  color: var(--color-teal);
+}
+
+.symbol {
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: var(--color-teal);
+}
+
+.input {
+  width: 100%;
+  padding: 12px 15px;
+  font-size: 0.8rem;
+  color: var(--color-dark);
+  background-color: rgb(247, 247, 247);
+  border: none;
+  outline: none;
+  border-bottom: 1px solid rgb(171, 171, 171);
+}
+
+.input:focus {
+  background-color: var(--color-white);
+  outline: 2px solid #cde1e4;
+  outline-offset: 3px;
+  border-bottom: 2px solid var(--color-teal);
+  border-radius: 1px;
+}
+
+.hint {
+  color: var(--color-gray);
+  font-size: 0.9rem;
+  margin-top: 10px;
+}
+
+/* ============================ LOGIN - ERROR STATE ============================== */
+
+.group:has(.input[aria-invalid='true']) .label,
+.group:has(.input[aria-invalid='true']) .symbol {
+  color: var(--color-red);
+}
+
+.input[aria-invalid='true'] {
+  border-bottom: 2px solid var(--color-red);
+}
+
+.input[aria-invalid='true']:focus {
+  outline: 2px solid #ebcccc;
+  border-bottom: 2px solid var(--color-red);
+}
+
+.errorMessage {
+  font-size: 1rem;
+  position: relative;
+  width: 100%;
+  padding: 16px 50px;
+  margin-bottom: 10px;
+  border: 1px solid var(--color-red);
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px 0px;
+}
+
+.errorMessage::before {
+  content: '';
+  position: absolute;
+  background-color: var(--color-white);
+  width: 14px;
+  height: 14px;
+  border-right: 1px solid var(--color-red);
+  border-bottom: 1px solid var(--color-red);
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 2px 0px;
+  left: 3px;
+  bottom: -9px;
+  transform: rotate(45deg);
+}
+
+/* ============================== LOGIN — CHECKBOX =============================== */
+
+.checkboxWrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.checkboxInput {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.checkboxLabel {
+  font-size: 1rem;
+  font-weight: 400;
+  padding-left: 20px;
+  position: relative;
+  cursor: pointer;
+}
+
+.checkboxLabel::before {
+  content: '';
+  height: 18px;
+  width: 18px;
+  border: 2px solid #ababab;
+  position: absolute;
+  left: -10px;
+}
+
+.checkboxInput:checked + .checkboxLabel::before {
+  background-color: var(--color-dark);
+  border-color: var(--color-dark);
+}
+
+.checkboxInput:checked + .checkboxLabel::after {
+  content: '\2714';
+  font-size: 0.7rem;
+  color: var(--color-white);
+  position: absolute;
+  left: -3px;
+  top: 3px;
+}
+
+.checkboxInput:focus-visible + .checkboxLabel::before {
+  outline: 1px solid var(--color-focus);
+  outline-offset: 3px;
+}
+
+/* ============================== CREATE - BUTTONS =============================== */
+
+.createTitle {
+  font-size: 2.2rem;
+}
+
+/* =============================== PAGE - BUTTONS ================================ */
+
+/* Tạm thời dùng style này vì nút CREATE ACCOUNT đang disabled, khi nút đã hoạt động ở giai đoạn sau 
+hãy thêm cursor pointer, transition vào cho cả 2 nút, và thêm các selector cho createButton giống như 
+loginButton (.createButton:hover và .createButton:focus-visible vì 2 nút này giống y hệt nhau. */
+.loginButton,
+.createButton {
+  font-size: 1.1rem;
+  font-weight: 700;
+  width: 300px;
+  padding: 10px 5px;
+  color: var(--color-white);
+  background-color: var(--color-dark);
+  border: none;
+}
+
+.loginButton {
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.loginButton:hover {
+  opacity: 0.7;
+}
+
+.loginButton:focus-visible {
+  outline: 1px solid var(--color-focus);
+  outline-offset: 3px;
+}
+
+/* =================== MEDIA QUERY TO STYLE FOR MOBILE LAYOUT ==================== */
+
+@media (max-width: 480px) {
+  .page {
+    border: none;
+    flex-direction: column;
+  }
+
+  .login {
+    padding-right: 0;
+    padding-bottom: 20px;
+    border-right: none;
+    border-bottom: 1px solid var(--color-gray-light);
+  }
+
+  .login,
+  .createAccount {
+    flex: none;
+  }
+
+  .createTitle {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .createDescription {
+    display: none;
+  }
+
+  .loginButton,
+  .createButton {
+    padding: 15px;
+    width: 100%;
+    border-radius: 25px;
+  }
+}
