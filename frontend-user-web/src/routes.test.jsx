@@ -3,10 +3,15 @@ import { render, screen, within } from '@testing-library/react';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
 import { routes } from './routes.jsx';
+import AuthProvider from './context/AuthProvider.jsx';
 
 function renderWithRouter(url) {
   const router = createMemoryRouter(routes, { initialEntries: [url] });
-  render(<RouterProvider router={router} />);
+  render(
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
+  );
 }
 
 describe('routes', () => {
@@ -49,7 +54,7 @@ describe('routes', () => {
   it('should render the login page at /login', () => {
     renderWithRouter('/login');
 
-    expect(screen.getByRole('heading', { name: 'Login' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'LOGIN' })).toBeInTheDocument();
   });
 
   it('should render 404 - Page not found heading for non-existent routes', () => {
@@ -128,7 +133,7 @@ describe('Header', () => {
     const accountLink = within(header).getByRole('link', { name: 'Account' });
     await user.click(accountLink);
 
-    expect(screen.getByRole('heading', { name: 'Login' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'LOGIN' })).toBeInTheDocument();
   });
 
   it('navigates to the wishlist page when Wishlist is clicked', async () => {
@@ -203,6 +208,6 @@ describe('BottomNav', () => {
     });
     await user.click(accountLink);
 
-    expect(screen.getByRole('heading', { name: 'Login' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'LOGIN' })).toBeInTheDocument();
   });
 });
