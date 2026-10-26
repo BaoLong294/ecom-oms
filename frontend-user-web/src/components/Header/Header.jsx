@@ -1,5 +1,5 @@
 import styles from './Header.module.css';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import Icon from '../Icon/Icon.jsx';
 
 /**
@@ -12,6 +12,8 @@ import Icon from '../Icon/Icon.jsx';
  * @param props.headerVariant - biến thể header, mặc định 'default'
  */
 function Header({ headerVariant = 'default' }) {
+  const location = useLocation();
+
   const isLanding = headerVariant === 'landing';
   const headerClassName = isLanding
     ? `${styles.header} ${styles.landing}`
@@ -42,7 +44,12 @@ function Header({ headerVariant = 'default' }) {
         )}
 
         <div className={styles.userActions}>
-          <Link to="/login" aria-label="Account">
+          {/* Gửi trang hiện tại để LoginPage quay về đây sau khi đăng nhập. */}
+          <Link
+            to="/login"
+            state={{ from: location.pathname }}
+            aria-label="Account"
+          >
             <Icon name="account-icon" />
           </Link>
           <Link to="/wishlist" aria-label="Wishlist">

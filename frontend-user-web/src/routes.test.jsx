@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, afterEach } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
@@ -12,7 +12,13 @@ function renderWithRouter(url) {
       <RouterProvider router={router} />
     </AuthProvider>
   );
+
+  return router;
 }
+
+afterEach(() => {
+  localStorage.clear();
+});
 
 describe('routes', () => {
   it('should render the home page at /', () => {
@@ -155,6 +161,22 @@ describe('Header', () => {
 
     expect(screen.getByRole('heading', { name: 'Cart' })).toBeInTheDocument();
   });
+
+  it('returns to the current page after logging in from Account', async () => {
+    const user = userEvent.setup();
+    renderWithRouter('/cart');
+    const header = screen.getByRole('banner');
+
+    await user.click(within(header).getByRole('link', { name: 'Account' }));
+    await user.type(
+      screen.getByLabelText(/^email address/i),
+      'john.doe@gmail.com'
+    );
+    await user.type(screen.getByLabelText(/^password/i), 'abcd1234');
+    await user.click(screen.getByRole('button', { name: 'LOG IN' }));
+
+    expect(screen.getByRole('heading', { name: 'Cart' })).toBeInTheDocument();
+  });
 });
 
 describe('BottomNav', () => {
@@ -209,5 +231,21 @@ describe('BottomNav', () => {
     await user.click(accountLink);
 
     expect(screen.getByRole('heading', { name: 'LOGIN' })).toBeInTheDocument();
+  });
+
+  it('returns to the current page after logging in from Account', async () => {
+    const user = userEvent.setup();
+    const router = renderWithRouter('/products/1');
+    const bottomNav = screen.getByRole('navigation', { name: 'Shortcuts' });
+
+    await user.click(within(bottomNav).getByRole('link', { name: 'Account' }));
+    await user.type(
+      screen.getByLabelText(/^email address/i),
+      'john.doe@gmail.com'
+    );
+    await user.type(screen.getByLabelText(/^password/i), 'abcd1234');
+    await user.click(screen.getByRole('button', { name: 'LOG IN' }));
+
+    expect(router.state.location.pathname).toBe('/products/1');
   });
 });

@@ -1,11 +1,13 @@
 import styles from './BottomNav.module.css';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import Icon from '../Icon/Icon.jsx';
 
 /**
  * Bottom navigation cho một số trang.
  */
 function BottomNav() {
+  const location = useLocation();
+
   return (
     <nav className={styles.bottomNav} aria-label="Shortcuts">
       <div className={styles.bottomInner}>
@@ -17,7 +19,12 @@ function BottomNav() {
           <Icon name="search-icon" />
         </button>
 
-        <Link to="/login" aria-label="Account">
+        {/* Gửi trang hiện tại để LoginPage quay về đây sau khi đăng nhập. */}
+        <Link
+          to="/login"
+          state={{ from: location.pathname }}
+          aria-label="Account"
+        >
           <Icon name="user-icon" />
         </Link>
       </div>
