@@ -2,6 +2,7 @@ import styles from './ProductDetails.module.css';
 import { useState, useRef } from 'react';
 import { formatToUSD, getEffectivePrice } from '../../utils/price';
 import Icon from '../../components/Icon/Icon';
+import QuantityStepper from '../../components/QuantityStepper/QuantityStepper';
 
 /**
  * Phần nội dung của trang chi tiết khi đã có dữ liệu: gallery ảnh, khối thông tin
@@ -47,7 +48,6 @@ function ProductDetails({ product }) {
   const isDiscounted = discountPercent !== null;
   const originalPrice = formatToUSD(price);
   const finalPrice = formatToUSD(getEffectivePrice(product));
-  const isMinQuantity = quantity === 1;
 
   // ================================ EVENT HANDLERS ================================
   const handleColorChange = (code) => {
@@ -62,17 +62,6 @@ function ProductDetails({ product }) {
 
   const handleSizeChange = (size) => {
     setSelectedSize(size);
-  };
-
-  const handleIncrease = () => {
-    setQuantity((prev) => prev + 1);
-  };
-
-  const handleDecrease = () => {
-    // Nút giảm dùng aria-disabled (không dùng disabled) nên trình duyệt không chặn
-    // click; việc giữ số lượng tối thiểu là 1 phải nằm ở đây.
-    if (isMinQuantity) return;
-    setQuantity((prev) => prev - 1);
   };
 
   return (
@@ -185,31 +174,7 @@ function ProductDetails({ product }) {
           )}
         </div>
 
-        {/* aria-disabled thay cho disabled: nút vẫn giữ focus khi chạm mức 1, người
-            dùng bàn phím không bị mất vị trí. <output> có sẵn role status nên
-            screen reader tự đọc số mới sau mỗi lần bấm. */}
-        <div className={styles.quantity}>
-          <button
-            type="button"
-            aria-label="Decrease quantity"
-            aria-disabled={isMinQuantity}
-            onClick={handleDecrease}
-            className={styles.decrease}
-          >
-            -
-          </button>
-          <output aria-label="Quantity" className={styles.quantityValue}>
-            {quantity}
-          </output>
-          <button
-            type="button"
-            aria-label="Increase quantity"
-            onClick={handleIncrease}
-            className={styles.increase}
-          >
-            +
-          </button>
-        </div>
+        <QuantityStepper quantity={quantity} onQuantityChange={setQuantity} />
 
         <button type="button" className={styles.addToCart} disabled>
           ADD TO CART
