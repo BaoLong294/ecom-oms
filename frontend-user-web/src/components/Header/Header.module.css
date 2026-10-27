@@ -77,7 +77,6 @@
   align-items: center;
   gap: 30px;
   margin-left: auto;
-  position: relative;
 }
 
 .userActions a {
@@ -105,6 +104,22 @@
 
 .header.landing .userActions svg {
   filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.7));
+}
+
+.cartLink {
+  position: relative;
+}
+
+.badge {
+  font-size: 0.7rem;
+  color: var(--color-white);
+  background-color: var(--color-dark);
+  padding: 2px 5px;
+  border-radius: 50%;
+
+  position: absolute;
+  top: -6px;
+  right: -9px;
 }
 
 /* =================== MEDIA QUERY TO STYLE FOR MOBILE LAYOUT ==================== */

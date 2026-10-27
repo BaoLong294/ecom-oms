@@ -4,12 +4,15 @@ import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
 import { routes } from './routes.jsx';
 import AuthProvider from './context/AuthProvider.jsx';
+import CartProvider from './context/CartProvider.jsx';
 
 function renderWithRouter(url) {
   const router = createMemoryRouter(routes, { initialEntries: [url] });
   render(
     <AuthProvider>
-      <RouterProvider router={router} />
+      <CartProvider>
+        <RouterProvider router={router} />
+      </CartProvider>
     </AuthProvider>
   );
 
@@ -176,6 +179,37 @@ describe('Header', () => {
     await user.click(screen.getByRole('button', { name: 'LOG IN' }));
 
     expect(screen.getByRole('heading', { name: 'Cart' })).toBeInTheDocument();
+  });
+
+  it('shows the total cart quantity in the cart link name and badge', () => {
+    localStorage.setItem(
+      'cart',
+      JSON.stringify([
+        { variantId: 5, quantity: 1 },
+        { variantId: 7, quantity: 3 },
+      ])
+    );
+    renderWithRouter('/cart');
+    const header = within(screen.getByRole('banner'));
+
+    expect(
+      header.getByRole('link', { name: 'Cart, 4 items' })
+    ).toBeInTheDocument();
+    expect(header.getByText('4')).toBeInTheDocument();
+  });
+
+  it('uses the singular item in the cart link name for one item', () => {
+    localStorage.setItem(
+      'cart',
+      JSON.stringify([{ variantId: 5, quantity: 1 }])
+    );
+    renderWithRouter('/cart');
+
+    expect(
+      within(screen.getByRole('banner')).getByRole('link', {
+        name: 'Cart, 1 item',
+      })
+    ).toBeInTheDocument();
   });
 });
 
