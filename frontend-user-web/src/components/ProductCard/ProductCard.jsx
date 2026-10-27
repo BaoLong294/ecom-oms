@@ -1,7 +1,7 @@
 import styles from './ProductCard.module.css';
 import Icon from '../Icon/Icon.jsx';
 import { Link } from 'react-router-dom';
-import { formatToUSD, getEffectivePrice } from '../../utils/price';
+import Price from '../Price/Price.jsx';
 
 /**
  * Card sản phẩm trong trang danh sách: ảnh màu đầu tiên, các swatch màu,
@@ -14,16 +14,9 @@ import { formatToUSD, getEffectivePrice } from '../../utils/price';
  *   sizes, price, discountPercent, discountInfo và colors ({ code, name, swatch, image })
  */
 function ProductCard({ product }) {
-  const { id, name, gender, discountPercent, discountInfo, sizes, colors } =
-    product;
+  const { id, name, gender, sizes, colors } = product;
 
   const sizeRange = `${sizes[0]}-${sizes.at(-1)}`;
-
-  const isDiscounted = discountPercent !== null;
-  const priceClassName = isDiscounted
-    ? styles.discountPrice
-    : styles.regularPrice;
-  const finalPrice = formatToUSD(getEffectivePrice(product));
 
   return (
     <div className={styles.card}>
@@ -60,11 +53,8 @@ function ProductCard({ product }) {
             {name}
           </Link>
         </h3>
-        <div>
-          <p className={priceClassName}>{finalPrice}</p>
-          {isDiscounted && discountInfo && (
-            <p className={styles.discountInfo}>{discountInfo}</p>
-          )}
+        <div className={styles.price}>
+          <Price item={product} />
         </div>
       </div>
     </div>

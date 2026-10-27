@@ -93,20 +93,9 @@
   outline: 1px solid var(--color-focus);
 }
 
-.discountPrice,
-.regularPrice {
+.price {
   font-size: 1.1rem;
-  font-weight: 700;
-}
-
-.discountPrice {
-  color: var(--color-red);
-  margin-bottom: 7px;
-}
-
-.discountInfo {
-  font-size: 0.8rem;
-  color: var(--color-red);
+  --discount-info-size: 0.8rem;
 }
 
 /* =================== MEDIA QUERY TO STYLE FOR MOBILE LAYOUT ==================== */

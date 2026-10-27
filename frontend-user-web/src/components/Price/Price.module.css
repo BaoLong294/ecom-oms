@@ -1,0 +1,14 @@
+.discountPrice,
+.regularPrice {
+  font-weight: 700;
+}
+
+.discountPrice {
+  color: var(--color-red);
+  margin-bottom: 7px;
+}
+
+.discountInfo {
+  font-size: var(--discount-info-size, 1em);
+  color: var(--color-red);
+}
