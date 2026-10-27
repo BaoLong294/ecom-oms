@@ -7,34 +7,64 @@ vi.mock('../data/products.js', () => ({
     {
       id: 1,
       name: 'First item',
-      gender: 'Men',
+      categoryId: 7,
+      gender: 'Unisex',
       price: 15,
       discountPercent: null,
+      discountInfo: null,
+      sizes: ['S'],
+      detailImages: ['/images/test/first-detail.avif'],
       colors: [
-        { code: '01', name: '01 Black', image: 'black.jpg' },
-        { code: '02', name: '02 Blue', image: 'blue.jpg' },
+        {
+          code: '01',
+          name: '01 Black',
+          swatch: '/images/test/swatch-black.avif',
+          image: '/images/test/black.avif',
+        },
+        {
+          code: '02',
+          name: '02 Blue',
+          swatch: '/images/test/swatch-blue.avif',
+          image: '/images/test/blue.avif',
+        },
       ],
+      features: [],
     },
     {
       id: 2,
       name: 'Second item',
+      categoryId: 8,
       gender: 'Women',
       price: 30,
       discountPercent: 50,
+      discountInfo: 'New Year Sale',
+      sizes: ['M'],
+      detailImages: ['/images/test/second-detail.avif'],
       colors: [
-        { code: '10', name: '10 Green', image: 'green.jpg' },
-        { code: '02', name: '02 Navy', image: 'navy.jpg' },
+        {
+          code: '10',
+          name: '10 Green',
+          swatch: '/images/test/swatch-green.avif',
+          image: '/images/test/green.avif',
+        },
+        {
+          code: '02',
+          name: '02 Navy',
+          swatch: '/images/test/swatch-navy.avif',
+          image: '/images/test/navy.avif',
+        },
       ],
+      features: [],
     },
   ],
 }));
 
 vi.mock('../data/variants.js', () => ({
   default: [
-    { id: 1, productId: 1, colorCode: '01' },
-    { id: 2, productId: 1, colorCode: '02' },
-    { id: 3, productId: 2, colorCode: '10' },
-    { id: 4, productId: 2, colorCode: '02' },
+    { id: 1, productId: 1, colorCode: '01', size: 'S', stockQuantity: 10 },
+    { id: 2, productId: 1, colorCode: '02', size: 'S', stockQuantity: 10 },
+    { id: 3, productId: 2, colorCode: '10', size: 'M', stockQuantity: 10 },
+    { id: 4, productId: 2, colorCode: '02', size: 'M', stockQuantity: 10 },
   ],
 }));
 
@@ -60,23 +90,29 @@ describe('getVariantsByIds', () => {
       id: 1,
       productId: 1,
       colorCode: '01',
+      size: 'S',
+      stockQuantity: 10,
       productName: 'First item',
-      gender: 'Men',
+      gender: 'Unisex',
       price: 15,
       discountPercent: null,
+      discountInfo: null,
       colorName: '01 Black',
-      colorImage: 'black.jpg',
+      colorImage: '/images/test/black.avif',
     });
     expect(result[1]).toMatchObject({
       id: 4,
       productId: 2,
       colorCode: '02',
+      size: 'M',
+      stockQuantity: 10,
       productName: 'Second item',
       gender: 'Women',
       price: 30,
       discountPercent: 50,
+      discountInfo: 'New Year Sale',
       colorName: '02 Navy',
-      colorImage: 'navy.jpg',
+      colorImage: '/images/test/navy.avif',
     });
   });
 

@@ -19,6 +19,7 @@ import { simulateRequest } from './mockApi.js';
  *   gender: string,
  *   price: number,
  *   discountPercent: number | null,
+ *   discountInfo: string | null,
  *   colorName: string,
  *   colorImage: string
  * }>>} Mảng thông tin variant; mảng rỗng nếu variantIds rỗng
@@ -39,6 +40,7 @@ export function getVariantsByIds(variantIds) {
       gender: product.gender,
       price: product.price,
       discountPercent: product.discountPercent,
+      discountInfo: product.discountInfo,
       colorName: color.name,
       colorImage: color.image,
     };
