@@ -39,7 +39,7 @@ function CartSummary({ onClose, addedQuantity }) {
           onClick={onClose}
           className={styles.close}
         >
-          ×
+          &times;
         </button>
       </div>
 

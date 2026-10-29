@@ -45,7 +45,7 @@ function CartItem({ item, onQuantityChange, onRemove }) {
             onClick={onRemove}
             className={styles.remove}
           >
-            x
+            &times;
           </button>
         </div>
 
