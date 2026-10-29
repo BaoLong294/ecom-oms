@@ -3,13 +3,14 @@ import { useState, useRef } from 'react';
 import { formatToUSD, getEffectivePrice } from '../../utils/price';
 import Icon from '../../components/Icon/Icon';
 import QuantityStepper from '../../components/QuantityStepper/QuantityStepper';
+import { useCart } from '../../context/CartContext';
 
 /**
  * Phần nội dung của trang chi tiết khi đã có dữ liệu: gallery ảnh, khối thông tin
  * (tên, chọn màu, chọn size, giá, số lượng, ADD TO CART) và phần mô tả.
  * Tách khỏi ProductPage để các state chọn màu, size khởi tạo được từ product:
  * component chỉ được render khi product đã có, nên useState nhận ngay phần tử đầu.
- * Nút tim và ADD TO CART tạm disabled cho tới Phần 10 và Phần 9.
+ * Nút tim tạm disabled cho tới Phần 10.
  * @param {object} props
  * @param {object} props.product - sản phẩm từ getProductById (gồm colors, sizes, detailImages, features, variants)
  */
@@ -25,10 +26,13 @@ function ProductDetails({ product }) {
     detailImages,
     colors,
     features,
+    variants,
   } = product;
 
   // Ref tới khung cuộn của gallery để cuộn về ảnh đầu khi đổi màu (xem handleColorChange).
   const galleryRef = useRef(null);
+
+  const { addItem } = useCart();
 
   // ==================================== STATE ====================================
   // Lưu code của màu thay vì object hay index: code ổn định, không trùng lặp dữ liệu
@@ -62,6 +66,14 @@ function ProductDetails({ product }) {
 
   const handleSizeChange = (size) => {
     setSelectedSize(size);
+  };
+
+  const handleAddToCart = () => {
+    const variant = variants.find(
+      (item) =>
+        item.colorCode === selectedColorCode && item.size === selectedSize
+    );
+    addItem(variant.id, quantity);
   };
 
   return (
@@ -176,7 +188,11 @@ function ProductDetails({ product }) {
 
         <QuantityStepper quantity={quantity} onQuantityChange={setQuantity} />
 
-        <button type="button" className={styles.addToCart} disabled>
+        <button
+          type="button"
+          className={styles.addToCart}
+          onClick={handleAddToCart}
+        >
           ADD TO CART
         </button>
       </div>

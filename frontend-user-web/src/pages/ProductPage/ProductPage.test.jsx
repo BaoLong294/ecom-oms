@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import ProductPage from './ProductPage';
 import { getProductById } from '../../services/productService';
+import CartProvider from '../../context/CartProvider.jsx';
 
 vi.mock('../../services/productService', () => ({
   getProductById: vi.fn(),
@@ -131,7 +132,11 @@ function renderProductPage() {
     { initialEntries: ['/products/29'] }
   );
 
-  render(<RouterProvider router={router} />);
+  render(
+    <CartProvider>
+      <RouterProvider router={router} />
+    </CartProvider>
+  );
 }
 
 // jsdom không cài đặt scrollTo cho phần tử, gọi tới sẽ ném TypeError.
@@ -143,6 +148,7 @@ beforeEach(() => {
 afterEach(() => {
   vi.resetAllMocks();
   delete Element.prototype.scrollTo;
+  localStorage.clear();
 });
 
 describe('ProductPage', () => {
@@ -252,16 +258,14 @@ describe('ProductDetails display', () => {
     expect(feature).not.toBeInTheDocument();
   });
 
-  it('renders wishlist and add to cart buttons as disabled', async () => {
+  it('renders the wishlist button as disabled', async () => {
     getProductById.mockResolvedValue(productA);
     renderProductPage();
     const wishlist = await screen.findByRole('button', {
       name: 'Add Product A to wishlist',
     });
-    const addToCart = screen.getByRole('button', { name: 'ADD TO CART' });
 
     expect(wishlist).toBeDisabled();
-    expect(addToCart).toBeDisabled();
   });
 });
 
@@ -406,5 +410,38 @@ describe('ProductDetails quantity stepper', () => {
     const quantityValue = screen.getByRole('status', { name: 'Quantity' });
 
     expect(quantityValue).toHaveTextContent('1');
+  });
+});
+
+describe('ProductDetails add to cart', () => {
+  function readStoredCart() {
+    return JSON.parse(localStorage.getItem('cart'));
+  }
+
+  it('adds the default color, size and quantity to the cart', async () => {
+    const user = userEvent.setup();
+    getProductById.mockResolvedValue(productA);
+    renderProductPage();
+    const addToCart = await screen.findByRole('button', {
+      name: 'ADD TO CART',
+    });
+
+    await user.click(addToCart);
+
+    expect(readStoredCart()).toEqual([{ variantId: 101, quantity: 1 }]);
+  });
+
+  it('adds the variant of the selected color and size with the chosen quantity', async () => {
+    const user = userEvent.setup();
+    getProductById.mockResolvedValue(productA);
+    renderProductPage();
+    const pinkRadio = await screen.findByRole('radio', { name: '11 PINK' });
+
+    await user.click(pinkRadio);
+    await user.click(screen.getByRole('radio', { name: 'L' }));
+    await user.click(screen.getByRole('button', { name: 'Increase quantity' }));
+    await user.click(screen.getByRole('button', { name: 'ADD TO CART' }));
+
+    expect(readStoredCart()).toEqual([{ variantId: 104, quantity: 2 }]);
   });
 });
