@@ -5,9 +5,14 @@ import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import ProductPage from './ProductPage';
 import { getProductById } from '../../services/productService';
 import CartProvider from '../../context/CartProvider.jsx';
+import { getVariantsByIds } from '../../services/variantService';
 
 vi.mock('../../services/productService', () => ({
   getProductById: vi.fn(),
+}));
+
+vi.mock('../../services/variantService', () => ({
+  getVariantsByIds: vi.fn(),
 }));
 
 const productA = {
@@ -126,9 +131,42 @@ const productB = {
   ],
 };
 
+const variant101 = {
+  id: 101,
+  productId: 1,
+  colorCode: '09',
+  size: 'M',
+  stockQuantity: 10,
+  productName: 'Product A',
+  gender: 'Unisex',
+  price: 50,
+  discountPercent: null,
+  discountInfo: null,
+  colorName: '09 BLACK',
+  colorImage: '/images/product-a/09-black.avif',
+};
+
+const variant203 = {
+  id: 203,
+  productId: 2,
+  colorCode: '10',
+  size: 'S',
+  stockQuantity: 10,
+  productName: 'Product B',
+  gender: 'Women',
+  price: 40,
+  discountPercent: 50,
+  discountInfo: 'Happy New Year',
+  colorName: '10 WHITE',
+  colorImage: '/images/product-b/10-white.avif',
+};
+
 function renderProductPage() {
   const router = createMemoryRouter(
-    [{ path: '/products/:id', element: <ProductPage /> }],
+    [
+      { path: '/products/:id', element: <ProductPage /> },
+      { path: '/cart', element: <h1>Cart page</h1> },
+    ],
     { initialEntries: ['/products/29'] }
   );
 
@@ -139,15 +177,27 @@ function renderProductPage() {
   );
 }
 
-// jsdom không cài đặt scrollTo cho phần tử, gọi tới sẽ ném TypeError.
+const originalShowModal = HTMLDialogElement.prototype.showModal;
+const originalClose = HTMLDialogElement.prototype.close;
+
+// jsdom không cài đặt scrollTo, cũng như 2 phương thức của dialog, gọi tới sẽ ném TypeError.
 // Gắn hàm giả mới trước mỗi test và gỡ sau mỗi test để các test không ảnh hưởng nhau.
 beforeEach(() => {
   Element.prototype.scrollTo = vi.fn();
+  HTMLDialogElement.prototype.showModal = vi.fn(function () {
+    this.setAttribute('open', '');
+  });
+  HTMLDialogElement.prototype.close = vi.fn(function () {
+    this.removeAttribute('open');
+    this.dispatchEvent(new Event('close'));
+  });
 });
 
 afterEach(() => {
   vi.resetAllMocks();
   delete Element.prototype.scrollTo;
+  HTMLDialogElement.prototype.showModal = originalShowModal;
+  HTMLDialogElement.prototype.close = originalClose;
   localStorage.clear();
 });
 
@@ -421,6 +471,7 @@ describe('ProductDetails add to cart', () => {
   it('adds the default color, size and quantity to the cart', async () => {
     const user = userEvent.setup();
     getProductById.mockResolvedValue(productA);
+    getVariantsByIds.mockReturnValue(new Promise(() => {}));
     renderProductPage();
     const addToCart = await screen.findByRole('button', {
       name: 'ADD TO CART',
@@ -434,6 +485,7 @@ describe('ProductDetails add to cart', () => {
   it('adds the variant of the selected color and size with the chosen quantity', async () => {
     const user = userEvent.setup();
     getProductById.mockResolvedValue(productA);
+    getVariantsByIds.mockReturnValue(new Promise(() => {}));
     renderProductPage();
     const pinkRadio = await screen.findByRole('radio', { name: '11 PINK' });
 
@@ -443,5 +495,96 @@ describe('ProductDetails add to cart', () => {
     await user.click(screen.getByRole('button', { name: 'ADD TO CART' }));
 
     expect(readStoredCart()).toEqual([{ variantId: 104, quantity: 2 }]);
+  });
+});
+
+describe('ProductDetails add to cart popup', () => {
+  it('opens the popup with the quantity just added', async () => {
+    const user = userEvent.setup();
+    getProductById.mockResolvedValue(productA);
+    getVariantsByIds.mockReturnValue(new Promise(() => {}));
+    renderProductPage();
+    const increase = await screen.findByRole('button', {
+      name: 'Increase quantity',
+    });
+
+    await user.click(increase);
+    await user.click(screen.getByRole('button', { name: 'ADD TO CART' }));
+
+    const dialog = screen.getByRole('dialog', {
+      name: '2 item(s) added to your cart',
+      hidden: true,
+    });
+    expect(dialog).toHaveAttribute('open');
+  });
+
+  it('shows the item count and total of the whole cart', async () => {
+    const user = userEvent.setup();
+    localStorage.setItem(
+      'cart',
+      JSON.stringify([{ variantId: 203, quantity: 1 }])
+    );
+    getProductById.mockResolvedValue(productA);
+    getVariantsByIds.mockResolvedValue([variant203, variant101]);
+    renderProductPage();
+    const increase = await screen.findByRole('button', {
+      name: 'Increase quantity',
+    });
+
+    await user.click(increase);
+    await user.click(screen.getByRole('button', { name: 'ADD TO CART' }));
+
+    expect(await screen.findByText('$120.00')).toBeInTheDocument();
+    expect(screen.getByText('3 item(s)')).toBeInTheDocument();
+    expect(getVariantsByIds).toHaveBeenCalledWith([203, 101]);
+  });
+
+  it('closes the popup with the close button', async () => {
+    const user = userEvent.setup();
+    getProductById.mockResolvedValue(productA);
+    getVariantsByIds.mockReturnValue(new Promise(() => {}));
+    renderProductPage();
+    const addToCart = await screen.findByRole('button', {
+      name: 'ADD TO CART',
+    });
+
+    await user.click(addToCart);
+    const dialog = screen.getByRole('dialog', { hidden: true });
+    await user.click(screen.getByRole('button', { name: 'Close' }));
+
+    expect(dialog).not.toHaveAttribute('open');
+  });
+
+  it('closes the popup with CONTINUE SHOPPING', async () => {
+    const user = userEvent.setup();
+    getProductById.mockResolvedValue(productA);
+    getVariantsByIds.mockReturnValue(new Promise(() => {}));
+    renderProductPage();
+    const addToCart = await screen.findByRole('button', {
+      name: 'ADD TO CART',
+    });
+
+    await user.click(addToCart);
+    const dialog = screen.getByRole('dialog', { hidden: true });
+    await user.click(screen.getByRole('button', { name: 'CONTINUE SHOPPING' }));
+
+    expect(dialog).not.toHaveAttribute('open');
+  });
+
+  it('goes to the cart page with VIEW CART', async () => {
+    const user = userEvent.setup();
+    getProductById.mockResolvedValue(productA);
+    getVariantsByIds.mockReturnValue(new Promise(() => {}));
+    renderProductPage();
+    const addToCart = await screen.findByRole('button', {
+      name: 'ADD TO CART',
+    });
+
+    await user.click(addToCart);
+    await user.click(screen.getByRole('link', { name: 'VIEW CART' }));
+
+    expect(
+      screen.getByRole('heading', { level: 1, name: 'Cart page' })
+    ).toBeInTheDocument();
   });
 });

@@ -4,12 +4,14 @@ import { formatToUSD, getEffectivePrice } from '../../utils/price';
 import Icon from '../../components/Icon/Icon';
 import QuantityStepper from '../../components/QuantityStepper/QuantityStepper';
 import { useCart } from '../../context/CartContext';
+import AddToCartPopup from '../../components/AddToCartPopup/AddToCartPopup';
 
 /**
  * Phần nội dung của trang chi tiết khi đã có dữ liệu: gallery ảnh, khối thông tin
  * (tên, chọn màu, chọn size, giá, số lượng, ADD TO CART) và phần mô tả.
  * Tách khỏi ProductPage để các state chọn màu, size khởi tạo được từ product:
  * component chỉ được render khi product đã có, nên useState nhận ngay phần tử đầu.
+ * Bấm nút ADD TO CART sẽ thêm variant đang chọn vào giỏ hàng và mở popup xác nhận.
  * Nút tim tạm disabled cho tới Phần 10.
  * @param {object} props
  * @param {object} props.product - sản phẩm từ getProductById (gồm colors, sizes, detailImages, features, variants)
@@ -36,11 +38,12 @@ function ProductDetails({ product }) {
 
   // ==================================== STATE ====================================
   // Lưu code của màu thay vì object hay index: code ổn định, không trùng lặp dữ liệu
-  // với product.colors, và khớp variants.colorCode để Phần 9 tìm đúng variant.
+  // với product.colors, và khớp variants.colorCode để tìm đúng variant khi thêm vào giỏ hàng.
   const [selectedColorCode, setSelectedColorCode] = useState(colors[0].code);
   // Lưu đúng chuỗi size vì nó khớp variants.size.
   const [selectedSize, setSelectedSize] = useState(sizes[0]);
   const [quantity, setQuantity] = useState(1);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   // =============================== GIÁ TRỊ DẪN XUẤT ===============================
   // Tính lại mỗi lần render thay vì lưu thành state, để ảnh chính và nhãn màu
@@ -73,7 +76,9 @@ function ProductDetails({ product }) {
       (item) =>
         item.colorCode === selectedColorCode && item.size === selectedSize
     );
+
     addItem(variant.id, quantity);
+    setIsPopupOpen(true);
   };
 
   return (
@@ -195,6 +200,12 @@ function ProductDetails({ product }) {
         >
           ADD TO CART
         </button>
+
+        <AddToCartPopup
+          isOpen={isPopupOpen}
+          onClose={() => setIsPopupOpen(false)}
+          addedQuantity={quantity}
+        />
       </div>
 
       {/* ================================= MÔ TẢ ================================= */}
