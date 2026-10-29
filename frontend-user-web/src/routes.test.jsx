@@ -57,7 +57,9 @@ describe('routes', () => {
   it('should render the cart page at /cart', () => {
     renderWithRouter('/cart');
 
-    expect(screen.getByRole('heading', { name: 'Cart' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: 'SHOPPING CART' })
+    ).toBeInTheDocument();
   });
 
   it('should render the login page at /login', () => {
@@ -162,7 +164,9 @@ describe('Header', () => {
     const cartLink = screen.getByRole('link', { name: 'Cart' });
     await user.click(cartLink);
 
-    expect(screen.getByRole('heading', { name: 'Cart' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: 'SHOPPING CART' })
+    ).toBeInTheDocument();
   });
 
   it('returns to the current page after logging in from Account', async () => {
@@ -178,7 +182,9 @@ describe('Header', () => {
     await user.type(screen.getByLabelText(/^password/i), 'abcd1234');
     await user.click(screen.getByRole('button', { name: 'LOG IN' }));
 
-    expect(screen.getByRole('heading', { name: 'Cart' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: 'SHOPPING CART' })
+    ).toBeInTheDocument();
   });
 
   it('shows the total cart quantity in the cart link name and badge', () => {
