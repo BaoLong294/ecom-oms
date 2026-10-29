@@ -1,0 +1,112 @@
+/* ================================ POPUP FRAME ================================= */
+.popup {
+  width: 750px;
+  max-width: 100%;
+  padding: 28px;
+}
+
+/* =================================== TITLE ==================================== */
+.title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.heading {
+  font-size: 1.1rem;
+  font-weight: 400;
+}
+
+.close {
+  font-size: 2.5rem;
+  line-height: 1;
+  border: none;
+  padding: 0;
+  background-color: transparent;
+  color: var(--color-dark);
+  cursor: pointer;
+}
+
+.close:focus-visible {
+  outline: 1px solid var(--color-focus);
+  outline-offset: 3px;
+}
+
+/* ================================== SUBTOTAL ================================== */
+.subtotal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--color-gray-light);
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+}
+
+.subtotalLabel,
+.totalPrice {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.itemCount {
+  font-size: 1.1rem;
+  font-weight: 400;
+  margin-left: 8px;
+}
+
+/* ================================== BUTTONS =================================== */
+.buttons {
+  display: flex;
+  gap: 20px;
+}
+
+.viewCart,
+.continueShopping {
+  flex: 1;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: 400;
+  letter-spacing: 0.15px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.viewCart {
+  background-color: var(--color-dark);
+  color: var(--color-white);
+  border: none;
+  transition: background-color 0.15s;
+}
+
+.viewCart:hover {
+  background-color: #363636;
+}
+
+.continueShopping {
+  background-color: var(--color-white);
+  color: var(--color-dark);
+  border: 1px solid rgb(125, 125, 125);
+  transition: opacity 0.15s;
+}
+
+.continueShopping:hover {
+  opacity: 0.6;
+}
+
+.viewCart:focus-visible,
+.continueShopping:focus-visible {
+  outline: 1px solid var(--color-focus);
+  outline-offset: 3px;
+}
+
+/* =================== MEDIA QUERY TO STYLE FOR MOBILE LAYOUT ==================== */
+@media (max-width: 480px) {
+  .buttons {
+    flex-direction: column;
+  }
+}

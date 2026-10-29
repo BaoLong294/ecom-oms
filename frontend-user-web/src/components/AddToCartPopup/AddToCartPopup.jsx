@@ -52,10 +52,15 @@ function CartSummary({ onClose, addedQuantity }) {
   return (
     <div className={styles.popup}>
       <div className={styles.title}>
-        <h2 id="add-to-cart-title">
+        <h2 id="add-to-cart-title" className={styles.heading}>
           {addedQuantity} item(s) added to your cart
         </h2>
-        <button type="button" aria-label="Close" onClick={onClose}>
+        <button
+          type="button"
+          aria-label="Close"
+          onClick={onClose}
+          className={styles.close}
+        >
           x
         </button>
       </div>
@@ -68,8 +73,14 @@ function CartSummary({ onClose, addedQuantity }) {
       </div>
 
       <div className={styles.buttons}>
-        <Link to="/cart">VIEW CART</Link>
-        <button type="button" onClick={onClose}>
+        <Link to="/cart" className={styles.viewCart}>
+          VIEW CART
+        </Link>
+        <button
+          type="button"
+          onClick={onClose}
+          className={styles.continueShopping}
+        >
           CONTINUE SHOPPING
         </button>
       </div>
