@@ -1,24 +1,9 @@
 import styles from './AddToCartPopup.module.css';
-import { getVariantsByIds } from '../../services/variantService';
-import { useCart } from '../../context/CartContext';
-import { useFetch } from '../../hooks/useFetch';
+import { useCartVariants } from '../../context/useCartVariants';
 import { formatToUSD } from '../../utils/price';
 import { getCartTotal } from '../../utils/cart';
 import { Link } from 'react-router-dom';
 import Modal from '../Modal/Modal';
-
-/**
- * Nhận khóa chuỗi id ('203,101'), đổi lại thành mảng số rồi gọi getVariantsByIds.
- * useFetch cần tham số là giá trị nguyên thủy: mảng id tạo mới ở mỗi lần render
- * sẽ khiến effect chạy lại liên tục, còn chuỗi so sánh theo nội dung nên ổn định.
- * Hàm đặt ở cấp module để tham chiếu không đổi giữa các lần render.
- * @param {string} idsKey - các variantId nối bằng dấu phẩy
- * @returns {Promise<Array<object>>} thông tin các variant, giữ thứ tự theo idsKey
- */
-function fetchVariantsByKey(idsKey) {
-  const ids = idsKey.split(',').map(Number);
-  return getVariantsByIds(ids);
-}
 
 /**
  * Nội dung popup "đã thêm vào giỏ": số lượng vừa thêm, tổng số lượng và tổng tiền
@@ -30,15 +15,8 @@ function fetchVariantsByKey(idsKey) {
  * @param {number} props.addedQuantity - số lượng vừa được thêm vào giỏ
  */
 function CartSummary({ onClose, addedQuantity }) {
-  const { items, itemCount } = useCart();
-
-  const idsKey = items.map((item) => item.variantId).join(',');
-
-  const {
-    data: variants,
-    isLoading,
-    errorMessage,
-  } = useFetch(fetchVariantsByKey, idsKey);
+  const { items, itemCount, variants, isLoading, errorMessage } =
+    useCartVariants();
 
   let totalPrice;
   if (isLoading) {
@@ -61,7 +39,7 @@ function CartSummary({ onClose, addedQuantity }) {
           onClick={onClose}
           className={styles.close}
         >
-          x
+          ×
         </button>
       </div>
 
