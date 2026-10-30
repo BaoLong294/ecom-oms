@@ -53,7 +53,7 @@ describe('routes', () => {
     renderWithRouter('/wishlist');
 
     expect(
-      screen.getByRole('heading', { name: 'Wishlist' })
+      screen.getByRole('heading', { name: 'WISHLIST' })
     ).toBeInTheDocument();
   });
 
@@ -157,7 +157,7 @@ describe('Header', () => {
     await user.click(wishlistLink);
 
     expect(
-      screen.getByRole('heading', { name: 'Wishlist' })
+      screen.getByRole('heading', { name: 'WISHLIST' })
     ).toBeInTheDocument();
   });
 
