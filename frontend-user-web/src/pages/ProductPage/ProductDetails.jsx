@@ -6,6 +6,8 @@ import QuantityStepper from '../../components/QuantityStepper/QuantityStepper';
 import { useCart } from '../../context/CartContext';
 import AddToCartPopup from '../../components/AddToCartPopup/AddToCartPopup';
 import { useWishlist } from '../../context/WishlistContext';
+import { useAuth } from '../../context/AuthContext';
+import LoginRequiredPopup from '../../components/LoginRequiredPopup/LoginRequiredPopup';
 
 /**
  * Phần nội dung của trang chi tiết khi đã có dữ liệu: gallery ảnh, khối thông tin
@@ -13,7 +15,8 @@ import { useWishlist } from '../../context/WishlistContext';
  * Tách khỏi ProductPage để các state chọn màu, size khởi tạo được từ product:
  * component chỉ được render khi product đã có, nên useState nhận ngay phần tử đầu.
  * Bấm nút ADD TO CART sẽ thêm variant đang chọn vào giỏ hàng và mở popup xác nhận.
- * Bấm nút tim sẽ thêm hoặc bỏ variant đang chọn khỏi wishlist.
+ * Bấm nút tim sẽ thêm hoặc bỏ variant đang chọn khỏi wishlist; khách chưa đăng nhập
+ * thì mở popup yêu cầu đăng nhập thay vì đổi wishlist.
  * @param {object} props
  * @param {object} props.product - sản phẩm từ getProductById (gồm colors, sizes, detailImages, features, variants)
  */
@@ -36,12 +39,15 @@ function ProductDetails({ product }) {
   const galleryRef = useRef(null);
 
   const { addItem } = useCart();
+
   // Đổi tên khi destructure vì giỏ hàng và wishlist cùng đặt tên hàm là addItem.
   const {
     isInWishlist,
     addItem: addToWishlist,
     removeItem: removeFromWishlist,
   } = useWishlist();
+
+  const { isLoggedIn } = useAuth();
 
   // ==================================== STATE ====================================
   // Lưu code của màu thay vì object hay index: code ổn định, không trùng lặp dữ liệu
@@ -51,6 +57,7 @@ function ProductDetails({ product }) {
   const [selectedSize, setSelectedSize] = useState(sizes[0]);
   const [quantity, setQuantity] = useState(1);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false);
 
   // =============================== GIÁ TRỊ DẪN XUẤT ===============================
   // Tính lại mỗi lần render thay vì lưu thành state, để ảnh chính và nhãn màu
@@ -93,6 +100,11 @@ function ProductDetails({ product }) {
   }
 
   function handleWishlistToggle() {
+    if (!isLoggedIn) {
+      setIsLoginPopupOpen(true);
+      return;
+    }
+
     if (isWishlisted) {
       removeFromWishlist(selectedVariant.id);
     } else {
@@ -223,6 +235,11 @@ function ProductDetails({ product }) {
         >
           ADD TO CART
         </button>
+
+        <LoginRequiredPopup
+          isOpen={isLoginPopupOpen}
+          onClose={() => setIsLoginPopupOpen(false)}
+        />
 
         <AddToCartPopup
           isOpen={isPopupOpen}

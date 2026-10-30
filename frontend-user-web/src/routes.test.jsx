@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
@@ -282,6 +282,47 @@ describe('BottomNav', () => {
     const bottomNav = screen.getByRole('navigation', { name: 'Shortcuts' });
 
     await user.click(within(bottomNav).getByRole('link', { name: 'Account' }));
+    await user.type(
+      screen.getByLabelText(/^email address/i),
+      'john.doe@gmail.com'
+    );
+    await user.type(screen.getByLabelText(/^password/i), 'abcd1234');
+    await user.click(screen.getByRole('button', { name: 'LOG IN' }));
+
+    expect(router.state.location.pathname).toBe('/products/1');
+  });
+});
+
+describe('Login required popup', () => {
+  const originalShowModal = HTMLDialogElement.prototype.showModal;
+  const originalClose = HTMLDialogElement.prototype.close;
+
+  // jsdom chưa cài đặt showModal/close của <dialog>; test này mở popup thật nên cần hàm giả.
+  beforeEach(() => {
+    HTMLDialogElement.prototype.showModal = vi.fn(function () {
+      this.setAttribute('open', '');
+    });
+    HTMLDialogElement.prototype.close = vi.fn(function () {
+      this.removeAttribute('open');
+      this.dispatchEvent(new Event('close'));
+    });
+  });
+
+  afterEach(() => {
+    HTMLDialogElement.prototype.showModal = originalShowModal;
+    HTMLDialogElement.prototype.close = originalClose;
+  });
+
+  it('returns to the product page after logging in from the popup', async () => {
+    const user = userEvent.setup();
+    const router = renderWithRouter('/products/1');
+    // Dữ liệu thật nên không gõ cứng tên sản phẩm, chỉ khớp phần đuôi của aria-label.
+    const wishlist = await screen.findByRole('button', {
+      name: /to wishlist$/,
+    });
+
+    await user.click(wishlist);
+    await user.click(screen.getByRole('link', { name: 'LOG IN' }));
     await user.type(
       screen.getByLabelText(/^email address/i),
       'john.doe@gmail.com'

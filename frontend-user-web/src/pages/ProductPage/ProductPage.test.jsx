@@ -163,11 +163,14 @@ const variant203 = {
   colorImage: '/images/product-b/10-white.avif',
 };
 
+const WISHLIST_BUTTON_NAME = 'Add Product A to wishlist';
+
 function renderProductPage() {
   const router = createMemoryRouter(
     [
       { path: '/products/:id', element: <ProductPage /> },
       { path: '/cart', element: <h1>Cart page</h1> },
+      { path: '/login', element: <h1>Login page</h1> },
     ],
     { initialEntries: ['/products/29'] }
   );
@@ -181,6 +184,16 @@ function renderProductPage() {
       </CartProvider>
     </AuthProvider>
   );
+}
+
+function readStoredWishlist() {
+  return JSON.parse(localStorage.getItem('wishlist'));
+}
+
+// Người chưa đăng nhập bấm tim chỉ mở popup, nên các test cần thêm/bỏ wishlist
+// phải đăng nhập trước khi render (AuthProvider chỉ đọc storage lúc khởi tạo).
+function logIn() {
+  localStorage.setItem('user', JSON.stringify({ email: 'jane@example.com' }));
 }
 
 const originalShowModal = HTMLDialogElement.prototype.showModal;
@@ -391,19 +404,8 @@ describe('ProductDetails color and size selection', () => {
 });
 
 describe('ProductDetails wishlist', () => {
-  const WISHLIST_BUTTON_NAME = 'Add Product A to wishlist';
-
   function storeWishlist(ids) {
     localStorage.setItem('wishlist', JSON.stringify(ids));
-  }
-
-  function readStoredWishlist() {
-    return JSON.parse(localStorage.getItem('wishlist'));
-  }
-
-  // Bước 4 sẽ chặn người chưa đăng nhập, nên các test có bấm tim đăng nhập sẵn từ bây giờ.
-  function logIn() {
-    localStorage.setItem('user', JSON.stringify({ email: 'jane@example.com' }));
   }
 
   it('is not pressed when the selected variant is not in the wishlist', async () => {
@@ -492,6 +494,89 @@ describe('ProductDetails wishlist', () => {
     );
 
     expect(readStoredWishlist()).toEqual([104]);
+  });
+});
+
+describe('ProductDetails login required popup', () => {
+  it('opens the login popup when a guest clicks the heart', async () => {
+    const user = userEvent.setup();
+    getProductById.mockResolvedValue(productA);
+    renderProductPage();
+    const wishlist = await screen.findByRole('button', {
+      name: WISHLIST_BUTTON_NAME,
+    });
+
+    // Dialog đóng bị ẩn nên không có tên và không được queryByRole tìm thấy.
+    expect(
+      screen.queryByRole('dialog', { name: 'Login' })
+    ).not.toBeInTheDocument();
+
+    await user.click(wishlist);
+
+    expect(
+      screen.getByRole('dialog', { name: 'Login', hidden: true })
+    ).toHaveAttribute('open');
+  });
+
+  it('does not change the wishlist when a guest clicks the heart', async () => {
+    const user = userEvent.setup();
+    getProductById.mockResolvedValue(productA);
+    renderProductPage();
+    const wishlist = await screen.findByRole('button', {
+      name: WISHLIST_BUTTON_NAME,
+    });
+
+    await user.click(wishlist);
+
+    expect(wishlist).toHaveAttribute('aria-pressed', 'false');
+    expect(readStoredWishlist()).toBeNull();
+  });
+
+  it('closes the popup with CANCEL', async () => {
+    const user = userEvent.setup();
+    getProductById.mockResolvedValue(productA);
+    renderProductPage();
+    const wishlist = await screen.findByRole('button', {
+      name: WISHLIST_BUTTON_NAME,
+    });
+
+    await user.click(wishlist);
+    const dialog = screen.getByRole('dialog', { name: 'Login', hidden: true });
+    await user.click(screen.getByRole('button', { name: 'CANCEL' }));
+
+    expect(dialog).not.toHaveAttribute('open');
+  });
+
+  it('goes to the login page with LOG IN', async () => {
+    const user = userEvent.setup();
+    getProductById.mockResolvedValue(productA);
+    renderProductPage();
+    const wishlist = await screen.findByRole('button', {
+      name: WISHLIST_BUTTON_NAME,
+    });
+
+    await user.click(wishlist);
+    await user.click(screen.getByRole('link', { name: 'LOG IN' }));
+
+    expect(
+      screen.getByRole('heading', { level: 1, name: 'Login page' })
+    ).toBeInTheDocument();
+  });
+
+  it('does not open the popup for a logged-in user', async () => {
+    const user = userEvent.setup();
+    logIn();
+    getProductById.mockResolvedValue(productA);
+    renderProductPage();
+    const wishlist = await screen.findByRole('button', {
+      name: WISHLIST_BUTTON_NAME,
+    });
+
+    await user.click(wishlist);
+
+    expect(
+      screen.queryByRole('dialog', { name: 'Login' })
+    ).not.toBeInTheDocument();
   });
 });
 
@@ -650,7 +735,10 @@ describe('ProductDetails add to cart popup', () => {
     });
 
     await user.click(addToCart);
-    const dialog = screen.getByRole('dialog', { hidden: true });
+    const dialog = screen.getByRole('dialog', {
+      name: '1 item(s) added to your cart',
+      hidden: true,
+    });
     await user.click(screen.getByRole('button', { name: 'Close' }));
 
     expect(dialog).not.toHaveAttribute('open');
@@ -666,7 +754,10 @@ describe('ProductDetails add to cart popup', () => {
     });
 
     await user.click(addToCart);
-    const dialog = screen.getByRole('dialog', { hidden: true });
+    const dialog = screen.getByRole('dialog', {
+      name: '1 item(s) added to your cart',
+      hidden: true,
+    });
     await user.click(screen.getByRole('button', { name: 'CONTINUE SHOPPING' }));
 
     expect(dialog).not.toHaveAttribute('open');
