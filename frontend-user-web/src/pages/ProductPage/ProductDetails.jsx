@@ -5,14 +5,15 @@ import Icon from '../../components/Icon/Icon';
 import QuantityStepper from '../../components/QuantityStepper/QuantityStepper';
 import { useCart } from '../../context/CartContext';
 import AddToCartPopup from '../../components/AddToCartPopup/AddToCartPopup';
+import { useWishlist } from '../../context/WishlistContext';
 
 /**
  * Phần nội dung của trang chi tiết khi đã có dữ liệu: gallery ảnh, khối thông tin
- * (tên, chọn màu, chọn size, giá, số lượng, ADD TO CART) và phần mô tả.
+ * (tên, nút tim, chọn màu, chọn size, giá, số lượng, ADD TO CART) và phần mô tả.
  * Tách khỏi ProductPage để các state chọn màu, size khởi tạo được từ product:
  * component chỉ được render khi product đã có, nên useState nhận ngay phần tử đầu.
  * Bấm nút ADD TO CART sẽ thêm variant đang chọn vào giỏ hàng và mở popup xác nhận.
- * Nút tim tạm disabled cho tới Phần 10.
+ * Bấm nút tim sẽ thêm hoặc bỏ variant đang chọn khỏi wishlist.
  * @param {object} props
  * @param {object} props.product - sản phẩm từ getProductById (gồm colors, sizes, detailImages, features, variants)
  */
@@ -35,10 +36,16 @@ function ProductDetails({ product }) {
   const galleryRef = useRef(null);
 
   const { addItem } = useCart();
+  // Đổi tên khi destructure vì giỏ hàng và wishlist cùng đặt tên hàm là addItem.
+  const {
+    isInWishlist,
+    addItem: addToWishlist,
+    removeItem: removeFromWishlist,
+  } = useWishlist();
 
   // ==================================== STATE ====================================
   // Lưu code của màu thay vì object hay index: code ổn định, không trùng lặp dữ liệu
-  // với product.colors, và khớp variants.colorCode để tìm đúng variant khi thêm vào giỏ hàng.
+  // với product.colors, và khớp variants.colorCode để tìm đúng variant đang chọn.
   const [selectedColorCode, setSelectedColorCode] = useState(colors[0].code);
   // Lưu đúng chuỗi size vì nó khớp variants.size.
   const [selectedSize, setSelectedSize] = useState(sizes[0]);
@@ -56,8 +63,17 @@ function ProductDetails({ product }) {
   const originalPrice = formatToUSD(price);
   const finalPrice = formatToUSD(getEffectivePrice(product));
 
+  // Tính lúc render (không tìm trong handler) vì trạng thái nút tim cần biết variant
+  // ngay khi vẽ; ADD TO CART dùng lại giá trị này. Đổi màu hoặc size làm variant đổi
+  // theo, nên tim tự đúng mà không phải đồng bộ tay như syncWishlistHeart của vanilla.
+  const selectedVariant = variants.find(
+    (variant) =>
+      variant.colorCode === selectedColorCode && variant.size === selectedSize
+  );
+  const isWishlisted = isInWishlist(selectedVariant.id);
+
   // ================================ EVENT HANDLERS ================================
-  const handleColorChange = (code) => {
+  function handleColorChange(code) {
     setSelectedColorCode(code);
     // Trên mobile gallery là dải cuộn ngang: nếu người dùng đang xem ảnh phía sau
     // thì sẽ không thấy ảnh đầu đổi màu, nên cuộn về đầu. Gọi trong handler (không
@@ -65,21 +81,24 @@ function ProductDetails({ product }) {
     // đã có nên galleryRef.current chắc chắn khác null. Trên desktop lưới không
     // cuộn được nên lệnh này không có tác dụng.
     galleryRef.current.scrollTo({ left: 0, behavior: 'smooth' });
-  };
+  }
 
-  const handleSizeChange = (size) => {
+  function handleSizeChange(size) {
     setSelectedSize(size);
-  };
+  }
 
-  const handleAddToCart = () => {
-    const variant = variants.find(
-      (item) =>
-        item.colorCode === selectedColorCode && item.size === selectedSize
-    );
-
-    addItem(variant.id, quantity);
+  function handleAddToCart() {
+    addItem(selectedVariant.id, quantity);
     setIsPopupOpen(true);
-  };
+  }
+
+  function handleWishlistToggle() {
+    if (isWishlisted) {
+      removeFromWishlist(selectedVariant.id);
+    } else {
+      addToWishlist(selectedVariant.id);
+    }
+  }
 
   return (
     <div className={styles.page}>
@@ -103,19 +122,23 @@ function ProductDetails({ product }) {
         {/* Nút tim là anh em của <h1>, không nằm trong <h1>, để tên của heading chỉ là tên sản phẩm. */}
         <div className={styles.title}>
           <h1 className={styles.name}>{name}</h1>
+          {/* Nút bật/tắt nên dùng aria-pressed để screen reader đọc trạng thái "pressed";
+              tên giữ cố định vì đổi tên theo trạng thái sẽ đọc thành 2 nút khác nhau.
+              CSS vẽ màu đỏ qua [aria-pressed='true'], không cần class trạng thái. */}
           <button
             type="button"
             className={styles.wishlist}
             aria-label={`Add ${name} to wishlist`}
-            disabled
+            aria-pressed={isWishlisted}
+            onClick={handleWishlistToggle}
           >
-            <Icon name="heart-icon" />
+            <Icon name={isWishlisted ? 'heart-icon-filled' : 'heart-icon'} />
           </button>
         </div>
 
         {/* Màu và size dùng radio thật (ẩn input, hiển thị label) để có sẵn trạng thái
             checked, phím mũi tên và "chỉ chọn 1" mà không cần tự viết ARIA.
-            fieldset + legend cho screen reader biết đang ở nhóm nào. Trạng thái chọn và 
+            fieldset + legend cho screen reader biết đang ở nhóm nào. Trạng thái chọn và
             focus được vẽ lên label qua :has(), vì input bị ẩn. */}
         <fieldset className={styles.options}>
           <legend className="visually-hidden">Color</legend>

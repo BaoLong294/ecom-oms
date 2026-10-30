@@ -4,7 +4,7 @@
   gap: 50px;
   align-items: start;
   grid-template-areas:
-    'gallery      info'
+    'gallery     info'
     'description info';
 }
 
@@ -55,6 +55,20 @@
   position: absolute;
   top: -6px;
   right: -6px;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.wishlist:hover {
+  color: var(--color-gray);
+}
+
+.wishlist[aria-pressed='true'] {
+  color: var(--color-red);
+}
+
+.wishlist:focus-visible {
+  outline: 1px solid var(--color-focus);
 }
 
 /* ======================= PRODUCT INFO — COLORS & SIZES ========================= */

@@ -4,8 +4,10 @@ import userEvent from '@testing-library/user-event';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import ProductPage from './ProductPage';
 import { getProductById } from '../../services/productService';
-import CartProvider from '../../context/CartProvider.jsx';
 import { getVariantsByIds } from '../../services/variantService';
+import AuthProvider from '../../context/AuthProvider.jsx';
+import CartProvider from '../../context/CartProvider.jsx';
+import WishlistProvider from '../../context/WishlistProvider.jsx';
 
 vi.mock('../../services/productService', () => ({
   getProductById: vi.fn(),
@@ -171,9 +173,13 @@ function renderProductPage() {
   );
 
   render(
-    <CartProvider>
-      <RouterProvider router={router} />
-    </CartProvider>
+    <AuthProvider>
+      <CartProvider>
+        <WishlistProvider>
+          <RouterProvider router={router} />
+        </WishlistProvider>
+      </CartProvider>
+    </AuthProvider>
   );
 }
 
@@ -307,16 +313,6 @@ describe('ProductDetails display', () => {
     expect(description).toBeInTheDocument();
     expect(feature).not.toBeInTheDocument();
   });
-
-  it('renders the wishlist button as disabled', async () => {
-    getProductById.mockResolvedValue(productA);
-    renderProductPage();
-    const wishlist = await screen.findByRole('button', {
-      name: 'Add Product A to wishlist',
-    });
-
-    expect(wishlist).toBeDisabled();
-  });
 });
 
 describe('ProductDetails color and size selection', () => {
@@ -391,6 +387,111 @@ describe('ProductDetails color and size selection', () => {
 
     expect(sizeRadio).toBeChecked();
     expect(sizeText).toBeInTheDocument();
+  });
+});
+
+describe('ProductDetails wishlist', () => {
+  const WISHLIST_BUTTON_NAME = 'Add Product A to wishlist';
+
+  function storeWishlist(ids) {
+    localStorage.setItem('wishlist', JSON.stringify(ids));
+  }
+
+  function readStoredWishlist() {
+    return JSON.parse(localStorage.getItem('wishlist'));
+  }
+
+  // Bước 4 sẽ chặn người chưa đăng nhập, nên các test có bấm tim đăng nhập sẵn từ bây giờ.
+  function logIn() {
+    localStorage.setItem('user', JSON.stringify({ email: 'jane@example.com' }));
+  }
+
+  it('is not pressed when the selected variant is not in the wishlist', async () => {
+    getProductById.mockResolvedValue(productA);
+    renderProductPage();
+    const wishlist = await screen.findByRole('button', {
+      name: WISHLIST_BUTTON_NAME,
+    });
+
+    expect(wishlist).toHaveAttribute('aria-pressed', 'false');
+  });
+
+  it('is pressed when the selected variant is already in the wishlist', async () => {
+    storeWishlist([101]);
+    getProductById.mockResolvedValue(productA);
+    renderProductPage();
+    const wishlist = await screen.findByRole('button', {
+      name: WISHLIST_BUTTON_NAME,
+    });
+
+    expect(wishlist).toHaveAttribute('aria-pressed', 'true');
+  });
+
+  it('adds the selected variant when clicked', async () => {
+    const user = userEvent.setup();
+    logIn();
+    getProductById.mockResolvedValue(productA);
+    renderProductPage();
+    const wishlist = await screen.findByRole('button', {
+      name: WISHLIST_BUTTON_NAME,
+    });
+
+    await user.click(wishlist);
+
+    expect(wishlist).toHaveAttribute('aria-pressed', 'true');
+    expect(readStoredWishlist()).toEqual([101]);
+  });
+
+  it('removes the selected variant when clicked again', async () => {
+    const user = userEvent.setup();
+    logIn();
+    storeWishlist([101]);
+    getProductById.mockResolvedValue(productA);
+    renderProductPage();
+    const wishlist = await screen.findByRole('button', {
+      name: WISHLIST_BUTTON_NAME,
+    });
+
+    expect(wishlist).toHaveAttribute('aria-pressed', 'true');
+
+    await user.click(wishlist);
+
+    expect(wishlist).toHaveAttribute('aria-pressed', 'false');
+    expect(readStoredWishlist()).toEqual([]);
+  });
+
+  it('follows both the selected color and size', async () => {
+    const user = userEvent.setup();
+    storeWishlist([104]);
+    getProductById.mockResolvedValue(productA);
+    renderProductPage();
+    const wishlist = await screen.findByRole('button', {
+      name: WISHLIST_BUTTON_NAME,
+    });
+
+    expect(wishlist).toHaveAttribute('aria-pressed', 'false');
+
+    await user.click(screen.getByRole('radio', { name: '11 PINK' }));
+    expect(wishlist).toHaveAttribute('aria-pressed', 'false');
+
+    await user.click(screen.getByRole('radio', { name: 'L' }));
+    expect(wishlist).toHaveAttribute('aria-pressed', 'true');
+  });
+
+  it('adds the variant of the current color and size', async () => {
+    const user = userEvent.setup();
+    logIn();
+    getProductById.mockResolvedValue(productA);
+    renderProductPage();
+    const pinkRadio = await screen.findByRole('radio', { name: '11 PINK' });
+
+    await user.click(pinkRadio);
+    await user.click(screen.getByRole('radio', { name: 'L' }));
+    await user.click(
+      screen.getByRole('button', { name: WISHLIST_BUTTON_NAME })
+    );
+
+    expect(readStoredWishlist()).toEqual([104]);
   });
 });
 
