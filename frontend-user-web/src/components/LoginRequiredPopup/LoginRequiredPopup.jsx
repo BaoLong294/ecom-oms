@@ -19,15 +19,25 @@ function LoginRequiredPopup({ isOpen, onClose }) {
   return (
     <Modal isOpen={isOpen} onClose={onClose} labelledBy="login-required-title">
       <div className={styles.popup}>
-        <h2 id="login-required-title">Login</h2>
+        <h2 id="login-required-title" className={styles.title}>
+          Login
+        </h2>
         <p className={styles.message}>
           You must be logged in to add to your wishlist.
         </p>
         <div className={styles.buttons}>
-          <Link to="/login" state={{ from: location.pathname }}>
+          <Link
+            to="/login"
+            state={{ from: location.pathname }}
+            className={styles.loginLink}
+          >
             LOG IN
           </Link>
-          <button type="button" onClick={onClose}>
+          <button
+            type="button"
+            onClick={onClose}
+            className={styles.cancelButton}
+          >
             CANCEL
           </button>
         </div>
