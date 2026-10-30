@@ -55,7 +55,7 @@ function WishlistPage() {
 
     content = (
       <div className={styles.filled}>
-        <section aria-label="Wishlist summary">
+        <section aria-label="Wishlist summary" className={styles.summary}>
           <p className={styles.count}>{wishlistRows.length} item(s)</p>
         </section>
 

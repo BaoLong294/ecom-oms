@@ -1,0 +1,107 @@
+/* ==================================== PAGE ===================================== */
+.page {
+  width: 100%;
+  max-width: var(--content-max-width);
+  margin: 0 auto 80px;
+}
+
+/* ============================ BREADCRUMBS & TITLE ============================== */
+.breadcrumbs {
+  font-size: 0.8rem;
+  color: rgb(117, 117, 117);
+  margin-bottom: 50px;
+}
+
+.breadcrumbsLink {
+  color: rgb(117, 117, 117);
+}
+
+.breadcrumbsLink:focus-visible {
+  outline: 1px solid var(--color-focus);
+}
+
+.title {
+  font-size: 2rem;
+  margin-bottom: 85px;
+}
+
+/* =============================== EMPTY WISHLIST ================================ */
+.emptyText {
+  font-size: 1.1rem;
+  margin-bottom: 40px;
+}
+
+.emptyContinue {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-white);
+  background-color: var(--color-dark);
+  display: inline-block;
+  text-decoration: none;
+  text-align: center;
+  padding: 10px 5px;
+  width: 288px;
+  line-height: 25px;
+  transition: opacity 0.15s;
+}
+
+.emptyContinue:hover {
+  opacity: 0.7;
+}
+
+.emptyContinue:focus-visible {
+  outline: 1px solid var(--color-focus);
+  outline-offset: 3px;
+}
+
+/* =============================== FILLED WISHLIST =============================== */
+.filled {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  align-items: start;
+  gap: 50px;
+}
+
+.rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+/* ================================ ITEM SUMMARY ================================= */
+.summary {
+  position: sticky;
+  top: 105px;
+  border: 1px solid var(--color-gray-light);
+  padding: 25px 20px;
+}
+
+.count {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+/* =================== MEDIA QUERY TO STYLE FOR MOBILE LAYOUT ==================== */
+@media (max-width: 480px) {
+  .page {
+    padding: 0 20px;
+  }
+
+  .title {
+    margin-bottom: 40px;
+  }
+
+  .filled {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .summary {
+    position: static;
+    max-width: 160px;
+    padding: 15px;
+    overflow-wrap: break-word;
+  }
+}
