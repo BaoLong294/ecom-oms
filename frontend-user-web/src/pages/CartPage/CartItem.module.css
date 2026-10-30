@@ -11,6 +11,10 @@
   border-bottom: 1px solid var(--color-gray-light);
 }
 
+.imageWrapper {
+  flex-shrink: 0;
+}
+
 .image {
   height: 100%;
   width: auto;
