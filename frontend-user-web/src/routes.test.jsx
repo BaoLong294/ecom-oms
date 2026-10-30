@@ -5,13 +5,16 @@ import userEvent from '@testing-library/user-event';
 import { routes } from './routes.jsx';
 import AuthProvider from './context/AuthProvider.jsx';
 import CartProvider from './context/CartProvider.jsx';
+import WishlistProvider from './context/WishlistProvider.jsx';
 
 function renderWithRouter(url) {
   const router = createMemoryRouter(routes, { initialEntries: [url] });
   render(
     <AuthProvider>
       <CartProvider>
-        <RouterProvider router={router} />
+        <WishlistProvider>
+          <RouterProvider router={router} />
+        </WishlistProvider>
       </CartProvider>
     </AuthProvider>
   );
