@@ -51,19 +51,25 @@ function WishlistOptions({ product, onClose }) {
         </button>
       </div>
 
-      <div>
-        <img src={selectedColor.image} alt={`${name}, ${selectedColor.name}`} />
-        <p>Color: {selectedColor.name}</p>
+      <div className={styles.colorPreview}>
+        <img
+          src={selectedColor.image}
+          alt={`${name}, ${selectedColor.name}`}
+          className={styles.image}
+        />
+        <p className={styles.colorName}>Color: {selectedColor.name}</p>
       </div>
 
-      <ColorOptions
-        name="wishlist-color"
-        colors={colors}
-        selectedColorCode={selectedColorCode}
-        onColorChange={setSelectedColorCode}
-      />
+      <div className={styles.swatches}>
+        <ColorOptions
+          name="wishlist-color"
+          colors={colors}
+          selectedColorCode={selectedColorCode}
+          onColorChange={setSelectedColorCode}
+        />
+      </div>
 
-      <ul>
+      <ul className={styles.sizes}>
         {sizes.map((size) => {
           const sizeVariant = variants.find(
             (variant) =>
@@ -72,13 +78,14 @@ function WishlistOptions({ product, onClose }) {
           const isWishlisted = isInWishlist(sizeVariant.id);
 
           return (
-            <li key={size}>
-              <p>{size}</p>
+            <li key={size} className={styles.sizeItem}>
+              <p className={styles.sizeLabel}>{size}</p>
               <button
                 type="button"
                 aria-label={`Add ${name} size ${size} to wishlist`}
                 aria-pressed={isWishlisted}
                 onClick={() => handleHeartClick(sizeVariant.id)}
+                className={styles.heart}
               >
                 <Icon
                   name={isWishlisted ? 'heart-icon-filled' : 'heart-icon'}
