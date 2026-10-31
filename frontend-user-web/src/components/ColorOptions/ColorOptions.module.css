@@ -1,0 +1,52 @@
+/* =============================== COLOR OPTIONS ================================= */
+
+.group {
+  border: none;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+
+.swatches {
+  display: flex;
+  gap: 12px;
+}
+
+.label {
+  width: var(--swatch-size, 36px);
+  height: var(--swatch-size, 36px);
+  border-radius: 50%;
+  border: none;
+  background-color: var(--color-white);
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.label:hover {
+  outline: 1px solid var(--color-gray);
+  outline-offset: 3px;
+}
+
+.label:has(input:checked) {
+  outline: 2px solid var(--color-dark);
+  outline-offset: 3px;
+}
+
+.label:has(input:focus-visible) {
+  outline: 1px solid var(--color-focus);
+  outline-offset: 3px;
+}
+
+.label input:focus-visible {
+  outline: none;
+}
+
+.swatch {
+  width: var(--swatch-size, 36px);
+  height: var(--swatch-size, 36px);
+  border-radius: 50%;
+  border: 1px solid var(--color-gray);
+}

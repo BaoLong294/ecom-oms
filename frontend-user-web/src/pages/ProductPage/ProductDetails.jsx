@@ -8,6 +8,7 @@ import AddToCartPopup from '../../components/AddToCartPopup/AddToCartPopup';
 import { useWishlist } from '../../context/WishlistContext';
 import { useAuth } from '../../context/AuthContext';
 import LoginRequiredPopup from '../../components/LoginRequiredPopup/LoginRequiredPopup';
+import ColorOptions from '../../components/ColorOptions/ColorOptions';
 
 /**
  * Phần nội dung của trang chi tiết khi đã có dữ liệu: gallery ảnh, khối thông tin
@@ -148,41 +149,20 @@ function ProductDetails({ product }) {
           </button>
         </div>
 
-        {/* Màu và size dùng radio thật (ẩn input, hiển thị label) để có sẵn trạng thái
-            checked, phím mũi tên và "chỉ chọn 1" mà không cần tự viết ARIA.
-            fieldset + legend cho screen reader biết đang ở nhóm nào. Trạng thái chọn và
-            focus được vẽ lên label qua :has(), vì input bị ẩn. */}
-        <fieldset className={styles.options}>
-          <legend className="visually-hidden">Color</legend>
-          <div className={styles.swatches}>
-            {colors.map((color) => {
-              const isChecked = color.code === selectedColorCode;
-
-              return (
-                <label key={color.code} className={styles.colorLabel}>
-                  <input
-                    type="radio"
-                    name="color"
-                    value={color.code}
-                    checked={isChecked}
-                    onChange={() => handleColorChange(color.code)}
-                    className="visually-hidden"
-                  />
-                  {/* alt là tên màu, cũng chính là tên của radio. */}
-                  <img
-                    src={color.swatch}
-                    alt={color.name}
-                    className={styles.swatchImage}
-                  />
-                </label>
-              );
-            })}
-          </div>
-        </fieldset>
+        <ColorOptions
+          name="color"
+          colors={colors}
+          selectedColorCode={selectedColorCode}
+          onColorChange={handleColorChange}
+        />
         <p className={styles.selectionText}>
           Color: {selectedColor.name.toUpperCase()}
         </p>
 
+        {/* Size dùng radio thật (ẩn input, hiển thị label) để có sẵn trạng thái
+            checked, phím mũi tên và "chỉ chọn 1" mà không cần tự viết ARIA.
+            fieldset + legend cho screen reader biết đang ở nhóm nào. Trạng thái chọn và
+            focus được vẽ lên label qua :has(), vì input bị ẩn. */}
         <fieldset className={styles.options}>
           <legend className="visually-hidden">Size</legend>
           <div className={styles.sizes}>

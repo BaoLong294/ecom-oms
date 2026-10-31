@@ -83,44 +83,12 @@
   font-size: 0.8rem;
   color: var(--color-gray);
   margin-bottom: 25px;
+  margin-top: 8px;
 }
 
-.swatches,
 .sizes {
   display: flex;
-  justify-content: flex-start;
   gap: 12px;
-  margin-bottom: 8px;
-}
-
-.colorLabel {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: none;
-  background-color: var(--color-white);
-  overflow: hidden;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.colorLabel:has(input:checked) {
-  outline: 2px solid var(--color-dark);
-  outline-offset: 3px;
-}
-
-.colorLabel:has(input:focus-visible) {
-  outline: 1px solid var(--color-focus);
-  outline-offset: 3px;
-}
-
-.swatchImage {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: 1px solid var(--color-gray);
 }
 
 .sizeLabel {
@@ -137,7 +105,6 @@
   cursor: pointer;
 }
 
-.colorLabel:hover,
 .sizeLabel:hover {
   outline: 1px solid var(--color-gray);
   outline-offset: 3px;
@@ -155,7 +122,6 @@
   outline-offset: 3px;
 }
 
-.colorLabel input:focus-visible,
 .sizeLabel input:focus-visible {
   outline: none;
 }
