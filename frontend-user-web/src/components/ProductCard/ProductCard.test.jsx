@@ -1,7 +1,8 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import ProductCard from './ProductCard.jsx';
+import userEvent from '@testing-library/user-event';
 
 // Không giảm giá, 2 màu, dải size S-L
 const productA = {
@@ -66,10 +67,19 @@ const productB = {
 /**
  * Render một ProductCard trong router tối thiểu (card có <Link> nên cần router).
  * @param {object} product - sản phẩm mock truyền vào card
+ * @param {function(object): void} [onWishlistClick] - hàm giả nhận lời gọi khi bấm tim;
+ *   mặc định vi.fn() cho các test không quan tâm tới nút tim.
  */
-function renderCard(product) {
+function renderCard(product, onWishlistClick = vi.fn()) {
   const router = createMemoryRouter(
-    [{ path: '/', element: <ProductCard product={product} /> }],
+    [
+      {
+        path: '/',
+        element: (
+          <ProductCard product={product} onWishlistClick={onWishlistClick} />
+        ),
+      },
+    ],
     { initialEntries: ['/'] }
   );
 
@@ -116,12 +126,15 @@ describe('ProductCard', () => {
     expect(screen.getByAltText('02 BLUE')).toBeInTheDocument();
   });
 
-  it('should disable the button used to add products to the wishlist', () => {
-    renderCard(productA);
-    const wishlistButton = screen.getByRole('button', {
-      name: 'Add Product A to wishlist',
-    });
+  it('should call onWishlistClick with the product when the heart is clicked', async () => {
+    const user = userEvent.setup();
+    const handleWishlistClick = vi.fn();
+    renderCard(productA, handleWishlistClick);
 
-    expect(wishlistButton).toBeDisabled();
+    await user.click(
+      screen.getByRole('button', { name: 'Add Product A to wishlist' })
+    );
+
+    expect(handleWishlistClick).toHaveBeenCalledWith(productA);
   });
 });

@@ -1,8 +1,10 @@
-import { describe, it, expect, vi, afterEach } from 'vitest';
+import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import CategoryPage from './CategoryPage.jsx';
 import { getCategoryListing } from '../../services/categoryService';
+import AuthProvider from '../../context/AuthProvider.jsx';
+import userEvent from '@testing-library/user-event';
 
 vi.mock('../../services/categoryService', () => ({
   getCategoryListing: vi.fn(),
@@ -140,7 +142,11 @@ function renderCategoryPage() {
     { initialEntries: ['/categories/3'] }
   );
 
-  render(<RouterProvider router={router} />);
+  render(
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
+  );
 }
 
 describe('CategoryPage', () => {
@@ -248,5 +254,45 @@ describe('CategoryPage', () => {
     });
 
     expect(categoryNotFound).toBeInTheDocument();
+  });
+});
+
+describe('CategoryPage wishlist', () => {
+  const originalShowModal = HTMLDialogElement.prototype.showModal;
+  const originalClose = HTMLDialogElement.prototype.close;
+
+  beforeEach(() => {
+    HTMLDialogElement.prototype.showModal = vi.fn(function () {
+      this.setAttribute('open', '');
+    });
+    HTMLDialogElement.prototype.close = vi.fn(function () {
+      this.removeAttribute('open');
+      this.dispatchEvent(new Event('close'));
+    });
+  });
+
+  afterEach(() => {
+    HTMLDialogElement.prototype.showModal = originalShowModal;
+    HTMLDialogElement.prototype.close = originalClose;
+    vi.resetAllMocks();
+  });
+
+  it('should open the login popup when a guest clicks a product heart', async () => {
+    const user = userEvent.setup();
+    getCategoryListing.mockResolvedValue(mockListing);
+    renderCategoryPage();
+    const heart = await screen.findByRole('button', {
+      name: 'Add Product C to wishlist',
+    });
+
+    expect(
+      screen.queryByRole('dialog', { name: 'Login' })
+    ).not.toBeInTheDocument();
+
+    await user.click(heart);
+
+    expect(
+      screen.getByRole('dialog', { name: 'Login', hidden: true })
+    ).toHaveAttribute('open');
   });
 });

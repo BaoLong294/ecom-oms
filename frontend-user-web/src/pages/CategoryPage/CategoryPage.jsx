@@ -1,9 +1,12 @@
 import styles from './CategoryPage.module.css';
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getCategoryListing } from '../../services/categoryService';
 import ProductCard from '../../components/ProductCard/ProductCard';
 import StatusMessage from '../../components/StatusMessage/StatusMessage';
 import { useFetch } from '../../hooks/useFetch';
+import { useAuth } from '../../context/AuthContext';
+import LoginRequiredPopup from '../../components/LoginRequiredPopup/LoginRequiredPopup';
 
 /**
  * Trang danh sách sản phẩm của một category: lấy id từ URL (/categories/:id),
@@ -14,9 +17,13 @@ import { useFetch } from '../../hooks/useFetch';
  * Đang tải hoặc lỗi: "Category" (ẩn, chỉ dành cho screen reader), kèm StatusMessage.
  * Category không tồn tại (service trả null): "Category not found".
  * Có dữ liệu: tên category.
+ * Bấm tim trên một card: khách chưa đăng nhập thì mở popup yêu cầu đăng nhập.
+ * Popup đặt ở trang (một popup cho mọi card) và luôn được render để Modal đóng đúng cách.
  */
 function CategoryPage() {
   const { id } = useParams();
+  const { isLoggedIn } = useAuth();
+  const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false);
 
   const {
     data: listing,
@@ -40,33 +47,51 @@ function CategoryPage() {
     headingClassName = styles.title;
     content = (
       <div className={styles.groups}>
-        {listing.groups.map((group) => (
-          <section key={group.id} aria-labelledby={`group-${group.id}`}>
-            <h2 id={`group-${group.id}`} className={styles.groupName}>
-              {group.name}
-            </h2>
-            {group.banners[0] && (
-              <img
-                src={group.banners[0].image}
-                alt={group.banners[0].alt}
-                className={styles.banner}
-              />
-            )}
-            <div className={styles.grid}>
-              {group.products.map((p) => (
-                <ProductCard key={p.id} product={p} />
-              ))}
-            </div>
-          </section>
-        ))}
+        {listing.groups.map((group) => {
+          const banner = group.banners[0];
+
+          return (
+            <section key={group.id} aria-labelledby={`group-${group.id}`}>
+              <h2 id={`group-${group.id}`} className={styles.groupName}>
+                {group.name}
+              </h2>
+              {banner && (
+                <img
+                  src={banner.image}
+                  alt={banner.alt}
+                  className={styles.banner}
+                />
+              )}
+              <div className={styles.grid}>
+                {group.products.map((product) => (
+                  <ProductCard
+                    key={product.id}
+                    product={product}
+                    onWishlistClick={handleWishlistClick}
+                  />
+                ))}
+              </div>
+            </section>
+          );
+        })}
       </div>
     );
+  }
+
+  function handleWishlistClick() {
+    if (!isLoggedIn) {
+      setIsLoginPopupOpen(true);
+    }
   }
 
   return (
     <div className={styles.page}>
       <h1 className={headingClassName}>{headingText}</h1>
       {content}
+      <LoginRequiredPopup
+        isOpen={isLoginPopupOpen}
+        onClose={() => setIsLoginPopupOpen(false)}
+      />
     </div>
   );
 }
