@@ -8,13 +8,22 @@ import { useRef, useEffect } from 'react';
  * đóng bằng phím Escape và trả focus về phần tử đã mở popup khi đóng.
  * onClose được gọi mỗi khi dialog đóng, kể cả khi trình duyệt tự đóng (Escape),
  * để cha cập nhật lại isOpen. Modal không tự vẽ nút đóng: mỗi popup đặt nút của mình trong children.
+ * Vị trí: mặc định nằm giữa màn hình; placement 'bottom' chỉ khác trên mobile, khi đó
+ * dialog nằm sát đáy và rộng hết màn hình (popup wishlist). Desktop luôn ở giữa.
  * @param {object} props
  * @param {boolean} props.isOpen - true thì mở dialog, false thì đóng
  * @param {function(): void} props.onClose - cha đặt isOpen về false khi dialog đóng
  * @param {string} props.labelledBy - id của tiêu đề bên trong, dùng làm tên của dialog
+ * @param {'center' | 'bottom'} [props.placement='center'] - vị trí của dialog trên mobile
  * @param {React.ReactNode} props.children - nội dung của popup
  */
-function Modal({ isOpen, onClose, labelledBy, children }) {
+function Modal({
+  isOpen,
+  onClose,
+  labelledBy,
+  placement = 'center',
+  children,
+}) {
   const dialogRef = useRef(null);
 
   // showModal() và close() là phương thức DOM, không có thuộc tính JSX tương ứng, nên dùng
@@ -29,12 +38,15 @@ function Modal({ isOpen, onClose, labelledBy, children }) {
     if (!isOpen && dialog.open) dialog.close();
   }, [isOpen]);
 
+  const dialogClassName =
+    placement === 'bottom' ? `${styles.modal} ${styles.bottom}` : styles.modal;
+
   return (
     <dialog
       ref={dialogRef}
       aria-labelledby={labelledBy}
       onClose={onClose}
-      className={styles.modal}
+      className={dialogClassName}
     >
       {children}
     </dialog>

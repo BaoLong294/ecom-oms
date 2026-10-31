@@ -110,6 +110,7 @@ function WishlistPopup({ product, onClose }) {
       isOpen={product !== null}
       onClose={onClose}
       labelledBy="wishlist-popup-title"
+      placement="bottom"
     >
       {product && <WishlistOptions product={product} onClose={onClose} />}
     </Modal>

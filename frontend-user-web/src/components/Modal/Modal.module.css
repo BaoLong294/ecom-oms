@@ -1,6 +1,7 @@
 /* ================================= DIALOG FRAME ================================ */
 /* Kích thước và padding do nội dung của từng popup quyết định; dialog chỉ co theo nội dung.
-   <dialog> modal đã được trình duyệt căn giữa màn hình sẵn. */
+   Dialog modal là position: fixed + inset: 0 và căn giữa nhờ margin: auto; reset toàn cục
+   trong global.css đặt margin: 0 nên phải đặt lại ở đây. */
 .modal {
   border: none;
   padding: 0;
@@ -17,5 +18,11 @@
 @media (max-width: 480px) {
   .modal {
     max-width: 80%;
+  }
+
+  .modal.bottom {
+    margin: auto 0 0;
+    width: 100%;
+    max-width: 100%;
   }
 }
