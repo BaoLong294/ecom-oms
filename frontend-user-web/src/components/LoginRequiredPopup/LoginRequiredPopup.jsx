@@ -13,7 +13,7 @@ import { Link, useLocation } from 'react-router-dom';
  */
 function LoginRequiredPopup({ isOpen, onClose }) {
   // Popup tự đọc trang hiện tại thay vì nhận qua prop: trang nào mở popup thì pathname
-  // chính là trang đó, nên mọi nơi dùng (trang chi tiết, card ở Phần 11) không phải truyền thêm.
+  // chính là trang đó, nên mọi nơi dùng (trang chi tiết, trang danh sách) không phải truyền thêm.
   const location = useLocation();
 
   return (

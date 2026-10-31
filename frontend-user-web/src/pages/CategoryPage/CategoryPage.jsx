@@ -7,6 +7,7 @@ import StatusMessage from '../../components/StatusMessage/StatusMessage';
 import { useFetch } from '../../hooks/useFetch';
 import { useAuth } from '../../context/AuthContext';
 import LoginRequiredPopup from '../../components/LoginRequiredPopup/LoginRequiredPopup';
+import WishlistPopup from './WishlistPopup';
 
 /**
  * Trang danh sách sản phẩm của một category: lấy id từ URL (/categories/:id),
@@ -17,13 +18,17 @@ import LoginRequiredPopup from '../../components/LoginRequiredPopup/LoginRequire
  * Đang tải hoặc lỗi: "Category" (ẩn, chỉ dành cho screen reader), kèm StatusMessage.
  * Category không tồn tại (service trả null): "Category not found".
  * Có dữ liệu: tên category.
- * Bấm tim trên một card: khách chưa đăng nhập thì mở popup yêu cầu đăng nhập.
+ * Bấm tim trên một card: khách chưa đăng nhập thì mở popup yêu cầu đăng nhập,
+ * đã đăng nhập thì mở popup wishlist của sản phẩm đó (state chỉ lưu id sản phẩm,
+ * object product được tìm lại trong listing lúc render).
+ * Hai popup đặt ở trang (một popup cho mọi card) và luôn được render để Modal đóng đúng cách.
  * Popup đặt ở trang (một popup cho mọi card) và luôn được render để Modal đóng đúng cách.
  */
 function CategoryPage() {
   const { id } = useParams();
   const { isLoggedIn } = useAuth();
   const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false);
+  const [wishlistProductId, setWishlistProductId] = useState(null);
 
   const {
     data: listing,
@@ -34,6 +39,7 @@ function CategoryPage() {
   let content = null;
   let headingText = 'Category';
   let headingClassName = 'visually-hidden';
+  let wishlistProduct = null;
 
   if (isLoading) {
     content = <StatusMessage variant="loading" />;
@@ -76,12 +82,19 @@ function CategoryPage() {
         })}
       </div>
     );
+
+    const products = listing.groups.flatMap((group) => group.products);
+    wishlistProduct =
+      products.find((product) => product.id === wishlistProductId) ?? null;
   }
 
-  function handleWishlistClick() {
+  function handleWishlistClick(product) {
     if (!isLoggedIn) {
       setIsLoginPopupOpen(true);
+      return;
     }
+
+    setWishlistProductId(product.id);
   }
 
   return (
@@ -91,6 +104,10 @@ function CategoryPage() {
       <LoginRequiredPopup
         isOpen={isLoginPopupOpen}
         onClose={() => setIsLoginPopupOpen(false)}
+      />
+      <WishlistPopup
+        product={wishlistProduct}
+        onClose={() => setWishlistProductId(null)}
       />
     </div>
   );

@@ -5,6 +5,7 @@ import CategoryPage from './CategoryPage.jsx';
 import { getCategoryListing } from '../../services/categoryService';
 import AuthProvider from '../../context/AuthProvider.jsx';
 import userEvent from '@testing-library/user-event';
+import WishlistProvider from '../../context/WishlistProvider.jsx';
 
 vi.mock('../../services/categoryService', () => ({
   getCategoryListing: vi.fn(),
@@ -60,6 +61,29 @@ const mockListing = {
               text: 'Product B Feature',
             },
           ],
+          variants: [
+            {
+              id: 101,
+              productId: 31,
+              colorCode: '08',
+              size: 'S',
+              stockQuantity: 10,
+            },
+            {
+              id: 102,
+              productId: 31,
+              colorCode: '08',
+              size: 'L',
+              stockQuantity: 10,
+            },
+            {
+              id: 103,
+              productId: 31,
+              colorCode: '08',
+              size: 'XL',
+              stockQuantity: 10,
+            },
+          ],
         },
       ],
     },
@@ -93,11 +117,47 @@ const mockListing = {
               swatch: '/images/09-black.avif',
               image: '/images/product-c/09-black.avif',
             },
+            {
+              code: '10',
+              name: '10 WHITE',
+              swatch: '/images/10-white.avif',
+              image: '/images/product-c/10-white.avif',
+            },
           ],
           features: [
             {
               img: '/images/product-c-feature.avif',
               text: 'Product C Feature',
+            },
+          ],
+          variants: [
+            {
+              id: 201,
+              productId: 32,
+              colorCode: '09',
+              size: 'XS',
+              stockQuantity: 10,
+            },
+            {
+              id: 202,
+              productId: 32,
+              colorCode: '09',
+              size: 'M',
+              stockQuantity: 10,
+            },
+            {
+              id: 203,
+              productId: 32,
+              colorCode: '10',
+              size: 'XS',
+              stockQuantity: 10,
+            },
+            {
+              id: 204,
+              productId: 32,
+              colorCode: '10',
+              size: 'M',
+              stockQuantity: 10,
             },
           ],
         },
@@ -125,6 +185,22 @@ const mockListing = {
               text: 'Product D Feature',
             },
           ],
+          variants: [
+            {
+              id: 301,
+              productId: 33,
+              colorCode: '30',
+              size: 'M',
+              stockQuantity: 10,
+            },
+            {
+              id: 302,
+              productId: 33,
+              colorCode: '30',
+              size: 'XXL',
+              stockQuantity: 10,
+            },
+          ],
         },
       ],
     },
@@ -144,7 +220,9 @@ function renderCategoryPage() {
 
   render(
     <AuthProvider>
-      <RouterProvider router={router} />
+      <WishlistProvider>
+        <RouterProvider router={router} />
+      </WishlistProvider>
     </AuthProvider>
   );
 }
@@ -261,6 +339,31 @@ describe('CategoryPage wishlist', () => {
   const originalShowModal = HTMLDialogElement.prototype.showModal;
   const originalClose = HTMLDialogElement.prototype.close;
 
+  function logIn() {
+    localStorage.setItem('user', JSON.stringify({ email: 'test@example.com' }));
+  }
+
+  function storeWishlist(ids) {
+    localStorage.setItem('wishlist', JSON.stringify(ids));
+  }
+
+  function readStoredWishlist() {
+    return JSON.parse(localStorage.getItem('wishlist'));
+  }
+
+  // Bấm tim của Product C (nhóm thứ hai, không phải sản phẩm đầu) rồi trả về popup đã mở.
+  async function openWishlistPopup(user) {
+    const heart = await screen.findByRole('button', {
+      name: 'Add Product C to wishlist',
+    });
+    await user.click(heart);
+
+    return screen.getByRole('dialog', {
+      name: 'Add to wishlist',
+      hidden: true,
+    });
+  }
+
   beforeEach(() => {
     HTMLDialogElement.prototype.showModal = vi.fn(function () {
       this.setAttribute('open', '');
@@ -275,6 +378,7 @@ describe('CategoryPage wishlist', () => {
     HTMLDialogElement.prototype.showModal = originalShowModal;
     HTMLDialogElement.prototype.close = originalClose;
     vi.resetAllMocks();
+    localStorage.clear();
   });
 
   it('should open the login popup when a guest clicks a product heart', async () => {
@@ -294,5 +398,149 @@ describe('CategoryPage wishlist', () => {
     expect(
       screen.getByRole('dialog', { name: 'Login', hidden: true })
     ).toHaveAttribute('open');
+  });
+
+  it('should open the wishlist popup when a logged-in user clicks a product heart', async () => {
+    const user = userEvent.setup();
+    logIn();
+    getCategoryListing.mockResolvedValue(mockListing);
+    renderCategoryPage();
+    const heart = await screen.findByRole('button', {
+      name: 'Add Product C to wishlist',
+    });
+
+    expect(
+      screen.queryByRole('dialog', { name: 'Add to wishlist' })
+    ).not.toBeInTheDocument();
+
+    await user.click(heart);
+
+    expect(
+      screen.getByRole('dialog', { name: 'Add to wishlist', hidden: true })
+    ).toHaveAttribute('open');
+    expect(
+      screen.queryByRole('dialog', { name: 'Login' })
+    ).not.toBeInTheDocument();
+  });
+
+  it('should show the first color of the clicked product', async () => {
+    const user = userEvent.setup();
+    logIn();
+    getCategoryListing.mockResolvedValue(mockListing);
+    renderCategoryPage();
+    const popup = within(await openWishlistPopup(user));
+
+    expect(
+      popup.getByRole('img', { name: 'Product C, 09 BLACK' })
+    ).toBeInTheDocument();
+    expect(popup.getByRole('radio', { name: '09 BLACK' })).toBeChecked();
+    expect(popup.getByText('Color: 09 BLACK')).toBeInTheDocument();
+  });
+
+  it('should press the size hearts of variants already in the wishlist', async () => {
+    const user = userEvent.setup();
+    logIn();
+    storeWishlist([202]);
+    getCategoryListing.mockResolvedValue(mockListing);
+    renderCategoryPage();
+    const popup = within(await openWishlistPopup(user));
+
+    expect(
+      popup.getByRole('button', { name: 'Add Product C size M to wishlist' })
+    ).toHaveAttribute('aria-pressed', 'true');
+    expect(
+      popup.getByRole('button', { name: 'Add Product C size XS to wishlist' })
+    ).toHaveAttribute('aria-pressed', 'false');
+  });
+
+  it('should add the variant of the selected color and size', async () => {
+    const user = userEvent.setup();
+    logIn();
+    getCategoryListing.mockResolvedValue(mockListing);
+    renderCategoryPage();
+    const popup = within(await openWishlistPopup(user));
+    const heartXS = popup.getByRole('button', {
+      name: 'Add Product C size XS to wishlist',
+    });
+
+    expect(heartXS).toHaveAttribute('aria-pressed', 'false');
+
+    await user.click(heartXS);
+
+    expect(heartXS).toHaveAttribute('aria-pressed', 'true');
+    expect(readStoredWishlist()).toEqual([201]);
+  });
+
+  it('should remove a variant that is already in the wishlist', async () => {
+    const user = userEvent.setup();
+    logIn();
+    storeWishlist([202]);
+    getCategoryListing.mockResolvedValue(mockListing);
+    renderCategoryPage();
+    const popup = within(await openWishlistPopup(user));
+    const heartM = popup.getByRole('button', {
+      name: 'Add Product C size M to wishlist',
+    });
+
+    expect(heartM).toHaveAttribute('aria-pressed', 'true');
+
+    await user.click(heartM);
+
+    expect(heartM).toHaveAttribute('aria-pressed', 'false');
+    expect(readStoredWishlist()).toEqual([]);
+  });
+
+  it('should update the image and size hearts when the color changes', async () => {
+    const user = userEvent.setup();
+    logIn();
+    storeWishlist([203]);
+    getCategoryListing.mockResolvedValue(mockListing);
+    renderCategoryPage();
+    const popup = within(await openWishlistPopup(user));
+    const heartXS = popup.getByRole('button', {
+      name: 'Add Product C size XS to wishlist',
+    });
+
+    expect(heartXS).toHaveAttribute('aria-pressed', 'false');
+
+    await user.click(popup.getByRole('radio', { name: '10 WHITE' }));
+
+    expect(heartXS).toHaveAttribute('aria-pressed', 'true');
+    expect(
+      popup.getByRole('button', { name: 'Add Product C size M to wishlist' })
+    ).toHaveAttribute('aria-pressed', 'false');
+    expect(
+      popup.getByRole('img', { name: 'Product C, 10 WHITE' })
+    ).toBeInTheDocument();
+    expect(popup.getByText('Color: 10 WHITE')).toBeInTheDocument();
+  });
+
+  it('should close the popup with the close button', async () => {
+    const user = userEvent.setup();
+    logIn();
+    getCategoryListing.mockResolvedValue(mockListing);
+    renderCategoryPage();
+    const dialog = await openWishlistPopup(user);
+
+    await user.click(within(dialog).getByRole('button', { name: 'Close' }));
+
+    expect(dialog).not.toHaveAttribute('open');
+  });
+
+  it('should close with CLOSE and start from the first color when reopened', async () => {
+    const user = userEvent.setup();
+    logIn();
+    getCategoryListing.mockResolvedValue(mockListing);
+    renderCategoryPage();
+    const dialog = await openWishlistPopup(user);
+
+    await user.click(within(dialog).getByRole('radio', { name: '10 WHITE' }));
+    await user.click(within(dialog).getByRole('button', { name: 'CLOSE' }));
+
+    expect(dialog).not.toHaveAttribute('open');
+
+    const reopened = within(await openWishlistPopup(user));
+
+    expect(reopened.getByRole('radio', { name: '09 BLACK' })).toBeChecked();
   });
 });
