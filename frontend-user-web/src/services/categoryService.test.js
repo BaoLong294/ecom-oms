@@ -2,6 +2,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { getCategoryListing } from './categoryService.js';
 import categories from '../data/categories.js';
 import categoryBanners from '../data/categoryBanners.js';
+import products from '../data/products.js';
 
 vi.mock('../data/categories.js', () => ({
   default: [
@@ -30,6 +31,15 @@ vi.mock('../data/products.js', () => ({
     { id: 3, categoryId: 6, name: 'Third Item' },
     { id: 4, categoryId: 4, name: 'Fourth Item' },
     { id: 5, categoryId: 7, name: 'Fifth Item' },
+  ],
+}));
+
+vi.mock('../data/variants.js', () => ({
+  default: [
+    { id: 11, productId: 1, colorCode: 'C1', size: 'S', stockQuantity: 10 },
+    { id: 12, productId: 2, colorCode: 'C2', size: 'M', stockQuantity: 10 },
+    { id: 13, productId: 1, colorCode: 'C3', size: 'L', stockQuantity: 10 },
+    { id: 14, productId: 4, colorCode: 'C4', size: 'S', stockQuantity: 10 },
   ],
 }));
 
@@ -69,17 +79,19 @@ describe('getCategoryListing', () => {
 
   it('should have correct id and name for each group', async () => {
     const categoryListing = await getCategoryListing(3);
-    const group = categoryListing.groups.find((group) => group.id === 5);
+    const group = categoryListing.groups.find((item) => item.id === 5);
 
     expect(group.name).toBe('First child');
   });
 
   it('should only have banner with correct categoryId in banners array', async () => {
     const categoryListing = await getCategoryListing(3);
-    const group = categoryListing.groups.find((group) => group.id === 5);
+    const group = categoryListing.groups.find((item) => item.id === 5);
     const ids = group.banners.map((banner) => banner.id);
-    const isCorrectCategoryId = categoryListing.groups.every((group) =>
-      group.banners.every((banner) => banner.categoryId === group.id)
+    const isCorrectCategoryId = categoryListing.groups.every((listingGroup) =>
+      listingGroup.banners.every(
+        (banner) => banner.categoryId === listingGroup.id
+      )
     );
 
     expect(ids).toHaveLength(2);
@@ -89,16 +101,18 @@ describe('getCategoryListing', () => {
 
   it('should have banner arranged by position in banners array', async () => {
     const categoryListing = await getCategoryListing(3);
-    const group = categoryListing.groups.find((group) => group.id === 5);
+    const group = categoryListing.groups.find((item) => item.id === 5);
 
     expect(group.banners.map((banner) => banner.position)).toEqual([1, 2]);
   });
 
   it('should only have product with correct categoryId in products array', async () => {
     const categoryListing = await getCategoryListing(3);
-    const group = categoryListing.groups.find((group) => group.id === 5);
-    const isCorrectCategoryId = categoryListing.groups.every((group) =>
-      group.products.every((product) => product.categoryId === group.id)
+    const group = categoryListing.groups.find((item) => item.id === 5);
+    const isCorrectCategoryId = categoryListing.groups.every((listingGroup) =>
+      listingGroup.products.every(
+        (product) => product.categoryId === listingGroup.id
+      )
     );
 
     expect(group.products.map((product) => product.id)).toEqual([1, 2]);
@@ -111,5 +125,24 @@ describe('getCategoryListing', () => {
       1, 2, 3, 4, 5, 6,
     ]);
     expect(categoryBanners.map((banner) => banner.id)).toEqual([1, 2, 3, 4]);
+  });
+
+  it('should attach the variants of each product', async () => {
+    const categoryListing = await getCategoryListing(3);
+    const firstGroup = categoryListing.groups.find((item) => item.id === 5);
+    const secondGroup = categoryListing.groups.find((item) => item.id === 6);
+    const [secondItem, firstItem] = firstGroup.products;
+
+    expect(secondItem.variants.map((variant) => variant.id)).toEqual([11, 13]);
+    expect(firstItem.variants.map((variant) => variant.id)).toEqual([12]);
+    expect(secondGroup.products[0].variants).toEqual([]);
+  });
+
+  it('should not add variants to the source products', async () => {
+    await getCategoryListing(3);
+
+    products.forEach((product) => {
+      expect(product).not.toHaveProperty('variants');
+    });
   });
 });
