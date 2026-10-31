@@ -1,6 +1,6 @@
 import products from '../data/products.js';
-import variants from '../data/variants.js';
 import { simulateRequest } from './mockApi.js';
+import { withVariants } from './withVariants.js';
 
 /**
  * Lấy dữ liệu cho trang chi tiết của một sản phẩm theo id: toàn bộ thông tin
@@ -31,13 +31,9 @@ import { simulateRequest } from './mockApi.js';
  * } | null>} Object product kèm mảng variants, trả null nếu product không tồn tại.
  */
 export function getProductById(productId) {
-  const product = products.find((p) => p.id === productId);
+  const product = products.find((item) => item.id === productId);
 
   if (!product) return simulateRequest(null);
 
-  const productVariants = variants.filter(
-    (variant) => variant.productId === productId
-  );
-
-  return simulateRequest({ ...product, variants: productVariants });
+  return simulateRequest(withVariants(product));
 }
