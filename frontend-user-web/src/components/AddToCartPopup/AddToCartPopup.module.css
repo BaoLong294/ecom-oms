@@ -109,4 +109,9 @@
   .buttons {
     flex-direction: column;
   }
+
+  .viewCart,
+  .continueShopping {
+    flex: none;
+  }
 }
