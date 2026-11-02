@@ -25,6 +25,11 @@
   font-family: var(--font-sans);
 }
 
+/* Đặt nền tường minh để trình duyệt ở chế độ tối không vẽ nền tối phía sau trang. */
+body {
+  background-color: var(--color-white);
+}
+
 /* Nội dung cho screen reader đọc, nhưng không hiển thị trên giao diện. */
 .visually-hidden {
   position: absolute;
