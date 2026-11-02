@@ -1,0 +1,58 @@
+/* ==================================== PAGE ===================================== */
+.page {
+  width: 100%;
+  max-width: var(--content-max-width);
+  margin: 65px auto 80px;
+}
+
+/* =================================== TITLE ===================================== */
+.title {
+  font-size: 2rem;
+  margin-bottom: 85px;
+}
+
+/* ================================== MESSAGE ==================================== */
+.message {
+  font-size: 1.1rem;
+  margin-bottom: 40px;
+}
+
+/* ============================ BACK TO HOME LINK ================================ */
+.homeLink {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-white);
+  background-color: var(--color-dark);
+  display: inline-block;
+  text-decoration: none;
+  text-align: center;
+  padding: 10px 5px;
+  width: 288px;
+  line-height: 25px;
+  transition: opacity 0.15s;
+}
+
+.homeLink:hover {
+  opacity: 0.7;
+}
+
+.homeLink:focus-visible {
+  outline: 1px solid var(--color-focus);
+  outline-offset: 3px;
+}
+
+/* =================== MEDIA QUERY TO STYLE FOR MOBILE LAYOUT ==================== */
+@media (max-width: 480px) {
+  .page {
+    padding: 0 20px;
+  }
+
+  .title {
+    margin-bottom: 40px;
+  }
+
+  .homeLink {
+    max-width: 288px;
+    width: 100%;
+  }
+}
