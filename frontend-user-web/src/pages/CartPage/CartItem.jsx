@@ -23,6 +23,10 @@ function CartItem({ item, onQuantityChange, onRemove }) {
     quantity,
   } = item;
 
+  // Nút lặp lại ở mọi món, và 2 variant của cùng sản phẩm có cùng productName,
+  // nên tên nút kèm màu và size để screen reader phân biệt được.
+  const itemLabel = `${productName}, ${colorName}, size ${size}`;
+
   const subtotal = formatToUSD(getEffectivePrice(item) * quantity);
 
   const isDiscounted = discountPercent !== null;
@@ -41,7 +45,7 @@ function CartItem({ item, onQuantityChange, onRemove }) {
           <h2 className={styles.title}>{productName}</h2>
           <button
             type="button"
-            aria-label={`Remove ${productName} from cart`}
+            aria-label={`Remove ${itemLabel} from cart`}
             onClick={onRemove}
             className={styles.remove}
           >
@@ -63,7 +67,7 @@ function CartItem({ item, onQuantityChange, onRemove }) {
           <QuantityStepper
             quantity={quantity}
             onQuantityChange={onQuantityChange}
-            itemName={productName}
+            itemName={itemLabel}
           />
         </div>
 

@@ -40,6 +40,23 @@ const discountedVariant = {
   colorImage: '/images/discounted-pants/31-beige.avif',
 };
 
+const regularVariantL = {
+  id: 15,
+  productId: 3,
+  colorCode: '09',
+  size: 'L',
+  stockQuantity: 10,
+  productName: 'Regular Pants',
+  gender: 'Women',
+  price: 30,
+  discountPercent: null,
+  discountInfo: null,
+  colorName: '09 BLACK',
+  colorImage: '/images/regular-pants/09-black.avif',
+};
+
+const REGULAR_LABEL = 'Regular Pants, 09 BLACK, size M';
+
 // Giỏ có 2 món: Regular 30 × 2 = 60, Discounted (50 giảm 20% = 40) × 3 = 120.
 // Tổng số lượng 5, tổng tiền 180.
 const TWO_ITEMS_CART = [
@@ -151,7 +168,7 @@ describe('CartPage items', () => {
     expect(regular.getByText('Size: Women M')).toBeInTheDocument();
     expect(regular.getByText('$30.00')).toBeInTheDocument();
     expect(
-      regular.getByRole('status', { name: 'Quantity of Regular Pants' })
+      regular.getByRole('status', { name: `Quantity of ${REGULAR_LABEL}` })
     ).toHaveTextContent('2');
     expect(regular.getByText('$60.00')).toBeInTheDocument();
 
@@ -182,7 +199,7 @@ describe('CartPage actions', () => {
     getVariantsByIds.mockResolvedValue([regularVariant, discountedVariant]);
     renderCartPage();
     const increase = await screen.findByRole('button', {
-      name: 'Increase quantity of Regular Pants',
+      name: `Increase quantity of ${REGULAR_LABEL}`,
     });
 
     await user.click(increase);
@@ -191,7 +208,7 @@ describe('CartPage actions', () => {
       screen.getByRole('region', { name: 'Order summary' })
     );
     expect(
-      screen.getByRole('status', { name: 'Quantity of Regular Pants' })
+      screen.getByRole('status', { name: `Quantity of ${REGULAR_LABEL}` })
     ).toHaveTextContent('3');
     expect(screen.getByText('$90.00')).toBeInTheDocument();
     expect(summary.getByText('6 ITEM(S)')).toBeInTheDocument();
@@ -209,7 +226,7 @@ describe('CartPage actions', () => {
     getVariantsByIds.mockResolvedValue([regularVariant, discountedVariant]);
     renderCartPage();
     const remove = await screen.findByRole('button', {
-      name: 'Remove Regular Pants from cart',
+      name: `Remove ${REGULAR_LABEL} from cart`,
     });
 
     await user.click(remove);
@@ -231,7 +248,7 @@ describe('CartPage actions', () => {
     getVariantsByIds.mockResolvedValue([regularVariant]);
     renderCartPage();
     const remove = await screen.findByRole('button', {
-      name: 'Remove Regular Pants from cart',
+      name: `Remove ${REGULAR_LABEL} from cart`,
     });
 
     await user.click(remove);
@@ -253,5 +270,26 @@ describe('CartPage actions', () => {
     expect(
       screen.getByRole('heading', { level: 1, name: 'Login page' })
     ).toBeInTheDocument();
+  });
+
+  it('names the buttons of two sizes of the same product differently', async () => {
+    const user = userEvent.setup();
+    storeCart([
+      { variantId: 12, quantity: 2 },
+      { variantId: 15, quantity: 1 },
+    ]);
+    getVariantsByIds.mockResolvedValue([regularVariant, regularVariantL]);
+    renderCartPage();
+    const removeL = await screen.findByRole('button', {
+      name: 'Remove Regular Pants, 09 BLACK, size L from cart',
+    });
+
+    expect(
+      screen.getByRole('button', { name: `Remove ${REGULAR_LABEL} from cart` })
+    ).toBeInTheDocument();
+
+    await user.click(removeL);
+
+    expect(readStoredCart()).toEqual([{ variantId: 12, quantity: 2 }]);
   });
 });

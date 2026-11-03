@@ -14,6 +14,10 @@ import Price from '../../components/Price/Price';
 function WishlistItem({ item, onRemove, onAddToCart }) {
   const { colorImage, productName, colorName, gender, size } = item;
 
+  // Nút lặp lại ở mọi món, và 2 variant của cùng sản phẩm có cùng productName,
+  // nên tên nút kèm màu và size để screen reader phân biệt được.
+  const itemLabel = `${productName}, ${colorName}, size ${size}`;
+
   return (
     <li className={styles.card}>
       <div className={styles.imageWrapper}>
@@ -25,7 +29,7 @@ function WishlistItem({ item, onRemove, onAddToCart }) {
           <h2 className={styles.title}>{productName}</h2>
           <button
             type="button"
-            aria-label={`Remove ${productName} from wishlist`}
+            aria-label={`Remove ${itemLabel} from wishlist`}
             onClick={onRemove}
             className={styles.remove}
           >
@@ -42,12 +46,12 @@ function WishlistItem({ item, onRemove, onAddToCart }) {
           <Price item={item} />
         </div>
 
-        {/* Tên bắt đầu bằng đúng chữ hiển thị (để điều khiển bằng giọng nói vẫn khớp)
-            và kèm tên món, vì nút này lặp lại ở mọi món trong danh sách. */}
+        {/* Tên bắt đầu bằng đúng chữ hiển thị, để điều khiển bằng giọng 
+            nói vẫn khớp. Vì nút này lặp lại ở mọi món trong danh sách. */}
         <button
           type="button"
           className={styles.addToCart}
-          aria-label={`ADD TO CART, ${productName}`}
+          aria-label={`ADD TO CART, ${itemLabel}`}
           onClick={onAddToCart}
         >
           ADD TO CART

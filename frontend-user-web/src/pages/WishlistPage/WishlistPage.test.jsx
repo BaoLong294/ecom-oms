@@ -41,6 +41,24 @@ const variant203 = {
   colorImage: '/images/product-b/10-white.avif',
 };
 
+const variant204 = {
+  id: 204,
+  productId: 2,
+  colorCode: '10',
+  size: 'XL',
+  stockQuantity: 10,
+  productName: 'Product B',
+  gender: 'Women',
+  price: 40,
+  discountPercent: 50,
+  discountInfo: 'Happy New Year',
+  colorName: '10 WHITE',
+  colorImage: '/images/product-b/10-white.avif',
+};
+
+const PRODUCT_A_LABEL = 'Product A, 09 BLACK, size M';
+const PRODUCT_B_LABEL = 'Product B, 10 WHITE, size S';
+
 const EMPTY_MESSAGE = 'Your wishlist is currently empty.';
 
 function renderWishlistPage() {
@@ -187,7 +205,9 @@ describe('WishlistPage actions', () => {
     expect(listItems).toHaveLength(2);
 
     await user.click(
-      screen.getByRole('button', { name: 'Remove Product B from wishlist' })
+      screen.getByRole('button', {
+        name: `Remove ${PRODUCT_B_LABEL} from wishlist`,
+      })
     );
 
     expect(screen.getAllByRole('listitem')).toHaveLength(1);
@@ -203,7 +223,7 @@ describe('WishlistPage actions', () => {
     getVariantsByIds.mockResolvedValue([variant101]);
     renderWishlistPage();
     const removeButton = await screen.findByRole('button', {
-      name: 'Remove Product A from wishlist',
+      name: `Remove ${PRODUCT_A_LABEL} from wishlist`,
     });
 
     await user.click(removeButton);
@@ -217,7 +237,7 @@ describe('WishlistPage actions', () => {
     getVariantsByIds.mockResolvedValue([variant101, variant203]);
     renderWishlistPage();
     const addToCart = await screen.findByRole('button', {
-      name: 'ADD TO CART, Product B',
+      name: `ADD TO CART, ${PRODUCT_B_LABEL}`,
     });
 
     await user.click(addToCart);
@@ -232,7 +252,7 @@ describe('WishlistPage actions', () => {
     getVariantsByIds.mockResolvedValue([variant101, variant203]);
     renderWishlistPage();
     const addToCart = await screen.findByRole('button', {
-      name: 'ADD TO CART, Product B',
+      name: `ADD TO CART, ${PRODUCT_B_LABEL}`,
     });
     const dialog = screen.getByRole('dialog', { hidden: true });
 
@@ -246,5 +266,23 @@ describe('WishlistPage actions', () => {
         hidden: true,
       })
     ).toHaveAttribute('open');
+  });
+
+  it('adds the right size when the same product is listed twice', async () => {
+    const user = userEvent.setup();
+    storeWishlist([203, 204]);
+    getVariantsByIds.mockResolvedValue([variant203, variant204]);
+    renderWishlistPage();
+    const addXL = await screen.findByRole('button', {
+      name: 'ADD TO CART, Product B, 10 WHITE, size XL',
+    });
+
+    expect(
+      screen.getByRole('button', { name: `ADD TO CART, ${PRODUCT_B_LABEL}` })
+    ).toBeInTheDocument();
+
+    await user.click(addXL);
+
+    expect(readStoredCart()).toEqual([{ variantId: 204, quantity: 1 }]);
   });
 });
