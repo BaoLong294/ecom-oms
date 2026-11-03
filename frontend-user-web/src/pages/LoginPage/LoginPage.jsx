@@ -99,6 +99,7 @@ function LoginPage() {
 
   return (
     <div className={styles.page}>
+      <title>Login | UNIQLO</title>
       <div className={styles.login}>
         <div className={styles.header}>
           <h1 className={styles.loginTitle}>LOGIN</h1>

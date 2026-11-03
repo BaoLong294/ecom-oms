@@ -86,6 +86,7 @@ function CartPage() {
 
   return (
     <div className={styles.page}>
+      <title>Shopping Cart | UNIQLO</title>
       <nav aria-label="Breadcrumb" className={styles.breadcrumbs}>
         <Link to="/" className={styles.breadcrumbsLink}>
           UNIQLO

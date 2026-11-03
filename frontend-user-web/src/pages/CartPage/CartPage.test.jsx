@@ -116,6 +116,13 @@ describe('CartPage states', () => {
 
     expect(getVariantsByIds).toHaveBeenCalledWith([12, 7]);
   });
+
+  it('sets the page title', () => {
+    getVariantsByIds.mockResolvedValue([]);
+    renderCartPage();
+
+    expect(document.title).toBe('Shopping Cart | UNIQLO');
+  });
 });
 
 describe('CartPage items', () => {

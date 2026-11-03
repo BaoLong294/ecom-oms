@@ -75,6 +75,7 @@ function WishlistPage() {
 
   return (
     <div className={styles.page}>
+      <title>Wishlist | UNIQLO</title>
       <nav aria-label="Breadcrumb" className={styles.breadcrumbs}>
         <Link to="/" className={styles.breadcrumbsLink}>
           UNIQLO

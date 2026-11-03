@@ -29,6 +29,14 @@ function renderLoginPage(entry = '/login') {
 
 afterEach(() => localStorage.clear());
 
+describe('LoginPage', () => {
+  it('sets the page title', () => {
+    renderLoginPage();
+
+    expect(document.title).toBe('Login | UNIQLO');
+  });
+});
+
 describe('Validation on blur', () => {
   it('does not flag an empty email on blur before submit', async () => {
     const user = userEvent.setup();

@@ -333,6 +333,35 @@ describe('CategoryPage', () => {
 
     expect(categoryNotFound).toBeInTheDocument();
   });
+
+  it('should set the page title to "Category" while loading', () => {
+    getCategoryListing.mockReturnValue(new Promise(() => {}));
+    renderCategoryPage();
+
+    expect(document.title).toBe('Category | UNIQLO');
+  });
+
+  it('should set the page title to the category name after fetching', async () => {
+    getCategoryListing.mockResolvedValue(mockListing);
+    renderCategoryPage();
+    await screen.findByRole('heading', {
+      level: 1,
+      name: 'Example Collection',
+    });
+
+    expect(document.title).toBe('Example Collection | UNIQLO');
+  });
+
+  it('should set the page title to "Category not found" when the category does not exist', async () => {
+    getCategoryListing.mockResolvedValue(null);
+    renderCategoryPage();
+    await screen.findByRole('heading', {
+      level: 1,
+      name: 'Category not found',
+    });
+
+    expect(document.title).toBe('Category not found | UNIQLO');
+  });
 });
 
 describe('CategoryPage wishlist', () => {

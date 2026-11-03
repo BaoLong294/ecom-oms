@@ -8,7 +8,7 @@ const WOMEN_CATEGORY_ID = 1;
 /**
  * Trang chủ: lấy banner landing của category Women từ service và hiển thị toàn màn hình.
  * Trong lúc chờ dữ liệu hiện thông báo loading, gặp lỗi thì hiện thông báo lỗi.
- * Tiêu đề trang (ẩn, dành cho screen reader) luôn được render ở mọi trạng thái.
+ * Tiêu đề tab và <h1> ẩn (dành cho screen reader) luôn được render ở mọi trạng thái.
  */
 function HomePage() {
   const {
@@ -30,6 +30,7 @@ function HomePage() {
 
   return (
     <>
+      <title>UNIQLO</title>
       <h1 className="visually-hidden">UNIQLO</h1>
       {content}
     </>

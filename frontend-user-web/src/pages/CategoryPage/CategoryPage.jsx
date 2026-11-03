@@ -18,11 +18,11 @@ import WishlistPopup from './WishlistPopup';
  * Đang tải hoặc lỗi: "Category" (ẩn, chỉ dành cho screen reader), kèm StatusMessage.
  * Category không tồn tại (service trả null): "Category not found".
  * Có dữ liệu: tên category.
+ * Tiêu đề tab dùng lại headingText nên luôn cùng chữ với <h1>.
  * Bấm tim trên một card: khách chưa đăng nhập thì mở popup yêu cầu đăng nhập,
  * đã đăng nhập thì mở popup wishlist của sản phẩm đó (state chỉ lưu id sản phẩm,
  * object product được tìm lại trong listing lúc render).
  * Hai popup đặt ở trang (một popup cho mọi card) và luôn được render để Modal đóng đúng cách.
- * Popup đặt ở trang (một popup cho mọi card) và luôn được render để Modal đóng đúng cách.
  */
 function CategoryPage() {
   const { id } = useParams();
@@ -99,6 +99,7 @@ function CategoryPage() {
 
   return (
     <div className={styles.page}>
+      <title>{`${headingText} | UNIQLO`}</title>
       <h1 className={headingClassName}>{headingText}</h1>
       {content}
       <LoginRequiredPopup

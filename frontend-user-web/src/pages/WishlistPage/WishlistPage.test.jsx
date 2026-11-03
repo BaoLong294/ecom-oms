@@ -125,6 +125,13 @@ describe('WishlistPage states', () => {
 
     expect(getVariantsByIds).toHaveBeenCalledWith([203, 101]);
   });
+
+  it('sets the page title', () => {
+    getVariantsByIds.mockResolvedValue([]);
+    renderWishlistPage();
+
+    expect(document.title).toBe('Wishlist | UNIQLO');
+  });
 });
 
 describe('WishlistPage items', () => {

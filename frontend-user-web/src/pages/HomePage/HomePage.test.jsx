@@ -88,6 +88,13 @@ describe('HomePage loading state', () => {
     expect(error).toBeInTheDocument();
     expect(headings).toHaveLength(0);
   });
+
+  it('should set the page title', () => {
+    getLandingBanners.mockReturnValue(new Promise(() => {}));
+    renderHomePage();
+
+    expect(document.title).toBe('UNIQLO');
+  });
 });
 
 describe('HomePage banners', () => {

@@ -275,6 +275,32 @@ describe('ProductPage', () => {
     expect(heading).toBeInTheDocument();
     expect(loading).not.toBeInTheDocument();
   });
+
+  it('sets the page title to "Product" while loading', () => {
+    getProductById.mockReturnValue(new Promise(() => {}));
+    renderProductPage();
+
+    expect(document.title).toBe('Product | UNIQLO');
+  });
+
+  it('sets the page title to the product name after fetching', async () => {
+    getProductById.mockResolvedValue(productA);
+    renderProductPage();
+    await screen.findByRole('heading', { level: 1, name: 'Product A' });
+
+    expect(document.title).toBe('Product A | UNIQLO');
+  });
+
+  it('sets the page title to "Product not found" when the product does not exist', async () => {
+    getProductById.mockResolvedValue(null);
+    renderProductPage();
+    await screen.findByRole('heading', {
+      level: 1,
+      name: 'Product not found',
+    });
+
+    expect(document.title).toBe('Product not found | UNIQLO');
+  });
 });
 
 describe('ProductDetails display', () => {

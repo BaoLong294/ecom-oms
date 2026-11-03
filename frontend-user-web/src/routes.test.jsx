@@ -86,6 +86,12 @@ describe('routes', () => {
     expect(homeLink).toHaveAttribute('href', '/');
   });
 
+  it('should set the page title for non-existent routes', () => {
+    renderWithRouter('/random-not-found-url');
+
+    expect(document.title).toBe('404 - Page not found | UNIQLO');
+  });
+
   it('should render a skip link that targets the main content', () => {
     renderWithRouter('/');
     const skipLink = screen.getByRole('link', { name: 'Skip to main content' });
