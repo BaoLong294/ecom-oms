@@ -365,6 +365,8 @@ describe('CategoryPage', () => {
 });
 
 describe('CategoryPage wishlist', () => {
+  const WISHLIST_POPUP_NAME = 'Add to wishlist: Product C';
+
   const originalShowModal = HTMLDialogElement.prototype.showModal;
   const originalClose = HTMLDialogElement.prototype.close;
 
@@ -388,7 +390,7 @@ describe('CategoryPage wishlist', () => {
     await user.click(heart);
 
     return screen.getByRole('dialog', {
-      name: 'Add to wishlist',
+      name: WISHLIST_POPUP_NAME,
       hidden: true,
     });
   }
@@ -439,13 +441,13 @@ describe('CategoryPage wishlist', () => {
     });
 
     expect(
-      screen.queryByRole('dialog', { name: 'Add to wishlist' })
+      screen.queryByRole('dialog', { name: WISHLIST_POPUP_NAME })
     ).not.toBeInTheDocument();
 
     await user.click(heart);
 
     expect(
-      screen.getByRole('dialog', { name: 'Add to wishlist', hidden: true })
+      screen.getByRole('dialog', { name: WISHLIST_POPUP_NAME, hidden: true })
     ).toHaveAttribute('open');
     expect(
       screen.queryByRole('dialog', { name: 'Login' })

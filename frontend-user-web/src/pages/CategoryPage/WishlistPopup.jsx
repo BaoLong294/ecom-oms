@@ -12,6 +12,8 @@ import Modal from '../../components/Modal/Modal';
  * Chỉ được render khi popup mở, nên mỗi lần mở là một lần mount mới và màu đang
  * chọn luôn bắt đầu từ màu đầu tiên. Trạng thái tim là giá trị dẫn xuất từ
  * selectedColorCode và wishlist, nên đổi màu thì mọi tim tự đúng theo màu mới.
+ * Tiêu đề có tên sản phẩm ẩn (visually-hidden) để tên của dialog là
+ * "Add to wishlist: {tên sản phẩm}", screen reader biết popup đang mở cho sản phẩm nào.
  * @param {object} props
  * @param {object} props.product - sản phẩm từ getCategoryListing (gồm name, sizes,
  *   colors, variants)
@@ -39,7 +41,7 @@ function WishlistOptions({ product, onClose }) {
     <div className={styles.popup}>
       <div className={styles.header}>
         <h2 id="wishlist-popup-title" className={styles.title}>
-          Add to wishlist
+          Add to wishlist<span className="visually-hidden">: {name}</span>
         </h2>
         <button
           type="button"
