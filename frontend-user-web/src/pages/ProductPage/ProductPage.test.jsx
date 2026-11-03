@@ -662,7 +662,7 @@ describe('ProductDetails quantity stepper', () => {
     const increaseQuantity = await screen.findByRole('button', {
       name: 'Increase quantity',
     });
-    const decreaseQuantity = screen.getByRole('button', {
+    const decreaseQuantity = await screen.findByRole('button', {
       name: 'Decrease quantity',
     });
 
@@ -707,6 +707,16 @@ describe('ProductDetails add to cart', () => {
     await user.click(screen.getByRole('button', { name: 'ADD TO CART' }));
 
     expect(readStoredCart()).toEqual([{ variantId: 104, quantity: 2 }]);
+  });
+
+  it('marks ADD TO CART as opening a dialog', async () => {
+    getProductById.mockResolvedValue(productA);
+    renderProductPage();
+    const addToCart = await screen.findByRole('button', {
+      name: 'ADD TO CART',
+    });
+
+    expect(addToCart).toHaveAttribute('aria-haspopup', 'dialog');
   });
 });
 

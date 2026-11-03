@@ -41,6 +41,7 @@ const variant203 = {
   colorImage: '/images/product-b/10-white.avif',
 };
 
+// Cùng Product B, cùng màu với variant203, chỉ khác size.
 const variant204 = {
   id: 204,
   productId: 2,
@@ -284,5 +285,16 @@ describe('WishlistPage actions', () => {
     await user.click(addXL);
 
     expect(readStoredCart()).toEqual([{ variantId: 204, quantity: 1 }]);
+  });
+
+  it('marks ADD TO CART as opening a dialog', async () => {
+    storeWishlist([203, 101]);
+    getVariantsByIds.mockResolvedValue([variant101, variant203]);
+    renderWishlistPage();
+    const addToCart = await screen.findByRole('button', {
+      name: `ADD TO CART, ${PRODUCT_B_LABEL}`,
+    });
+
+    expect(addToCart).toHaveAttribute('aria-haspopup', 'dialog');
   });
 });

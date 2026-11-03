@@ -212,6 +212,7 @@ function ProductDetails({ product }) {
           type="button"
           className={styles.addToCart}
           onClick={handleAddToCart}
+          aria-haspopup="dialog"
         >
           ADD TO CART
         </button>

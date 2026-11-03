@@ -46,12 +46,12 @@ function WishlistItem({ item, onRemove, onAddToCart }) {
           <Price item={item} />
         </div>
 
-        {/* Tên bắt đầu bằng đúng chữ hiển thị, để điều khiển bằng giọng 
-            nói vẫn khớp. Vì nút này lặp lại ở mọi món trong danh sách. */}
+        {/* Tên bắt đầu bằng đúng chữ hiển thị, để điều khiển bằng giọng nói vẫn khớp. */}
         <button
           type="button"
           className={styles.addToCart}
           aria-label={`ADD TO CART, ${itemLabel}`}
+          aria-haspopup="dialog"
           onClick={onAddToCart}
         >
           ADD TO CART
