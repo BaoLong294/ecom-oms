@@ -1,5 +1,5 @@
 import styles from './LoginPage.module.css';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { validateEmail, validatePassword } from '../../utils/validation';
@@ -44,6 +44,7 @@ function getFieldError(value, message, isSubmitted) {
  * không cập nhật khi gõ, nên kết quả hiển thị được lưu vào state tại hai thời điểm đó.
  * Đăng nhập thành công thì quay về trang đã dẫn tới đây (location.state.from),
  * hoặc trang chủ nếu người dùng vào thẳng /login.
+ * Submit thất bại thì focus vào ô lỗi đầu tiên.
  * @returns {JSX.Element}
  */
 function LoginPage() {
@@ -56,6 +57,8 @@ function LoginPage() {
   const { login } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
+  const emailInputRef = useRef(null);
+  const passwordInputRef = useRef(null);
 
   const from = location.state?.from ?? '/';
 
@@ -90,7 +93,13 @@ function LoginPage() {
     setEmailError(getFieldError(email, emailMessage, true));
     setPasswordError(getFieldError(password, passwordMessage, true));
 
-    if (emailMessage === '' && passwordMessage === '') {
+    // Đưa focus vào ô lỗi đầu tiên để screen reader đọc ngay ô đó kèm thông báo lỗi
+    // (aria-invalid + aria-describedby), và người dùng bàn phím sửa được luôn.
+    if (emailMessage !== '') {
+      emailInputRef.current.focus();
+    } else if (passwordMessage !== '') {
+      passwordInputRef.current.focus();
+    } else {
       login(email.trim());
       // replace để nút Back không quay lại form login sau khi đã đăng nhập.
       navigate(from, { replace: true });
@@ -125,6 +134,7 @@ function LoginPage() {
               type="email"
               name="email"
               value={email}
+              ref={emailInputRef}
               placeholder="Enter a valid email"
               className={styles.input}
               aria-invalid={emailError.isInvalid}
@@ -149,6 +159,7 @@ function LoginPage() {
               type={showPassword ? 'text' : 'password'}
               name="password"
               value={password}
+              ref={passwordInputRef}
               className={styles.input}
               aria-invalid={passwordError.isInvalid}
               aria-describedby={passwordDescribedBy}

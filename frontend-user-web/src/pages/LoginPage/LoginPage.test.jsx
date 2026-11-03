@@ -129,6 +129,29 @@ describe('Validation on submit', () => {
     expect(screen.queryByText(EMAIL_EMPTY)).not.toBeInTheDocument();
     expect(emailInput).not.toHaveAttribute('aria-invalid', 'true');
   });
+
+  it('focuses the email field when submitting an empty form', async () => {
+    const user = userEvent.setup();
+    renderLoginPage();
+
+    await user.click(screen.getByRole('button', { name: 'LOG IN' }));
+
+    expect(screen.getByLabelText(/^email address/i)).toHaveFocus();
+  });
+
+  it('focuses the password field when only the password is invalid', async () => {
+    const user = userEvent.setup();
+    renderLoginPage();
+    const passwordInput = screen.getByLabelText(/^password/i);
+
+    await user.type(
+      screen.getByLabelText(/^email address/i),
+      'john.doe@gmail.com'
+    );
+    await user.click(screen.getByRole('button', { name: 'LOG IN' }));
+
+    expect(passwordInput).toHaveFocus();
+  });
 });
 
 describe('Show password', () => {
