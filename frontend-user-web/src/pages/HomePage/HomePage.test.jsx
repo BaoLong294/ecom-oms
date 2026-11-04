@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { render, screen, within } from '@testing-library/react';
+import { render, screen, within, act } from '@testing-library/react';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import HomePage from './HomePage';
 import { getLandingBanners } from '../../services/bannerService';
@@ -52,6 +52,36 @@ const MOCK_BANNERS = [
     alt: 'Third alternative text',
   },
 ];
+
+const WOMEN_BANNER = {
+  id: 21,
+  categoryId: 11,
+  targetCategoryId: 5,
+  position: 1,
+  title: 'Women banner',
+  subtitle: null,
+  description: 'Some description',
+  price: 40,
+  discountPercent: null,
+  discountInfo: null,
+  image: '/images/women-banner.jpg',
+  alt: 'Women banner image',
+};
+
+const MEN_BANNER = {
+  id: 22,
+  categoryId: 12,
+  targetCategoryId: 10,
+  position: 1,
+  title: 'Men banner',
+  subtitle: null,
+  description: 'Some description',
+  price: 50,
+  discountPercent: null,
+  discountInfo: null,
+  image: '/images/men-banner.jpg',
+  alt: 'Men banner image',
+};
 
 vi.mock('../../services/bannerService', () => ({
   getLandingBanners: vi.fn(),
@@ -179,5 +209,75 @@ describe('HomePage banners', () => {
 
     expect(bannerA).toHaveAttribute('href', '/categories/5');
     expect(bannerB).toHaveAttribute('href', '/categories/7');
+  });
+});
+
+describe('HomePage category switch', () => {
+  it('should show the banners and title of the new category after switching', async () => {
+    getLandingBanners.mockImplementation((categoryId) =>
+      Promise.resolve(categoryId === 11 ? [WOMEN_BANNER] : [MEN_BANNER])
+    );
+    const router = renderHomePage();
+    await screen.findByRole('heading', { level: 2, name: 'Women banner' });
+
+    await act(async () => {
+      await router.navigate('/men');
+    });
+
+    expect(
+      await screen.findByRole('heading', { level: 2, name: 'Men banner' })
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole('heading', { level: 2, name: 'Women banner' })
+    ).not.toBeInTheDocument();
+    expect(document.title).toBe('Men | UNIQLO');
+  });
+
+  it('should keep the previous banners while the new ones are loading', async () => {
+    const men = Promise.withResolvers();
+    getLandingBanners.mockImplementation((categoryId) =>
+      categoryId === 11 ? Promise.resolve([WOMEN_BANNER]) : men.promise
+    );
+    const router = renderHomePage();
+    await screen.findByRole('heading', { level: 2, name: 'Women banner' });
+
+    await act(async () => {
+      await router.navigate('/men');
+    });
+
+    expect(getLandingBanners).toHaveBeenCalledWith(12);
+    expect(
+      screen.getByRole('heading', { level: 2, name: 'Women banner' })
+    ).toBeInTheDocument();
+    expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+  });
+
+  it('should ignore banners of the previous category that arrive late', async () => {
+    const women = Promise.withResolvers();
+    const men = Promise.withResolvers();
+    getLandingBanners.mockImplementation((categoryId) =>
+      categoryId === 11 ? women.promise : men.promise
+    );
+    const router = renderHomePage();
+
+    await act(async () => {
+      await router.navigate('/men');
+    });
+    await act(async () => {
+      men.resolve([MEN_BANNER]);
+    });
+    await screen.findByRole('heading', { level: 2, name: 'Men banner' });
+
+    // WOMEN về sau MEN: kết quả này thuộc lần fetch đã hết hiệu lực, phải bị bỏ qua.
+    await act(async () => {
+      women.resolve([WOMEN_BANNER]);
+    });
+
+    expect(
+      screen.getByRole('heading', { level: 2, name: 'Men banner' })
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole('heading', { level: 2, name: 'Women banner' })
+    ).not.toBeInTheDocument();
   });
 });
