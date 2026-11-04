@@ -123,6 +123,42 @@ describe('Header', () => {
     ).toBeInTheDocument();
   });
 
+  it('links the Categories menu to each category landing page in order', () => {
+    renderWithRouter('/men');
+    const menu = screen.getByRole('navigation', { name: 'Categories' });
+    const hrefs = within(menu)
+      .getAllByRole('link')
+      .map((link) => link.getAttribute('href'));
+
+    expect(hrefs).toEqual(['/women', '/men', '/kids', '/baby']);
+  });
+
+  it('navigates to the category landing page when a menu link is clicked', async () => {
+    const user = userEvent.setup();
+    const router = renderWithRouter('/women');
+    const menu = screen.getByRole('navigation', { name: 'Categories' });
+
+    await user.click(within(menu).getByRole('link', { name: 'MEN' }));
+
+    expect(router.state.location.pathname).toBe('/men');
+    expect(
+      screen.getByRole('heading', { level: 1, name: 'MEN' })
+    ).toBeInTheDocument();
+  });
+
+  it('marks only the menu link of the current category as the current page', () => {
+    renderWithRouter('/men');
+    const menu = within(screen.getByRole('navigation', { name: 'Categories' }));
+
+    expect(menu.getByRole('link', { name: 'MEN' })).toHaveAttribute(
+      'aria-current',
+      'page'
+    );
+    expect(menu.getByRole('link', { name: 'WOMEN' })).not.toHaveAttribute(
+      'aria-current'
+    );
+  });
+
   it('hides the Categories menu on the category page', () => {
     renderWithRouter('/categories/5');
 

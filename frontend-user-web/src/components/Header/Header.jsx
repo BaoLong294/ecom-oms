@@ -1,11 +1,14 @@
 import styles from './Header.module.css';
-import { Link, useLocation } from 'react-router-dom';
+import { NavLink, Link, useLocation } from 'react-router-dom';
 import Icon from '../Icon/Icon.jsx';
 import { useCart } from '../../context/CartContext.js';
+import { LANDING_CATEGORIES } from '../../config/landingCategories.js';
 
 /**
  * Header dùng chung cho mọi trang, có 2 biến thể:
  * 'landing' (trong suốt, có menu WOMEN/MEN/KIDS/BABY) và 'default' (nền trắng, có viền dưới, không có menu).
+ * Menu của biến thể 'landing' là các NavLink sinh từ LANDING_CATEGORIES; NavLink tự gắn
+ * aria-current="page" cho link của category đang xem (CSS dựa vào thuộc tính này để đánh dấu).
  * Skip link được đặt làm phần tử con đầu tiên của <header>: header có position: fixed nên là
  * containing block của skip link, nhờ vậy lớp phủ (position: absolute; inset: 0) luôn khớp đúng
  * kích thước header ở mọi biến thể. Không chuyển skip link ra AppLayout, nếu không lớp phủ sẽ che toàn trang.
@@ -49,10 +52,13 @@ function Header({ headerVariant = 'default' }) {
         {isLanding && (
           <nav className={styles.menu} aria-label="Categories">
             <ul>
-              <li>WOMEN</li>
-              <li>MEN</li>
-              <li>KIDS</li>
-              <li>BABY</li>
+              {LANDING_CATEGORIES.map((category) => (
+                <li key={category.slug}>
+                  <NavLink to={`/${category.slug}`} className={styles.menuLink}>
+                    {category.name.toUpperCase()}
+                  </NavLink>
+                </li>
+              ))}
             </ul>
           </nav>
         )}
