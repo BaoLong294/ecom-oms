@@ -1,3 +1,4 @@
+import { Navigate } from 'react-router-dom';
 import AppLayout from './components/AppLayout/AppLayout';
 import HomePage from './pages/HomePage/HomePage';
 import CategoryPage from './pages/CategoryPage/CategoryPage';
@@ -6,11 +7,18 @@ import CartPage from './pages/CartPage/CartPage';
 import WishlistPage from './pages/WishlistPage/WishlistPage';
 import LoginPage from './pages/LoginPage/LoginPage';
 import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
+import { LANDING_CATEGORIES } from './config/landingCategories';
 
 export const routes = [
   {
     element: <AppLayout headerVariant="landing" hasBottomNav={true} />,
-    children: [{ path: '/', element: <HomePage /> }],
+    children: [
+      { path: '/', element: <Navigate to="/women" replace /> },
+      ...LANDING_CATEGORIES.map((category) => ({
+        path: `/${category.slug}`,
+        element: <HomePage category={category} />,
+      })),
+    ],
   },
   {
     element: <AppLayout headerVariant="default" hasBottomNav={true} />,

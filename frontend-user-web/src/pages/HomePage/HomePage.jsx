@@ -3,19 +3,25 @@ import LandingBanner from '../../components/LandingBanner/LandingBanner';
 import StatusMessage from '../../components/StatusMessage/StatusMessage';
 import { useFetch } from '../../hooks/useFetch';
 
-const WOMEN_CATEGORY_ID = 1;
-
 /**
- * Trang chủ: lấy banner landing của category Women từ service và hiển thị toàn màn hình.
+ * Trang landing của một category gốc (WOMEN, MEN, KIDS, BABY): lấy banner landing của
+ * category đó từ service và hiển thị toàn màn hình.
+ * Mỗi category có route riêng (sinh từ LANDING_CATEGORIES), cùng render HomePage với prop
+ * category khác nhau.
  * Trong lúc chờ dữ liệu hiện thông báo loading, gặp lỗi thì hiện thông báo lỗi.
- * Tiêu đề tab và <h1> ẩn (dành cho screen reader) luôn được render ở mọi trạng thái.
+ * Tiêu đề tab ('{name} | UNIQLO') và <h1> ẩn (tên category viết hoa, dành cho screen reader)
+ * luôn được render ở mọi trạng thái, vì đều lấy từ prop, không phải chờ dữ liệu.
+ * @param {{ category: { slug: string, name: string, categoryId: number } }} props
+ * @param props.category - category gốc của trang, lấy từ LANDING_CATEGORIES
  */
-function HomePage() {
+function HomePage({ category }) {
+  const { name, categoryId } = category;
+
   const {
     data: banners,
     isLoading,
     errorMessage,
-  } = useFetch(getLandingBanners, WOMEN_CATEGORY_ID);
+  } = useFetch(getLandingBanners, categoryId);
 
   let content;
   if (isLoading) {
@@ -30,8 +36,8 @@ function HomePage() {
 
   return (
     <>
-      <title>UNIQLO</title>
-      <h1 className="visually-hidden">UNIQLO</h1>
+      <title>{`${name} | UNIQLO`}</title>
+      <h1 className="visually-hidden">{name.toUpperCase()}</h1>
       {content}
     </>
   );

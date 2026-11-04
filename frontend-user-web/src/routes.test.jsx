@@ -27,10 +27,21 @@ afterEach(() => {
 });
 
 describe('routes', () => {
-  it('should render the home page at /', () => {
-    renderWithRouter('/');
+  it('should redirect / to the Women landing page', async () => {
+    const router = renderWithRouter('/');
 
-    expect(screen.getByRole('heading', { name: 'UNIQLO' })).toBeInTheDocument();
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'WOMEN' })
+    ).toBeInTheDocument();
+    expect(router.state.location.pathname).toBe('/women');
+  });
+
+  it('should render the landing page of a category at /men', () => {
+    renderWithRouter('/men');
+
+    expect(
+      screen.getByRole('heading', { level: 1, name: 'MEN' })
+    ).toBeInTheDocument();
   });
 
   it('should render the category page at /categories/5', () => {
@@ -104,8 +115,8 @@ describe('routes', () => {
 });
 
 describe('Header', () => {
-  it('shows the Categories menu on the landing page', () => {
-    renderWithRouter('/');
+  it('shows the Categories menu on a category landing page', () => {
+    renderWithRouter('/men');
 
     expect(
       screen.getByRole('navigation', { name: 'Categories' })
@@ -143,7 +154,9 @@ describe('Header', () => {
     const logoLink = screen.getByRole('link', { name: 'UNIQLO home' });
     await user.click(logoLink);
 
-    expect(screen.getByRole('heading', { name: 'UNIQLO' })).toBeInTheDocument();
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'WOMEN' })
+    ).toBeInTheDocument();
   });
 
   it('navigates to the login page when Account is clicked', async () => {
@@ -230,7 +243,7 @@ describe('Header', () => {
 
 describe('BottomNav', () => {
   it('shows the Shortcuts nav on the landing page', () => {
-    renderWithRouter('/');
+    renderWithRouter('/men');
 
     expect(
       screen.getByRole('navigation', { name: 'Shortcuts' })
@@ -267,7 +280,9 @@ describe('BottomNav', () => {
     const homeLink = screen.getByRole('link', { name: 'Home' });
     await user.click(homeLink);
 
-    expect(screen.getByRole('heading', { name: 'UNIQLO' })).toBeInTheDocument();
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'WOMEN' })
+    ).toBeInTheDocument();
   });
 
   it('navigates to the login page when Account is clicked', async () => {

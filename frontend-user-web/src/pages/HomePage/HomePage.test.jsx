@@ -4,6 +4,10 @@ import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import HomePage from './HomePage';
 import { getLandingBanners } from '../../services/bannerService';
 
+// Id khác id thật và khác mọi id trong MOCK_BANNERS để bắt lỗi dùng nhầm trường.
+const WOMEN_CATEGORY = { slug: 'women', name: 'Women', categoryId: 11 };
+const MEN_CATEGORY = { slug: 'men', name: 'Men', categoryId: 12 };
+
 const MOCK_BANNERS = [
   {
     id: 1,
@@ -57,10 +61,20 @@ afterEach(() => {
   vi.resetAllMocks();
 });
 
-function renderHomePage() {
-  const routes = [{ path: '/', element: <HomePage /> }];
-  const router = createMemoryRouter(routes, { initialEntries: ['/'] });
+/**
+ * Render HomePage trong router tối thiểu có 2 landing (Women, Men).
+ * @param {string} [entry='/women'] - URL bắt đầu
+ * @returns {object} router, để bước sau đổi category bằng router.navigate
+ */
+function renderHomePage(entry = '/women') {
+  const routes = [WOMEN_CATEGORY, MEN_CATEGORY].map((category) => ({
+    path: `/${category.slug}`,
+    element: <HomePage category={category} />,
+  }));
+  const router = createMemoryRouter(routes, { initialEntries: [entry] });
   render(<RouterProvider router={router} />);
+
+  return router;
 }
 
 describe('HomePage loading state', () => {
@@ -88,23 +102,34 @@ describe('HomePage loading state', () => {
     expect(error).toBeInTheDocument();
     expect(headings).toHaveLength(0);
   });
+});
 
-  it('should set the page title', () => {
+describe('HomePage category', () => {
+  it('should fetch banners of the category in the route', () => {
     getLandingBanners.mockReturnValue(new Promise(() => {}));
-    renderHomePage();
+    renderHomePage('/men');
 
-    expect(document.title).toBe('UNIQLO');
+    expect(getLandingBanners).toHaveBeenCalledWith(12);
+  });
+
+  it('should set the page title from the category name', () => {
+    getLandingBanners.mockReturnValue(new Promise(() => {}));
+    renderHomePage('/men');
+
+    expect(document.title).toBe('Men | UNIQLO');
+  });
+
+  it('should render the category name in uppercase as the page heading', () => {
+    getLandingBanners.mockReturnValue(new Promise(() => {}));
+    renderHomePage('/men');
+
+    expect(
+      screen.getByRole('heading', { level: 1, name: 'MEN' })
+    ).toBeInTheDocument();
   });
 });
 
 describe('HomePage banners', () => {
-  it('should fetch banners of the Women category', () => {
-    getLandingBanners.mockReturnValue(new Promise(() => {}));
-    renderHomePage();
-
-    expect(getLandingBanners).toHaveBeenCalledWith(1);
-  });
-
   it('should render one banner for each banner returned by the service', async () => {
     getLandingBanners.mockResolvedValue(MOCK_BANNERS);
     renderHomePage();
