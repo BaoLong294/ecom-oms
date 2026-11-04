@@ -1,5 +1,5 @@
 import styles from './AppLayout.module.css';
-import { Outlet } from 'react-router-dom';
+import { Outlet, ScrollRestoration } from 'react-router-dom';
 import Header from '../Header/Header.jsx';
 import BottomNav from '../BottomNav/BottomNav.jsx';
 
@@ -16,8 +16,8 @@ function AppLayout({ headerVariant, hasBottomNav }) {
 
   return (
     <>
+      <ScrollRestoration />
       <Header headerVariant={headerVariant} />
-
       <main
         id="main-content"
         tabIndex={-1}
@@ -25,7 +25,6 @@ function AppLayout({ headerVariant, hasBottomNav }) {
       >
         <Outlet />
       </main>
-
       {hasBottomNav && <BottomNav />}
     </>
   );

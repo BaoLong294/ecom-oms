@@ -22,8 +22,14 @@ function renderWithRouter(url) {
   return router;
 }
 
+// jsdom không có window.scrollTo thật; ScrollRestoration gọi nó mỗi lần chuyển trang.
+beforeEach(() => {
+  vi.spyOn(window, 'scrollTo').mockImplementation(() => {});
+});
+
 afterEach(() => {
   localStorage.clear();
+  vi.restoreAllMocks();
 });
 
 describe('routes', () => {
@@ -144,6 +150,17 @@ describe('Header', () => {
     expect(
       screen.getByRole('heading', { level: 1, name: 'MEN' })
     ).toBeInTheDocument();
+  });
+
+  it('scrolls to the top when switching category from the menu', async () => {
+    const user = userEvent.setup();
+    renderWithRouter('/women');
+    const menu = screen.getByRole('navigation', { name: 'Categories' });
+    window.scrollTo.mockClear();
+
+    await user.click(within(menu).getByRole('link', { name: 'MEN' }));
+
+    expect(window.scrollTo).toHaveBeenCalledWith(0, 0);
   });
 
   it('marks only the menu link of the current category as the current page', () => {
