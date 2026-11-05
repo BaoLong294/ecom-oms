@@ -1,0 +1,112 @@
+/* =================================== MENU ====================================== */
+.menuList {
+  list-style-type: none;
+  display: flex;
+  gap: 5vw;
+}
+
+.item {
+  padding-bottom: 25px;
+  margin-bottom: -25px;
+}
+
+.menuLink {
+  position: relative;
+  color: var(--color-white);
+  font-size: 1rem;
+  font-weight: bold;
+  letter-spacing: 0.01rem;
+  text-decoration: none;
+  text-shadow: rgba(0, 0, 0, 0.8) 0 1px 1px;
+  transition: color 0.15s ease;
+}
+
+.menuLink:hover {
+  color: var(--color-dark);
+}
+
+.menuLink[aria-current='page']::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -10px;
+  height: 2px;
+  background-color: currentColor;
+  box-shadow: rgba(0, 0, 0, 0.8) 0 1px 1px;
+}
+
+.menuLink:focus-visible {
+  outline: 1px solid var(--color-focus);
+}
+
+/* ================================= MEGA MENU =================================== */
+.megaMenu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: #ebecee;
+  padding: 30px 40px 40px;
+}
+
+.status {
+  text-align: center;
+  color: var(--color-gray);
+}
+
+.subcategories {
+  list-style-type: none;
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 30px 20px;
+}
+
+.subcategoryLink {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  color: var(--color-dark);
+  text-decoration: none;
+}
+
+.subcategoryImage {
+  display: block;
+  width: 120px;
+  aspect-ratio: 1;
+  object-fit: contain;
+}
+
+.subcategoryName {
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.subcategoryLink:hover .subcategoryName {
+  text-decoration: underline;
+}
+
+.subcategoryLink:focus-visible {
+  outline: 1px solid var(--color-focus);
+  outline-offset: 4px;
+}
+
+/* =================== MEDIA QUERY TO STYLE FOR MOBILE LAYOUT ==================== */
+@media (max-width: 480px) {
+  .menu {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+
+  .menuList {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .megaMenu {
+    display: none;
+  }
+}

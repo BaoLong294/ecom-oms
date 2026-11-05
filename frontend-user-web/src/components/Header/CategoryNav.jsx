@@ -35,9 +35,9 @@ function CategoryNavItem({
   let menuContent;
 
   if (isLoading) {
-    menuContent = <p>Loading...</p>;
+    menuContent = <p className={styles.status}>Loading...</p>;
   } else if (errorMessage) {
-    menuContent = <p>{errorMessage}</p>;
+    menuContent = <p className={styles.status}>{errorMessage}</p>;
   } else {
     menuContent = (
       <ul
@@ -88,6 +88,7 @@ function CategoryNavItem({
       onFocus={onOpen}
       onBlur={handleBlur}
       onKeyDown={handleKeyDown}
+      className={styles.item}
     >
       <NavLink
         ref={linkRef}
@@ -114,7 +115,7 @@ function CategoryNav() {
 
   return (
     <nav className={styles.menu} aria-label="Categories">
-      <ul>
+      <ul className={styles.menuList}>
         {LANDING_CATEGORIES.map((category) => {
           const subcategories =
             menu?.find((root) => root.id === category.categoryId)?.children ??
