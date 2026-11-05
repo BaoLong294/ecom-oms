@@ -1,17 +1,37 @@
 import { describe, it, expect, vi } from 'vitest';
-import { getCategoryListing } from './categoryService.js';
+import { getCategoryListing, getCategoryMenu } from './categoryService.js';
 import categories from '../data/categories.js';
 import categoryBanners from '../data/categoryBanners.js';
 import products from '../data/products.js';
 
 vi.mock('../data/categories.js', () => ({
   default: [
-    { id: 1, name: 'Grandparent', position: 1, parentId: null },
-    { id: 2, name: 'Second parent', position: 2, parentId: 1 },
-    { id: 3, name: 'First parent', position: 1, parentId: 1 },
-    { id: 4, name: 'Third child', position: 3, parentId: 3 },
-    { id: 5, name: 'First child', position: 1, parentId: 3 },
-    { id: 6, name: 'Second child', position: 2, parentId: 3 },
+    { id: 1, name: 'Grandparent', position: 2, parentId: null, image: null },
+    { id: 2, name: 'Second parent', position: 2, parentId: 1, image: null },
+    {
+      id: 3,
+      name: 'First parent',
+      position: 1,
+      parentId: 1,
+      image: '/images/first-parent.avif',
+    },
+    { id: 4, name: 'Third child', position: 3, parentId: 3, image: null },
+    { id: 5, name: 'First child', position: 1, parentId: 3, image: null },
+    { id: 6, name: 'Second child', position: 2, parentId: 3, image: null },
+    {
+      id: 9,
+      name: 'First grandparent',
+      position: 1,
+      parentId: null,
+      image: null,
+    },
+    {
+      id: 10,
+      name: 'Only child',
+      position: 1,
+      parentId: 9,
+      image: '/images/only-child.avif',
+    },
   ],
 }));
 
@@ -122,7 +142,7 @@ describe('getCategoryListing', () => {
   it('should not reorder the source data', async () => {
     await getCategoryListing(3);
     expect(categories.map((category) => category.id)).toEqual([
-      1, 2, 3, 4, 5, 6,
+      1, 2, 3, 4, 5, 6, 9, 10,
     ]);
     expect(categoryBanners.map((banner) => banner.id)).toEqual([1, 2, 3, 4]);
   });
@@ -144,5 +164,59 @@ describe('getCategoryListing', () => {
     products.forEach((product) => {
       expect(product).not.toHaveProperty('variants');
     });
+  });
+});
+
+describe('getCategoryMenu', () => {
+  it('should return root categories sorted by position', async () => {
+    const menu = await getCategoryMenu();
+
+    expect(menu.map((root) => root.id)).toEqual([9, 1]);
+  });
+
+  it('should return each root with its id, name and children', async () => {
+    const menu = await getCategoryMenu();
+
+    expect(menu[0]).toEqual({
+      id: 9,
+      name: 'First grandparent',
+      children: [
+        { id: 10, name: 'Only child', image: '/images/only-child.avif' },
+      ],
+    });
+  });
+
+  it('should only include the direct children of each root', async () => {
+    const menu = await getCategoryMenu();
+    const root = menu.find((item) => item.id === 1);
+    const childIds = root.children.map((child) => child.id);
+
+    expect(childIds).toHaveLength(2);
+    expect(childIds).toEqual(expect.arrayContaining([2, 3]));
+  });
+
+  it('should sort the children by position', async () => {
+    const menu = await getCategoryMenu();
+    const root = menu.find((item) => item.id === 1);
+
+    expect(root.children.map((child) => child.id)).toEqual([3, 2]);
+  });
+
+  it('should return the id, name and image of each child', async () => {
+    const menu = await getCategoryMenu();
+    const root = menu.find((item) => item.id === 1);
+
+    expect(root.children).toEqual([
+      { id: 3, name: 'First parent', image: '/images/first-parent.avif' },
+      { id: 2, name: 'Second parent', image: null },
+    ]);
+  });
+
+  it('should not reorder the source data', async () => {
+    await getCategoryMenu();
+
+    expect(categories.map((category) => category.id)).toEqual([
+      1, 2, 3, 4, 5, 6, 9, 10,
+    ]);
   });
 });

@@ -52,3 +52,31 @@ export function getCategoryListing(categoryId) {
 
   return simulateRequest({ id: category.id, name: category.name, groups });
 }
+
+/**
+ * Lấy dữ liệu cho mega-menu: mọi category gốc, sắp theo position tăng dần,
+ * mỗi gốc kèm các category con trực tiếp (cũng sắp theo position).
+ * Chỉ lấy id, tên và ảnh, không kèm sản phẩm.
+ * Tương ứng với API: GET /api/categories/menu
+ *
+ * @returns {Promise<Array<{
+ *   id: number,
+ *   name: string,
+ *   children: Array<{ id: number, name: string, image: string | null }>
+ * }>>} Mảng category gốc; children là mảng rỗng nếu gốc không có con.
+ */
+export function getCategoryMenu() {
+  const rootCategories = categories
+    .filter((category) => category.parentId === null)
+    .sort((a, b) => a.position - b.position);
+
+  const menu = rootCategories.map((rootCategory) => {
+    const children = categories
+      .filter((category) => category.parentId === rootCategory.id)
+      .sort((a, b) => a.position - b.position)
+      .map(({ id, name, image }) => ({ id, name, image }));
+    return { id: rootCategory.id, name: rootCategory.name, children };
+  });
+
+  return simulateRequest(menu);
+}
