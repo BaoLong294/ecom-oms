@@ -207,6 +207,20 @@ const mockListing = {
   ],
 };
 
+// Category không có category con nào.
+const emptyListing = {
+  id: 3,
+  name: 'Empty Collection',
+  groups: [],
+};
+
+// Category có nhóm nhưng nhóm nào cũng không có sản phẩm.
+const noProductsListing = {
+  id: 3,
+  name: 'Quiet Collection',
+  groups: [{ id: 11, name: 'Group A', banners: [], products: [] }],
+};
+
 /**
  * Render CategoryPage trong router tối thiểu tại /categories/3,
  * để useParams đọc được id = '3'. Dữ liệu đến từ service bị mock,
@@ -573,5 +587,44 @@ describe('CategoryPage wishlist', () => {
     const reopened = within(await openWishlistPopup(user));
 
     expect(reopened.getByRole('radio', { name: '09 BLACK' })).toBeChecked();
+  });
+});
+
+describe('CategoryPage empty state', () => {
+  const EMPTY_MESSAGE = 'There are no products in this category yet.';
+
+  afterEach(() => {
+    vi.resetAllMocks();
+  });
+
+  it('should show the empty message and a link back home when the category has no groups', async () => {
+    getCategoryListing.mockResolvedValue(emptyListing);
+    renderCategoryPage();
+    const message = await screen.findByText(EMPTY_MESSAGE);
+
+    expect(message).toBeInTheDocument();
+    expect(
+      screen.getByRole('link', { name: 'CONTINUE SHOPPING' })
+    ).toHaveAttribute('href', '/');
+  });
+
+  it('should show the empty message instead of the groups when no group has products', async () => {
+    getCategoryListing.mockResolvedValue(noProductsListing);
+    renderCategoryPage();
+    const message = await screen.findByText(EMPTY_MESSAGE);
+
+    expect(message).toBeInTheDocument();
+    expect(screen.queryByRole('heading', { level: 2 })).not.toBeInTheDocument();
+  });
+
+  it('should not show the empty message when the category has products', async () => {
+    getCategoryListing.mockResolvedValue(mockListing);
+    renderCategoryPage();
+    await screen.findByRole('heading', {
+      level: 1,
+      name: 'Example Collection',
+    });
+
+    expect(screen.queryByText(EMPTY_MESSAGE)).not.toBeInTheDocument();
   });
 });

@@ -1,14 +1,46 @@
+/* ================================ PAGE LAYOUT ================================== */
 .page {
   max-width: var(--content-max-width);
   margin: 0 auto;
 }
 
+/* =================================== TITLE ===================================== */
 .title {
   font-size: 2rem;
   font-weight: 400;
   margin: 25px 0;
 }
 
+/* =============================== EMPTY CATEGORY ================================ */
+.emptyText {
+  font-size: 1.1rem;
+  margin-bottom: 40px;
+}
+
+.emptyContinue {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-white);
+  background-color: var(--color-dark);
+  display: inline-block;
+  text-decoration: none;
+  text-align: center;
+  padding: 10px 5px;
+  width: 288px;
+  line-height: 25px;
+  transition: opacity 0.15s;
+}
+
+.emptyContinue:hover {
+  opacity: 0.7;
+}
+
+.emptyContinue:focus-visible {
+  outline: 1px solid var(--color-focus);
+  outline-offset: 3px;
+}
+
+/* =============================== FILLED CATEGORY =============================== */
 .groups {
   display: flex;
   flex-direction: column;
@@ -37,7 +69,9 @@
 /* =================== MEDIA QUERY TO STYLE FOR MOBILE LAYOUT ==================== */
 @media (max-width: 480px) {
   .title,
-  .groupName {
+  .groupName,
+  .emptyText,
+  .emptyContinue {
     margin-left: 15px;
   }
 

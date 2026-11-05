@@ -1,6 +1,6 @@
 import styles from './CategoryPage.module.css';
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { getCategoryListing } from '../../services/categoryService';
 import ProductCard from '../../components/ProductCard/ProductCard';
 import StatusMessage from '../../components/StatusMessage/StatusMessage';
@@ -16,8 +16,8 @@ import WishlistPopup from './WishlistPopup';
  * Mỗi nhóm là một <section> đặt tên bằng aria-labelledby theo <h2> của nhóm.
  * Tiêu đề <h1> luôn được render:
  * Đang tải hoặc lỗi: "Category" (ẩn, chỉ dành cho screen reader), kèm StatusMessage.
- * Category không tồn tại (service trả null): "Category not found".
- * Có dữ liệu: tên category.
+ * Category không tồn tại (service trả null): "Category not found". Có dữ liệu: tên category.
+ * Category không có sản phẩm nào: thay các nhóm bằng thông báo và link CONTINUE SHOPPING về trang chủ.
  * Tiêu đề tab dùng lại headingText nên luôn cùng chữ với <h1>.
  * Bấm tim trên một card: khách chưa đăng nhập thì mở popup yêu cầu đăng nhập,
  * đã đăng nhập thì mở popup wishlist của sản phẩm đó (state chỉ lưu id sản phẩm,
@@ -51,39 +51,54 @@ function CategoryPage() {
   } else {
     headingText = listing.name;
     headingClassName = styles.title;
-    content = (
-      <div className={styles.groups}>
-        {listing.groups.map((group) => {
-          const banner = group.banners[0];
-
-          return (
-            <section key={group.id} aria-labelledby={`group-${group.id}`}>
-              <h2 id={`group-${group.id}`} className={styles.groupName}>
-                {group.name}
-              </h2>
-              {banner && (
-                <img
-                  src={banner.image}
-                  alt={banner.alt}
-                  className={styles.banner}
-                />
-              )}
-              <div className={styles.grid}>
-                {group.products.map((product) => (
-                  <ProductCard
-                    key={product.id}
-                    product={product}
-                    onWishlistClick={handleWishlistClick}
-                  />
-                ))}
-              </div>
-            </section>
-          );
-        })}
-      </div>
-    );
 
     const products = listing.groups.flatMap((group) => group.products);
+
+    if (products.length === 0) {
+      content = (
+        <>
+          <p className={styles.emptyText}>
+            There are no products in this category yet.
+          </p>
+          <Link to="/" className={styles.emptyContinue}>
+            CONTINUE SHOPPING
+          </Link>
+        </>
+      );
+    } else {
+      content = (
+        <div className={styles.groups}>
+          {listing.groups.map((group) => {
+            const banner = group.banners[0];
+
+            return (
+              <section key={group.id} aria-labelledby={`group-${group.id}`}>
+                <h2 id={`group-${group.id}`} className={styles.groupName}>
+                  {group.name}
+                </h2>
+                {banner && (
+                  <img
+                    src={banner.image}
+                    alt={banner.alt}
+                    className={styles.banner}
+                  />
+                )}
+                <div className={styles.grid}>
+                  {group.products.map((product) => (
+                    <ProductCard
+                      key={product.id}
+                      product={product}
+                      onWishlistClick={handleWishlistClick}
+                    />
+                  ))}
+                </div>
+              </section>
+            );
+          })}
+        </div>
+      );
+    }
+
     wishlistProduct =
       products.find((product) => product.id === wishlistProductId) ?? null;
   }
