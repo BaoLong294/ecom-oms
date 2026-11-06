@@ -14,6 +14,13 @@
   background-color: rgba(27, 27, 27, 0.5);
 }
 
+/* ========================= DIALOG ABOVE THE BOTTOM NAV ========================= */
+.modal.aboveNav {
+  margin: auto auto 100px;
+  width: 360px;
+  max-width: calc(100% - 32px);
+}
+
 /* =================== MEDIA QUERY TO STYLE FOR MOBILE LAYOUT ==================== */
 @media (max-width: 480px) {
   .modal {

@@ -9,12 +9,13 @@ import { useRef, useEffect } from 'react';
  * onClose được gọi mỗi khi dialog đóng, kể cả khi trình duyệt tự đóng (Escape),
  * để cha cập nhật lại isOpen. Modal không tự vẽ nút đóng: mỗi popup đặt nút của mình trong children.
  * Vị trí: mặc định nằm giữa màn hình; placement 'bottom' chỉ khác trên mobile, khi đó
- * dialog nằm sát đáy và rộng hết màn hình (popup wishlist). Desktop luôn ở giữa.
+ * dialog nằm sát đáy và rộng hết màn hình (popup wishlist). Placement 'aboveNav' nằm
+ * sát đáy, ngay trên BottomNav, ở mọi kích thước màn hình (khung tìm kiếm).
  * @param {object} props
  * @param {boolean} props.isOpen - true thì mở dialog, false thì đóng
  * @param {function(): void} props.onClose - cha đặt isOpen về false khi dialog đóng
  * @param {string} props.labelledBy - id của tiêu đề bên trong, dùng làm tên của dialog
- * @param {'center' | 'bottom'} [props.placement='center'] - vị trí của dialog trên mobile
+ * @param {'center' | 'bottom' | 'aboveNav'} [props.placement='center'] - vị trí của dialog
  * @param {React.ReactNode} props.children - nội dung của popup
  */
 function Modal({
@@ -39,7 +40,9 @@ function Modal({
   }, [isOpen]);
 
   const dialogClassName =
-    placement === 'bottom' ? `${styles.modal} ${styles.bottom}` : styles.modal;
+    placement === 'center'
+      ? styles.modal
+      : `${styles.modal} ${styles[placement]}`;
 
   return (
     <dialog
