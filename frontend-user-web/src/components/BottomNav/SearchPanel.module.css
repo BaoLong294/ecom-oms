@@ -1,0 +1,92 @@
+/* ===================================== PANEL ==================================== */
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  height: 440px;
+  padding: 20px;
+}
+
+/* =================================== SEARCH BOX ================================= */
+.input {
+  width: 100%;
+  height: 44px;
+  padding: 0 20px;
+  border: 1px solid var(--color-gray);
+  border-radius: 22px;
+  font-size: 1rem;
+  color: var(--color-dark);
+}
+
+.input:focus {
+  outline: 1px solid var(--color-focus);
+  border-color: var(--color-focus);
+}
+
+/* ================================== STATUS LINE ================================= */
+.status {
+  font-size: 0.85rem;
+  color: var(--color-gray);
+}
+
+/* ===================================== RESULTS ================================== */
+.results {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  list-style: none;
+  border-top: 1px solid var(--color-gray-light);
+}
+
+.resultLink {
+  display: block;
+  padding: 12px 4px;
+  border-bottom: 1px solid var(--color-gray-light);
+  color: var(--color-dark);
+  text-decoration: none;
+}
+
+.resultLink:hover {
+  text-decoration: underline;
+}
+
+.resultLink:focus-visible {
+  outline: 1px solid var(--color-focus);
+  outline-offset: -2px;
+}
+
+/* ================================== CLOSE BUTTON ================================ */
+/* Đè đúng lên nút Search của BottomNav (cách đáy 30px, rộng 64px, giữa màn hình) để
+   kính lúp trông như đổi thành dấu ×. Phần tử fixed trong dialog căn theo màn hình. */
+.closeButton {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background-color: var(--color-white);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  color: var(--color-dark);
+  font-size: 2rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.closeButton:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 3px;
+}
+
+/* =================== MEDIA QUERY TO STYLE FOR MOBILE LAYOUT ==================== */
+@media (max-width: 480px) {
+  .panel {
+    padding: 16px;
+  }
+}

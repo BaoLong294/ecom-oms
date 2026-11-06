@@ -17,8 +17,9 @@
 /* ========================= DIALOG ABOVE THE BOTTOM NAV ========================= */
 .modal.aboveNav {
   margin: auto auto 100px;
-  width: 360px;
+  width: 450px;
   max-width: calc(100% - 32px);
+  border-radius: 16px;
 }
 
 /* =================== MEDIA QUERY TO STYLE FOR MOBILE LAYOUT ==================== */

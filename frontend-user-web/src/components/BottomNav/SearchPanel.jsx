@@ -86,14 +86,20 @@ function SearchContent({ onClose }) {
         id="search-input"
         type="search"
         value={query}
+        className={styles.input}
         placeholder="What are you looking for?"
         onChange={(event) => setQuery(event.target.value)}
       />
       {trimmedQuery !== '' && (
         <SearchResults query={trimmedQuery} onClose={onClose} />
       )}
-      <button type="button" aria-label="Close" onClick={onClose}>
-        <span aria-hidden="true">×</span>
+      <button
+        type="button"
+        aria-label="Close"
+        onClick={onClose}
+        className={styles.closeButton}
+      >
+        <span aria-hidden="true">x</span>
       </button>
     </div>
   );
