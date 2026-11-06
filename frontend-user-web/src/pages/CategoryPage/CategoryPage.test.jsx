@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest';
-import { render, screen, within } from '@testing-library/react';
+import { render, screen, within, fireEvent } from '@testing-library/react';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import CategoryPage from './CategoryPage.jsx';
 import { getCategoryListing } from '../../services/categoryService';
@@ -11,8 +11,8 @@ vi.mock('../../services/categoryService', () => ({
   getCategoryListing: vi.fn(),
 }));
 
-// Listing của category 3: Group A có 2 banner (chỉ ảnh position 1 được hiển thị)
-// và 1 sản phẩm; Group B có 1 banner và 2 sản phẩm.
+// Listing của category 3: Group A có 2 banner (dải cuộn có mũi tên) và 1 sản phẩm;
+// Group B có 1 banner (không có mũi tên) và 2 sản phẩm.
 const mockListing = {
   id: 3,
   name: 'Example Collection',
@@ -321,20 +321,18 @@ describe('CategoryPage', () => {
     expect(productNotExist).not.toBeInTheDocument();
   });
 
-  it('should show only the first banner of each group', async () => {
+  it('should show every banner of a group in order', async () => {
     getCategoryListing.mockResolvedValue(mockListing);
     renderCategoryPage();
-    const groupA = await screen.findByRole('region', { name: 'Group A' });
-
-    const bannerShown = within(groupA).getByRole('img', {
-      name: 'Banner A1',
+    const bannerList = await screen.findByRole('list', {
+      name: 'Group A banners',
     });
-    const bannerHidden = within(groupA).queryByRole('img', {
-      name: 'Banner A2',
-    });
+    const banners = within(bannerList).getAllByRole('img');
 
-    expect(bannerShown).toBeInTheDocument();
-    expect(bannerHidden).not.toBeInTheDocument();
+    expect(banners.map((banner) => banner.getAttribute('alt'))).toEqual([
+      'Banner A1',
+      'Banner A2',
+    ]);
   });
 
   it('should show "Category not found" when the category does not exist', async () => {
@@ -626,5 +624,158 @@ describe('CategoryPage empty state', () => {
     });
 
     expect(screen.queryByText(EMPTY_MESSAGE)).not.toBeInTheDocument();
+  });
+});
+
+describe('CategoryPage banner carousel', () => {
+  // jsdom không tính layout nên số đo của khung cuộn luôn là 0: tự gán trước khi thao tác.
+  function setScrollMetrics(element, { scrollLeft, clientWidth, scrollWidth }) {
+    Object.defineProperty(element, 'scrollLeft', {
+      value: scrollLeft,
+      configurable: true,
+    });
+    Object.defineProperty(element, 'clientWidth', {
+      value: clientWidth,
+      configurable: true,
+    });
+    Object.defineProperty(element, 'scrollWidth', {
+      value: scrollWidth,
+      configurable: true,
+    });
+  }
+
+  // Render trang rồi trả về dải banner của Group A (nhóm có 2 ảnh).
+  async function renderGroupACarousel() {
+    getCategoryListing.mockResolvedValue(mockListing);
+    renderCategoryPage();
+
+    return screen.findByRole('list', { name: 'Group A banners' });
+  }
+
+  beforeEach(() => {
+    Element.prototype.scrollBy = vi.fn();
+  });
+
+  afterEach(() => {
+    delete Element.prototype.scrollBy;
+    vi.resetAllMocks();
+  });
+
+  it('should not show arrows for a group with a single banner', async () => {
+    getCategoryListing.mockResolvedValue(mockListing);
+    renderCategoryPage();
+    await screen.findByRole('region', { name: 'Group B' });
+
+    expect(
+      screen.queryByRole('button', { name: 'Previous Group B banner' })
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: 'Next Group B banner' })
+    ).not.toBeInTheDocument();
+  });
+
+  it('should disable only the previous arrow at the start', async () => {
+    await renderGroupACarousel();
+
+    expect(
+      screen.getByRole('button', { name: 'Previous Group A banner' })
+    ).toHaveAttribute('aria-disabled', 'true');
+    expect(
+      screen.getByRole('button', { name: 'Next Group A banner' })
+    ).toHaveAttribute('aria-disabled', 'false');
+  });
+
+  it('should scroll forward by one banner width when next is clicked', async () => {
+    const user = userEvent.setup();
+    const list = await renderGroupACarousel();
+    setScrollMetrics(list, {
+      scrollLeft: 0,
+      clientWidth: 800,
+      scrollWidth: 1600,
+    });
+
+    await user.click(
+      screen.getByRole('button', { name: 'Next Group A banner' })
+    );
+
+    expect(Element.prototype.scrollBy).toHaveBeenCalledWith({
+      left: 800,
+      behavior: 'smooth',
+    });
+  });
+
+  it('should not scroll when previous is clicked at the start', async () => {
+    const user = userEvent.setup();
+    const list = await renderGroupACarousel();
+    setScrollMetrics(list, {
+      scrollLeft: 0,
+      clientWidth: 800,
+      scrollWidth: 1600,
+    });
+
+    await user.click(
+      screen.getByRole('button', { name: 'Previous Group A banner' })
+    );
+
+    expect(Element.prototype.scrollBy).not.toHaveBeenCalled();
+  });
+
+  it('should disable next and enable previous at the end', async () => {
+    const user = userEvent.setup();
+    const list = await renderGroupACarousel();
+    // 799.5: vị trí cuộn có thể là số lẻ, vẫn phải tính là đã tới cuối.
+    setScrollMetrics(list, {
+      scrollLeft: 799.5,
+      clientWidth: 800,
+      scrollWidth: 1600,
+    });
+    fireEvent.scroll(list);
+    const next = screen.getByRole('button', { name: 'Next Group A banner' });
+
+    expect(next).toHaveAttribute('aria-disabled', 'true');
+    expect(
+      screen.getByRole('button', { name: 'Previous Group A banner' })
+    ).toHaveAttribute('aria-disabled', 'false');
+
+    await user.click(next);
+
+    expect(Element.prototype.scrollBy).not.toHaveBeenCalled();
+  });
+
+  it('should scroll back by one banner width when previous is clicked at the end', async () => {
+    const user = userEvent.setup();
+    const list = await renderGroupACarousel();
+    setScrollMetrics(list, {
+      scrollLeft: 800,
+      clientWidth: 800,
+      scrollWidth: 1600,
+    });
+    fireEvent.scroll(list);
+
+    await user.click(
+      screen.getByRole('button', { name: 'Previous Group A banner' })
+    );
+
+    expect(Element.prototype.scrollBy).toHaveBeenCalledWith({
+      left: -800,
+      behavior: 'smooth',
+    });
+  });
+
+  it('should enable both arrows in the middle', async () => {
+    const list = await renderGroupACarousel();
+    setScrollMetrics(list, {
+      scrollLeft: 800,
+      clientWidth: 800,
+      scrollWidth: 2400,
+    });
+    fireEvent.scroll(list);
+
+    expect(
+      screen.getByRole('button', { name: 'Previous Group A banner' })
+    ).toHaveAttribute('aria-disabled', 'false');
+    expect(
+      screen.getByRole('button', { name: 'Next Group A banner' })
+    ).toHaveAttribute('aria-disabled', 'false');
   });
 });

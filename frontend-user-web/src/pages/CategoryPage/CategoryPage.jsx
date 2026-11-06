@@ -8,11 +8,12 @@ import { useFetch } from '../../hooks/useFetch';
 import { useAuth } from '../../context/AuthContext';
 import LoginRequiredPopup from '../../components/LoginRequiredPopup/LoginRequiredPopup';
 import WishlistPopup from './WishlistPopup';
+import BannerCarousel from './BannerCarousel';
 
 /**
  * Trang danh sách sản phẩm của một category: lấy id từ URL (/categories/:id),
  * gọi getCategoryListing và hiển thị từng nhóm (category con) gồm tiêu đề,
- * banner đầu tiên và lưới ProductCard.
+ * dải banner (BannerCarousel) và lưới ProductCard.
  * Mỗi nhóm là một <section> đặt tên bằng aria-labelledby theo <h2> của nhóm.
  * Tiêu đề <h1> luôn được render:
  * Đang tải hoặc lỗi: "Category" (ẩn, chỉ dành cho screen reader), kèm StatusMessage.
@@ -68,33 +69,28 @@ function CategoryPage() {
     } else {
       content = (
         <div className={styles.groups}>
-          {listing.groups.map((group) => {
-            const banner = group.banners[0];
-
-            return (
-              <section key={group.id} aria-labelledby={`group-${group.id}`}>
-                <h2 id={`group-${group.id}`} className={styles.groupName}>
-                  {group.name}
-                </h2>
-                {banner && (
-                  <img
-                    src={banner.image}
-                    alt={banner.alt}
-                    className={styles.banner}
+          {listing.groups.map((group) => (
+            <section key={group.id} aria-labelledby={`group-${group.id}`}>
+              <h2 id={`group-${group.id}`} className={styles.groupName}>
+                {group.name}
+              </h2>
+              {group.banners.length > 0 && (
+                <BannerCarousel
+                  banners={group.banners}
+                  groupName={group.name}
+                />
+              )}
+              <div className={styles.grid}>
+                {group.products.map((product) => (
+                  <ProductCard
+                    key={product.id}
+                    product={product}
+                    onWishlistClick={handleWishlistClick}
                   />
-                )}
-                <div className={styles.grid}>
-                  {group.products.map((product) => (
-                    <ProductCard
-                      key={product.id}
-                      product={product}
-                      onWishlistClick={handleWishlistClick}
-                    />
-                  ))}
-                </div>
-              </section>
-            );
-          })}
+                ))}
+              </div>
+            </section>
+          ))}
         </div>
       );
     }
