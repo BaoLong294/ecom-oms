@@ -1,0 +1,86 @@
+/* ================================== CAROUSEL =================================== */
+.carousel {
+  position: relative;
+  margin-bottom: 15px;
+}
+
+.list {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  list-style: none;
+}
+
+.slide {
+  flex: 0 0 100%;
+  scroll-snap-align: start;
+}
+
+.image {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* =================================== ARROWS ==================================== */
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.8);
+  color: var(--color-dark);
+  font-size: 2rem;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    background-color 0.15s,
+    opacity 0.15s;
+}
+
+.previous {
+  left: 15px;
+}
+
+.next {
+  right: 15px;
+}
+
+.arrow:hover {
+  background-color: var(--color-white);
+}
+
+.arrow[aria-disabled='true'] {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.arrow:focus-visible {
+  outline: 1px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* =================== MEDIA QUERY TO STYLE FOR MOBILE LAYOUT ==================== */
+@media (max-width: 480px) {
+  .arrow {
+    width: 32px;
+    height: 32px;
+    font-size: 1.5rem;
+  }
+
+  .previous {
+    left: 10px;
+  }
+
+  .next {
+    right: 10px;
+  }
+}

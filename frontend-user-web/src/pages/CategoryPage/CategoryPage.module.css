@@ -53,13 +53,6 @@
   margin-bottom: 15px;
 }
 
-.banner {
-  display: block;
-  max-width: 100%;
-  height: auto;
-  margin-bottom: 15px;
-}
-
 .grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
