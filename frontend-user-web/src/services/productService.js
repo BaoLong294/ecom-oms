@@ -37,3 +37,24 @@ export function getProductById(productId) {
 
   return simulateRequest(withVariants(product));
 }
+
+/**
+ * Tìm sản phẩm theo từ khóa trong tên, dùng cho ô tìm kiếm.
+ * Từ khóa được bỏ khoảng trắng hai đầu; so khớp không phân biệt hoa thường
+ * và khớp ở bất kỳ vị trí nào trong tên. Kết quả giữ thứ tự của dữ liệu.
+ * Nơi gọi tự bỏ qua từ khóa rỗng (từ khóa rỗng khớp mọi sản phẩm).
+ * Tương ứng với API: GET /api/products?search=:query
+ *
+ * @param {string} query - từ khóa người dùng nhập, ví dụ 'pants'.
+ * @returns {Promise<{ id: number, name: string }[]>} Mảng sản phẩm khớp, mỗi phần tử
+ *   chỉ có id và name; trả mảng rỗng nếu không có sản phẩm nào khớp.
+ */
+export function searchProducts(query) {
+  const normalizedQuery = query.trim().toLowerCase();
+
+  return simulateRequest(
+    products
+      .filter((product) => product.name.toLowerCase().includes(normalizedQuery))
+      .map(({ id, name }) => ({ id, name }))
+  );
+}

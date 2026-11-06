@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { getProductById } from './productService.js';
+import { getProductById, searchProducts } from './productService.js';
 import products from '../data/products.js';
 
 vi.mock('../data/products.js', () => ({
@@ -8,7 +8,7 @@ vi.mock('../data/products.js', () => ({
       id: 1,
       name: 'First item',
       categoryId: 10,
-      gender: 'Men',
+      gender: 'Unisex',
       price: 50,
     },
     {
@@ -17,6 +17,21 @@ vi.mock('../data/products.js', () => ({
       categoryId: 20,
       gender: 'Women',
       price: 35,
+    },
+    // id 4 đứng trước id 3 để bắt lỗi sắp xếp lại theo id.
+    {
+      id: 4,
+      name: 'Sweat Wide Pants',
+      categoryId: 30,
+      gender: 'Unisex',
+      price: 40,
+    },
+    {
+      id: 3,
+      name: 'Cotton PANTS',
+      categoryId: 30,
+      gender: 'Women',
+      price: 30,
     },
   ],
 }));
@@ -70,5 +85,47 @@ describe('getProductById', () => {
     await getProductById(1);
 
     expect(products[0]).not.toHaveProperty('variants');
+  });
+});
+
+describe('searchProducts', () => {
+  it('should match product names regardless of letter case', async () => {
+    const results = await searchProducts('PaNtS');
+    const resultIds = results.map((product) => product.id);
+
+    expect(resultIds).toHaveLength(2);
+    expect(resultIds).toEqual(expect.arrayContaining([3, 4]));
+  });
+
+  it('should match a keyword in the middle of the name', async () => {
+    const results = await searchProducts('wide');
+
+    expect(results.map((product) => product.id)).toEqual([4]);
+  });
+
+  it('should ignore leading and trailing spaces in the keyword', async () => {
+    const results = await searchProducts('  item  ');
+    const resultIds = results.map((product) => product.id);
+
+    expect(resultIds).toHaveLength(2);
+    expect(resultIds).toEqual(expect.arrayContaining([1, 2]));
+  });
+
+  it('should keep the order of the data', async () => {
+    const results = await searchProducts('pants');
+
+    expect(results.map((product) => product.id)).toEqual([4, 3]);
+  });
+
+  it('should return only id and name of each product', async () => {
+    const results = await searchProducts('cotton');
+
+    expect(results).toEqual([{ id: 3, name: 'Cotton PANTS' }]);
+  });
+
+  it('should return an empty array when nothing matches', async () => {
+    const results = await searchProducts('jacket');
+
+    expect(results).toEqual([]);
   });
 });
