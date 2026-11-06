@@ -30,6 +30,11 @@ body {
   background-color: var(--color-white);
 }
 
+/* showModal() không tự khóa cuộn: khi có dialog đang mở, trang phía sau không cuộn được. */
+body:has(dialog[open]) {
+  overflow: hidden;
+}
+
 /* Nội dung cho screen reader đọc, nhưng không hiển thị trên giao diện. */
 .visually-hidden {
   position: absolute;
