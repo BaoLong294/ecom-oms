@@ -1,0 +1,95 @@
+/* ==================================== PAGE ===================================== */
+.page {
+  width: 100%;
+  max-width: var(--content-max-width);
+  margin: 0 auto 80px;
+}
+
+/* ============================ BREADCRUMBS & TITLE ============================== */
+.breadcrumbs {
+  font-size: 0.8rem;
+  color: rgb(117, 117, 117);
+  margin-bottom: 50px;
+}
+
+.breadcrumbsLink {
+  color: rgb(117, 117, 117);
+}
+
+.breadcrumbsLink:focus-visible {
+  outline: 1px solid var(--color-focus);
+}
+
+.title {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.email {
+  color: var(--color-gray);
+  margin-bottom: 40px;
+}
+
+/* ==================================== MENU ===================================== */
+.menu {
+  list-style: none;
+  border-top: 1px solid var(--color-gray-light);
+  margin-bottom: 40px;
+  max-width: 760px;
+}
+
+.menuItem {
+  border-bottom: 1px solid var(--color-gray-light);
+}
+
+.menuLink {
+  display: block;
+  padding: 16px 0;
+  font-size: 1.1rem;
+  color: var(--color-dark);
+  text-decoration: none;
+}
+
+.menuLink:hover {
+  text-decoration: underline;
+}
+
+.menuLink:focus-visible {
+  outline: 1px solid var(--color-focus);
+  outline-offset: -2px;
+}
+
+/* =================================== LOG OUT =================================== */
+.logoutButton {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-dark);
+  background-color: var(--color-white);
+  border: 1px solid var(--color-dark);
+  padding: 10px 5px;
+  width: 288px;
+  line-height: 25px;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.logoutButton:hover {
+  opacity: 0.7;
+}
+
+.logoutButton:focus-visible {
+  outline: 1px solid var(--color-focus);
+  outline-offset: 3px;
+}
+
+/* =================== MEDIA QUERY TO STYLE FOR MOBILE LAYOUT ==================== */
+@media (max-width: 480px) {
+  .page {
+    padding: 0 20px;
+  }
+
+  .logoutButton {
+    max-width: 288px;
+    width: 100%;
+  }
+}

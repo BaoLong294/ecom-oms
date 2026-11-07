@@ -26,7 +26,7 @@ function AccountPage() {
   return (
     <div className={styles.page}>
       <title>Membership | UNIQLO</title>
-      <nav aria-label="Breadcrumb" className={styles.breadcrumb}>
+      <nav aria-label="Breadcrumb" className={styles.breadcrumbs}>
         <Link to="/" className={styles.breadcrumbsLink}>
           UNIQLO
         </Link>{' '}
