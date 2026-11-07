@@ -19,7 +19,7 @@ function AccountPage() {
   // navigate của data router là bất đồng bộ: đăng xuất trước khi URL rời /account
   // thì RequireAuth thấy khách và chuyển sang /login thay vì về trang chủ.
   async function handleLogout() {
-    await navigate('/', { replace: true });
+    await navigate('/', { replace: true, flushSync: true });
     logout();
   }
 
