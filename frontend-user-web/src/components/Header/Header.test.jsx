@@ -5,6 +5,7 @@ import userEvent from '@testing-library/user-event';
 import Header from './Header.jsx';
 import CartProvider from '../../context/CartProvider.jsx';
 import { getCategoryMenu } from '../../services/categoryService';
+import AuthProvider from '../../context/AuthProvider.jsx';
 
 vi.mock('../../services/categoryService', () => ({
   getCategoryMenu: vi.fn(),
@@ -57,9 +58,11 @@ function renderHeader(headerVariant = 'landing') {
   );
 
   render(
-    <CartProvider>
-      <RouterProvider router={router} />
-    </CartProvider>
+    <AuthProvider>
+      <CartProvider>
+        <RouterProvider router={router} />
+      </CartProvider>
+    </AuthProvider>
   );
 
   return router;

@@ -464,4 +464,32 @@ describe('Account route', () => {
     expect(router.state.location.pathname).toBe('/women');
     expect(localStorage.getItem('user')).toBeNull();
   });
+
+  it('links Account in the header to the account page when logged in', async () => {
+    const user = userEvent.setup();
+    logIn();
+    const router = renderWithRouter('/categories/5');
+    const header = screen.getByRole('banner');
+
+    await user.click(within(header).getByRole('link', { name: 'Account' }));
+
+    expect(router.state.location.pathname).toBe('/account');
+    expect(
+      screen.getByRole('heading', { level: 1, name: 'MEMBERSHIP' })
+    ).toBeInTheDocument();
+  });
+
+  it('links Account in the bottom nav to the account page when logged in', async () => {
+    const user = userEvent.setup();
+    logIn();
+    const router = renderWithRouter('/products/1');
+    const bottomNav = screen.getByRole('navigation', { name: 'Shortcuts' });
+
+    await user.click(within(bottomNav).getByRole('link', { name: 'Account' }));
+
+    expect(router.state.location.pathname).toBe('/account');
+    expect(
+      screen.getByRole('heading', { level: 1, name: 'MEMBERSHIP' })
+    ).toBeInTheDocument();
+  });
 });

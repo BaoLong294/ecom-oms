@@ -4,6 +4,7 @@ import { createMemoryRouter, RouterProvider, Outlet } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
 import BottomNav from './BottomNav.jsx';
 import { searchProducts } from '../../services/productService.js';
+import AuthProvider from '../../context/AuthProvider.jsx';
 
 vi.mock('../../services/productService.js', () => ({
   searchProducts: vi.fn(),
@@ -36,7 +37,11 @@ function renderBottomNav() {
     ],
     { initialEntries: ['/'] }
   );
-  render(<RouterProvider router={router} />);
+  render(
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
+  );
 
   return router;
 }
