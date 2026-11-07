@@ -8,6 +8,8 @@ import WishlistPage from './pages/WishlistPage/WishlistPage';
 import LoginPage from './pages/LoginPage/LoginPage';
 import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
 import { LANDING_CATEGORIES } from './config/landingCategories';
+import RequireAuth from './components/RequireAuth/RequireAuth';
+import AccountPage from './pages/AccountPage/AccountPage';
 
 export const routes = [
   {
@@ -33,6 +35,10 @@ export const routes = [
       { path: '/cart', element: <CartPage /> },
       { path: '/wishlist', element: <WishlistPage /> },
       { path: '/login', element: <LoginPage /> },
+      {
+        element: <RequireAuth />,
+        children: [{ path: '/account', element: <AccountPage /> }],
+      },
       { path: '*', element: <NotFoundPage /> },
     ],
   },

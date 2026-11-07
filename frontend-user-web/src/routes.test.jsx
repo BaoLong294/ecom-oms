@@ -407,3 +407,47 @@ describe('Login required popup', () => {
     expect(router.state.location.pathname).toBe('/products/1');
   });
 });
+
+describe('Account route', () => {
+  // AuthProvider chỉ đọc storage một lần lúc khởi tạo nên phải ghi trước render.
+  function logIn() {
+    localStorage.setItem('user', JSON.stringify({ email: 'long@example.com' }));
+  }
+
+  it('redirects a guest from /account to the login page', async () => {
+    const router = renderWithRouter('/account');
+
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'LOGIN' })
+    ).toBeInTheDocument();
+    expect(router.state.location.pathname).toBe('/login');
+  });
+
+  it('returns a guest to /account after logging in', async () => {
+    const user = userEvent.setup();
+    const router = renderWithRouter('/account');
+
+    await screen.findByRole('heading', { level: 1, name: 'LOGIN' });
+    await user.type(
+      screen.getByLabelText(/^email address/i),
+      'john.doe@gmail.com'
+    );
+    await user.type(screen.getByLabelText(/^password/i), 'abcd1234');
+    await user.click(screen.getByRole('button', { name: 'LOG IN' }));
+
+    expect(router.state.location.pathname).toBe('/account');
+    expect(
+      screen.getByRole('heading', { level: 1, name: 'MEMBERSHIP' })
+    ).toBeInTheDocument();
+  });
+
+  it('shows the account page to a logged-in user', () => {
+    logIn();
+    const router = renderWithRouter('/account');
+
+    expect(
+      screen.getByRole('heading', { level: 1, name: 'MEMBERSHIP' })
+    ).toBeInTheDocument();
+    expect(router.state.location.pathname).toBe('/account');
+  });
+});
