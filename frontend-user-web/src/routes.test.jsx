@@ -450,4 +450,18 @@ describe('Account route', () => {
     ).toBeInTheDocument();
     expect(router.state.location.pathname).toBe('/account');
   });
+
+  it('logs out and goes to the home page', async () => {
+    const user = userEvent.setup();
+    logIn();
+    const router = renderWithRouter('/account');
+
+    await user.click(screen.getByRole('button', { name: 'LOG OUT' }));
+
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'WOMEN' })
+    ).toBeInTheDocument();
+    expect(router.state.location.pathname).toBe('/women');
+    expect(localStorage.getItem('user')).toBeNull();
+  });
 });
