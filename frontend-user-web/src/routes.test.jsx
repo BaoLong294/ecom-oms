@@ -2,10 +2,11 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
-import { routes } from './routes.jsx';
-import AuthProvider from './context/AuthProvider.jsx';
-import CartProvider from './context/CartProvider.jsx';
-import WishlistProvider from './context/WishlistProvider.jsx';
+import { routes } from './routes';
+import AuthProvider from './context/AuthProvider';
+import CartProvider from './context/CartProvider';
+import WishlistProvider from './context/WishlistProvider';
+import OrdersProvider from './context/OrdersProvider';
 
 function renderWithRouter(url) {
   const router = createMemoryRouter(routes, { initialEntries: [url] });
@@ -13,7 +14,9 @@ function renderWithRouter(url) {
     <AuthProvider>
       <CartProvider>
         <WishlistProvider>
-          <RouterProvider router={router} />
+          <OrdersProvider>
+            <RouterProvider router={router} />
+          </OrdersProvider>
         </WishlistProvider>
       </CartProvider>
     </AuthProvider>
