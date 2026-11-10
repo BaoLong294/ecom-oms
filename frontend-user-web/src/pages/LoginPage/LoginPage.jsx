@@ -2,42 +2,18 @@ import styles from './LoginPage.module.css';
 import { useState, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { validateEmail, validatePassword } from '../../utils/validation';
+import {
+  validateEmail,
+  validatePassword,
+  NO_ERROR,
+  getFieldError,
+} from '../../utils/validation';
+import FormField from '../../components/FormField/FormField';
 
 // Viết bằng nháy kép vì câu chứa cả nháy đơn, backtick và {}: đặt thẳng trong JSX
 // thì {} bị hiểu là biểu thức, đặt trong template literal thì backtick kết thúc chuỗi.
 const PASSWORD_HINT =
   "Password must be 8-20 letters and contain both letters and numbers. The following symbols can be used !#$%&()'*+,-./:;<=?>@[]^_`{|}~";
-
-const NO_ERROR = { isInvalid: false, message: '' };
-
-/**
- * Quyết định cách hiển thị lỗi của một ô theo quy tắc của bản vanilla:
- * trước lần submit đầu, ô rỗng không bị báo lỗi và ô sai định dạng chỉ tô viền đỏ;
- * sau khi submit, mọi lỗi đều hiện đủ thông báo.
- * Cần value vì trước khi submit, ô rỗng và ô sai định dạng đều có message khác ''
- * nhưng hiển thị khác nhau.
- * @param {string} value Giá trị hiện tại của ô
- * @param {string} message Kết quả của validateEmail/validatePassword, '' nếu hợp lệ
- * @param {boolean} isSubmitted Form đã được submit ít nhất một lần chưa
- * @returns {{ isInvalid: boolean, message: string }} isInvalid quyết định viền đỏ
- *   (aria-invalid), message là chữ hiển thị ('' nếu không hiện chữ)
- */
-function getFieldError(value, message, isSubmitted) {
-  if (message === '') {
-    return NO_ERROR;
-  }
-
-  if (isSubmitted) {
-    return { isInvalid: true, message };
-  }
-
-  if (value.trim() === '') {
-    return NO_ERROR;
-  }
-
-  return { isInvalid: true, message: '' };
-}
 
 /**
  * Trang đăng nhập giả lập. Lỗi chỉ cập nhật khi rời ô (blur) và khi submit,
@@ -45,6 +21,7 @@ function getFieldError(value, message, isSubmitted) {
  * Đăng nhập thành công thì quay về trang đã dẫn tới đây (location.state.from),
  * hoặc trang chủ nếu người dùng vào thẳng /login.
  * Submit thất bại thì focus vào ô lỗi đầu tiên.
+ * Hai ô nhập dùng FormField; quy tắc hiển thị lỗi nằm ở getFieldError (utils/validation).
  * @returns {JSX.Element}
  */
 function LoginPage() {
@@ -60,15 +37,9 @@ function LoginPage() {
   const emailInputRef = useRef(null);
   const passwordInputRef = useRef(null);
 
+  // Nơi dẫn tới /login gửi pathname của trang đó qua state.from để đăng nhập xong quay về đúng chỗ.
+  // Vào thẳng /login thì không có state, nên quay về trang chủ.
   const from = location.state?.from ?? '/';
-
-  // Chỉ trỏ tới thông báo lỗi khi phần tử đó đang được render.
-  const emailDescribedBy = emailError.message ? 'login-email-error' : undefined;
-
-  // Lỗi đứng trước gợi ý để screen reader đọc vấn đề trước, gợi ý dài đọc sau.
-  const passwordDescribedBy = passwordError.message
-    ? 'login-password-error login-password-hint'
-    : 'login-password-hint';
 
   function handleEmailBlur() {
     setEmailError(getFieldError(email, validateEmail(email), isSubmitted));
@@ -120,57 +91,31 @@ function LoginPage() {
         </p>
 
         <form className={styles.form} onSubmit={handleSubmit} noValidate>
-          <div className={styles.group}>
-            {emailError.message && (
-              <p id="login-email-error" className={styles.errorMessage}>
-                {emailError.message}
-              </p>
-            )}
-            <label htmlFor="login-email" className={styles.label}>
-              EMAIL ADDRESS <span className={styles.symbol}>*</span>
-            </label>
-            <input
-              id="login-email"
-              type="email"
-              name="email"
-              value={email}
-              ref={emailInputRef}
-              placeholder="Enter a valid email"
-              className={styles.input}
-              aria-invalid={emailError.isInvalid}
-              aria-describedby={emailDescribedBy}
-              onChange={(event) => setEmail(event.target.value)}
-              onBlur={handleEmailBlur}
-              required
-            />
-          </div>
+          <FormField
+            id="login-email"
+            label="EMAIL ADDRESS"
+            type="email"
+            name="email"
+            value={email}
+            placeholder="Enter a valid email"
+            ref={emailInputRef}
+            error={emailError}
+            onChange={(event) => setEmail(event.target.value)}
+            onBlur={handleEmailBlur}
+          />
 
-          <div className={styles.group}>
-            {passwordError.message && (
-              <p id="login-password-error" className={styles.errorMessage}>
-                {passwordError.message}
-              </p>
-            )}
-            <label htmlFor="login-password" className={styles.label}>
-              PASSWORD <span className={styles.symbol}>*</span>
-            </label>
-            <input
-              id="login-password"
-              type={showPassword ? 'text' : 'password'}
-              name="password"
-              value={password}
-              ref={passwordInputRef}
-              className={styles.input}
-              aria-invalid={passwordError.isInvalid}
-              aria-describedby={passwordDescribedBy}
-              onChange={(event) => setPassword(event.target.value)}
-              onBlur={handlePasswordBlur}
-              required
-            />
-            <p id="login-password-hint" className={styles.hint}>
-              {PASSWORD_HINT}
-            </p>
-          </div>
+          <FormField
+            id="login-password"
+            label="PASSWORD"
+            type={showPassword ? 'text' : 'password'}
+            name="password"
+            value={password}
+            hint={PASSWORD_HINT}
+            ref={passwordInputRef}
+            error={passwordError}
+            onChange={(event) => setPassword(event.target.value)}
+            onBlur={handlePasswordBlur}
+          />
 
           <div className={styles.checkboxWrapper}>
             <input
