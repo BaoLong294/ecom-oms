@@ -170,7 +170,7 @@ function CheckoutPage() {
         </div>
 
         <section aria-label="Order summary" className={styles.summary}>
-          <div className={styles.summaryRow}>
+          <div className={`${styles.summaryRow} ${styles.strong}`}>
             <p>ORDER SUMMARY</p>
             <p>{itemCount} ITEM(S)</p>
           </div>
@@ -185,7 +185,7 @@ function CheckoutPage() {
             <p>Free</p>
           </div>
 
-          <div className={styles.summaryRow}>
+          <div className={`${styles.summaryRow} ${styles.strong}`}>
             <p>ORDER TOTAL</p>
             <p>{total}</p>
           </div>
