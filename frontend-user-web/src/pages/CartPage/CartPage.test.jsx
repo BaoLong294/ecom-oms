@@ -1,10 +1,11 @@
-import { describe, it, expect, vi, afterEach } from 'vitest';
+import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import CartPage from './CartPage';
-import CartProvider from '../../context/CartProvider.jsx';
+import CartProvider from '../../context/CartProvider';
 import { getVariantsByIds } from '../../services/variantService';
+import AuthProvider from '../../context/AuthProvider';
 
 vi.mock('../../services/variantService', () => ({
   getVariantsByIds: vi.fn(),
@@ -78,14 +79,17 @@ function renderCartPage() {
       { path: '/cart', element: <CartPage /> },
       { path: '/', element: <h1>Home page</h1> },
       { path: '/login', element: <h1>Login page</h1> },
+      { path: '/checkout', element: <h1>Checkout page</h1> },
     ],
     { initialEntries: ['/cart'] }
   );
 
   render(
-    <CartProvider>
-      <RouterProvider router={router} />
-    </CartProvider>
+    <AuthProvider>
+      <CartProvider>
+        <RouterProvider router={router} />
+      </CartProvider>
+    </AuthProvider>
   );
 }
 
@@ -258,20 +262,6 @@ describe('CartPage actions', () => {
     ).toBeInTheDocument();
   });
 
-  it('goes to the login page with CHECKOUT', async () => {
-    const user = userEvent.setup();
-    storeCart(TWO_ITEMS_CART);
-    getVariantsByIds.mockResolvedValue([regularVariant, discountedVariant]);
-    renderCartPage();
-    const checkout = await screen.findByRole('link', { name: 'CHECKOUT' });
-
-    await user.click(checkout);
-
-    expect(
-      screen.getByRole('heading', { level: 1, name: 'Login page' })
-    ).toBeInTheDocument();
-  });
-
   it('names the buttons of two sizes of the same product differently', async () => {
     const user = userEvent.setup();
     storeCart([
@@ -291,5 +281,81 @@ describe('CartPage actions', () => {
     await user.click(removeL);
 
     expect(readStoredCart()).toEqual([{ variantId: 12, quantity: 2 }]);
+  });
+});
+
+describe('CartPage checkout', () => {
+  const originalShowModal = HTMLDialogElement.prototype.showModal;
+  const originalClose = HTMLDialogElement.prototype.close;
+
+  // jsdom chưa cài đặt showModal/close của <dialog>; khách bấm CHECKOUT sẽ mở popup.
+  beforeEach(() => {
+    HTMLDialogElement.prototype.showModal = vi.fn(function () {
+      this.setAttribute('open', '');
+    });
+    HTMLDialogElement.prototype.close = vi.fn(function () {
+      this.removeAttribute('open');
+      this.dispatchEvent(new Event('close'));
+    });
+  });
+
+  afterEach(() => {
+    HTMLDialogElement.prototype.showModal = originalShowModal;
+    HTMLDialogElement.prototype.close = originalClose;
+  });
+
+  // AuthProvider chỉ đọc storage một lần lúc khởi tạo nên phải ghi trước render.
+  function logIn() {
+    localStorage.setItem('user', JSON.stringify({ email: 'long@example.com' }));
+  }
+
+  it('opens the login popup when a guest clicks CHECKOUT', async () => {
+    const user = userEvent.setup();
+    storeCart(TWO_ITEMS_CART);
+    getVariantsByIds.mockResolvedValue([regularVariant, discountedVariant]);
+    renderCartPage();
+    const checkout = await screen.findByRole('button', { name: 'CHECKOUT' });
+    expect(checkout).toHaveAttribute('aria-haspopup', 'dialog');
+    expect(
+      screen.queryByRole('dialog', { name: 'Login' })
+    ).not.toBeInTheDocument();
+
+    await user.click(checkout);
+
+    const dialog = screen.getByRole('dialog', { name: 'Login', hidden: true });
+    expect(dialog).toHaveAttribute('open');
+    expect(
+      within(dialog).getByText('You must be logged in to check out.')
+    ).toBeInTheDocument();
+  });
+
+  it('goes to the login page from the popup', async () => {
+    const user = userEvent.setup();
+    storeCart(TWO_ITEMS_CART);
+    getVariantsByIds.mockResolvedValue([regularVariant, discountedVariant]);
+    renderCartPage();
+
+    await user.click(await screen.findByRole('button', { name: 'CHECKOUT' }));
+    await user.click(screen.getByRole('link', { name: 'LOG IN' }));
+
+    expect(
+      screen.getByRole('heading', { level: 1, name: 'Login page' })
+    ).toBeInTheDocument();
+  });
+
+  it('links CHECKOUT to the checkout page when logged in', async () => {
+    const user = userEvent.setup();
+    logIn();
+    storeCart(TWO_ITEMS_CART);
+    getVariantsByIds.mockResolvedValue([regularVariant, discountedVariant]);
+    renderCartPage();
+    const checkout = await screen.findByRole('link', { name: 'CHECKOUT' });
+    expect(checkout).toHaveAttribute('href', '/checkout');
+
+    await user.click(checkout);
+
+    expect(
+      screen.getByRole('heading', { level: 1, name: 'Checkout page' })
+    ).toBeInTheDocument();
   });
 });

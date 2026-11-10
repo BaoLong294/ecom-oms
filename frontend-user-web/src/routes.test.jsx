@@ -22,14 +22,33 @@ function renderWithRouter(url) {
   return router;
 }
 
-// jsdom không có window.scrollTo thật; ScrollRestoration gọi nó mỗi lần chuyển trang.
+// AuthProvider chỉ đọc storage một lần lúc khởi tạo nên phải ghi trước render.
+function logIn() {
+  localStorage.setItem('user', JSON.stringify({ email: 'long@example.com' }));
+}
+
+const originalShowModal = HTMLDialogElement.prototype.showModal;
+const originalClose = HTMLDialogElement.prototype.close;
+
 beforeEach(() => {
+  // jsdom không có window.scrollTo thật; ScrollRestoration gọi nó mỗi lần chuyển trang.
   vi.spyOn(window, 'scrollTo').mockImplementation(() => {});
+
+  // jsdom chưa cài đặt showModal/close của <dialog>; các test mở popup thật cần hàm giả.
+  HTMLDialogElement.prototype.showModal = vi.fn(function () {
+    this.setAttribute('open', '');
+  });
+  HTMLDialogElement.prototype.close = vi.fn(function () {
+    this.removeAttribute('open');
+    this.dispatchEvent(new Event('close'));
+  });
 });
 
 afterEach(() => {
   localStorage.clear();
   vi.restoreAllMocks();
+  HTMLDialogElement.prototype.showModal = originalShowModal;
+  HTMLDialogElement.prototype.close = originalClose;
 });
 
 describe('routes', () => {
@@ -368,25 +387,6 @@ describe('BottomNav', () => {
 });
 
 describe('Login required popup', () => {
-  const originalShowModal = HTMLDialogElement.prototype.showModal;
-  const originalClose = HTMLDialogElement.prototype.close;
-
-  // jsdom chưa cài đặt showModal/close của <dialog>; test này mở popup thật nên cần hàm giả.
-  beforeEach(() => {
-    HTMLDialogElement.prototype.showModal = vi.fn(function () {
-      this.setAttribute('open', '');
-    });
-    HTMLDialogElement.prototype.close = vi.fn(function () {
-      this.removeAttribute('open');
-      this.dispatchEvent(new Event('close'));
-    });
-  });
-
-  afterEach(() => {
-    HTMLDialogElement.prototype.showModal = originalShowModal;
-    HTMLDialogElement.prototype.close = originalClose;
-  });
-
   it('returns to the product page after logging in from the popup', async () => {
     const user = userEvent.setup();
     const router = renderWithRouter('/products/1');
@@ -409,11 +409,6 @@ describe('Login required popup', () => {
 });
 
 describe('Account route', () => {
-  // AuthProvider chỉ đọc storage một lần lúc khởi tạo nên phải ghi trước render.
-  function logIn() {
-    localStorage.setItem('user', JSON.stringify({ email: 'long@example.com' }));
-  }
-
   it('redirects a guest from /account to the login page', async () => {
     const router = renderWithRouter('/account');
 
@@ -490,6 +485,74 @@ describe('Account route', () => {
     expect(router.state.location.pathname).toBe('/account');
     expect(
       screen.getByRole('heading', { level: 1, name: 'MEMBERSHIP' })
+    ).toBeInTheDocument();
+  });
+});
+
+describe('Checkout route', () => {
+  // Variant id 1 có trong dữ liệu thật (variants đánh số từ 1).
+  function storeOneItemCart() {
+    localStorage.setItem(
+      'cart',
+      JSON.stringify([{ variantId: 1, quantity: 1 }])
+    );
+  }
+
+  it('redirects a guest from /checkout to the login page', async () => {
+    const router = renderWithRouter('/checkout');
+
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'LOGIN' })
+    ).toBeInTheDocument();
+    expect(router.state.location.pathname).toBe('/login');
+  });
+
+  it('returns a guest to /checkout after logging in', async () => {
+    const user = userEvent.setup();
+    const router = renderWithRouter('/checkout');
+
+    await screen.findByRole('heading', { level: 1, name: 'LOGIN' });
+    await user.type(
+      screen.getByLabelText(/^email address/i),
+      'john.doe@gmail.com'
+    );
+    await user.type(screen.getByLabelText(/^password/i), 'abcd1234');
+    await user.click(screen.getByRole('button', { name: 'LOG IN' }));
+
+    expect(router.state.location.pathname).toBe('/checkout');
+    expect(
+      screen.getByRole('heading', { level: 1, name: 'CHECKOUT' })
+    ).toBeInTheDocument();
+  });
+
+  it('returns a guest to the cart after logging in from CHECKOUT', async () => {
+    const user = userEvent.setup();
+    storeOneItemCart();
+    const router = renderWithRouter('/cart');
+
+    await user.click(await screen.findByRole('button', { name: 'CHECKOUT' }));
+    await user.click(screen.getByRole('link', { name: 'LOG IN' }));
+    await user.type(
+      screen.getByLabelText(/^email address/i),
+      'john.doe@gmail.com'
+    );
+    await user.type(screen.getByLabelText(/^password/i), 'abcd1234');
+    await user.click(screen.getByRole('button', { name: 'LOG IN' }));
+
+    expect(router.state.location.pathname).toBe('/cart');
+  });
+
+  it('takes a logged-in user from the cart to the checkout page', async () => {
+    const user = userEvent.setup();
+    logIn();
+    storeOneItemCart();
+    const router = renderWithRouter('/cart');
+
+    await user.click(await screen.findByRole('link', { name: 'CHECKOUT' }));
+
+    expect(router.state.location.pathname).toBe('/checkout');
+    expect(
+      screen.getByRole('heading', { level: 1, name: 'CHECKOUT' })
     ).toBeInTheDocument();
   });
 });

@@ -10,6 +10,7 @@ import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
 import { LANDING_CATEGORIES } from './config/landingCategories';
 import RequireAuth from './components/RequireAuth/RequireAuth';
 import AccountPage from './pages/AccountPage/AccountPage';
+import CheckoutPage from './pages/CheckoutPage/CheckoutPage';
 
 export const routes = [
   {
@@ -37,7 +38,10 @@ export const routes = [
       { path: '/login', element: <LoginPage /> },
       {
         element: <RequireAuth />,
-        children: [{ path: '/account', element: <AccountPage /> }],
+        children: [
+          { path: '/account', element: <AccountPage /> },
+          { path: '/checkout', element: <CheckoutPage /> },
+        ],
       },
       { path: '*', element: <NotFoundPage /> },
     ],

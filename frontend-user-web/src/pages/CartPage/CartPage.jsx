@@ -6,6 +6,9 @@ import StatusMessage from '../../components/StatusMessage/StatusMessage';
 import CartItem from './CartItem';
 import { formatToUSD } from '../../utils/price';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+import { useState } from 'react';
+import LoginRequiredPopup from '../../components/LoginRequiredPopup/LoginRequiredPopup';
 
 /**
  * Trang giỏ hàng. Giỏ hàng chỉ lưu variantId và quantity, nên trang lấy thông tin
@@ -13,13 +16,15 @@ import { Link } from 'react-router-dom';
  * giữ đúng thứ tự trong giỏ và bỏ qua món không còn variant (đã ngừng bán, id cũ).
  * Giỏ rỗng hiện thông báo ngay, xét trước trạng thái loading vì không cần chờ giá.
  * Đổi số lượng và xóa món đi qua CartContext; đổi số lượng không gọi lại service
- * vì danh sách id không đổi. CHECKOUT dẫn tới trang đăng nhập kèm from '/cart'
- * để đăng nhập xong quay lại giỏ (chia theo trạng thái đăng nhập ở Phần 19).
+ * vì danh sách id không đổi. CHECKOUT: đã đăng nhập thì sang /checkout; khách thì
+ * mở popup yêu cầu đăng nhập (LOG IN dẫn tới login, đăng nhập xong quay về giỏ).
  */
 function CartPage() {
   const { items, itemCount, variants, isLoading, errorMessage } =
     useCartVariants();
   const { changeQuantity, removeItem } = useCart();
+  const { isLoggedIn } = useAuth();
+  const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false);
 
   let content;
   if (items.length === 0) {
@@ -69,13 +74,21 @@ function CartPage() {
             <p>{total}</p>
           </div>
 
-          <Link
-            to="/login"
-            state={{ from: '/cart' }}
-            className={styles.checkout}
-          >
-            CHECKOUT
-          </Link>
+          {isLoggedIn ? (
+            <Link to="/checkout" className={styles.checkout}>
+              CHECKOUT
+            </Link>
+          ) : (
+            <button
+              type="button"
+              className={styles.checkout}
+              aria-haspopup="dialog"
+              onClick={() => setIsLoginPopupOpen(true)}
+            >
+              CHECKOUT
+            </button>
+          )}
+
           <Link to="/" className={styles.continue}>
             CONTINUE SHOPPING
           </Link>
@@ -97,6 +110,12 @@ function CartPage() {
       <h1 className={styles.title}>SHOPPING CART</h1>
 
       {content}
+
+      <LoginRequiredPopup
+        isOpen={isLoginPopupOpen}
+        onClose={() => setIsLoginPopupOpen(false)}
+        message="You must be logged in to check out."
+      />
     </div>
   );
 }
