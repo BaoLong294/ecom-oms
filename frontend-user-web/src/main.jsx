@@ -6,6 +6,7 @@ import { routes } from './routes';
 import AuthProvider from './context/AuthProvider';
 import CartProvider from './context/CartProvider';
 import WishlistProvider from './context/WishlistProvider';
+import OrdersProvider from './context/OrdersProvider';
 
 const router = createBrowserRouter(routes);
 
@@ -14,7 +15,9 @@ createRoot(document.getElementById('root')).render(
     <AuthProvider>
       <CartProvider>
         <WishlistProvider>
-          <RouterProvider router={router} />
+          <OrdersProvider>
+            <RouterProvider router={router} />
+          </OrdersProvider>
         </WishlistProvider>
       </CartProvider>
     </AuthProvider>
