@@ -6,10 +6,11 @@
  * 'added' ({ variantId, quantity }): chưa có variant thì thêm vào cuối, có rồi thì cộng số lượng.
  * 'quantity_changed' ({ variantId, quantity }): gán số lượng mới cho variant đó.
  * 'removed' ({ variantId }): bỏ variant đó khỏi giỏ.
+ * 'cleared': bỏ mọi món khỏi giỏ (action không có dữ liệu đi kèm).
  * @param {Array<{ variantId: number, quantity: number }>} state - giỏ hàng hiện tại
  * @param {{ type: string, variantId?: number, quantity?: number }} action - thao tác vừa xảy ra
  * @returns {Array<{ variantId: number, quantity: number }>} giỏ hàng mới
- * @throws {Error} khi action.type không thuộc 3 action trên
+ * @throws {Error} khi action.type không thuộc 4 action trên
  */
 export function cartReducer(state, action) {
   switch (action.type) {
@@ -41,6 +42,9 @@ export function cartReducer(state, action) {
 
     case 'removed':
       return state.filter((item) => item.variantId !== action.variantId);
+
+    case 'cleared':
+      return [];
 
     default:
       throw new Error('Unknown action: ' + action.type);

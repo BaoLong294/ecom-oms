@@ -72,6 +72,15 @@ describe('removed', () => {
   });
 });
 
+describe('cleared', () => {
+  it('empties the cart', () => {
+    const action = { type: 'cleared' };
+    const result = cartReducer(CART_TWO_ITEMS, action);
+
+    expect(result).toEqual([]);
+  });
+});
+
 describe('unknown action', () => {
   it('throws an error for an unknown action type', () => {
     const action = { type: 'unknown' };

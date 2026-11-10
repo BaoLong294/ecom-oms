@@ -7,9 +7,10 @@ import { useCart } from './CartContext.js';
 const CART_KEY = 'cart';
 
 // Component chỉ dùng trong test: hiển thị state của giỏ thành chữ
-// và có 3 nút gọi 3 hàm của context với giá trị cố định.
+// và có 4 nút gọi 4 hàm của context với giá trị cố định.
 function CartStatus() {
-  const { items, itemCount, addItem, changeQuantity, removeItem } = useCart();
+  const { items, itemCount, addItem, changeQuantity, removeItem, clearItems } =
+    useCart();
   const itemsText =
     items.map((item) => `${item.variantId}x${item.quantity}`).join(', ') ||
     'none';
@@ -26,6 +27,9 @@ function CartStatus() {
       </button>
       <button type="button" onClick={() => removeItem(5)}>
         Remove
+      </button>
+      <button type="button" onClick={() => clearItems()}>
+        Clear
       </button>
     </div>
   );
@@ -132,6 +136,22 @@ describe('cart actions', () => {
 
     expect(screen.getByText('Items: 7x3')).toBeInTheDocument();
     expect(readStoredCart()).toEqual([{ variantId: 7, quantity: 3 }]);
+  });
+
+  it('clears the cart and saves it to storage', async () => {
+    const user = userEvent.setup();
+    storeCart([
+      { variantId: 5, quantity: 1 },
+      { variantId: 7, quantity: 3 },
+    ]);
+    renderCart();
+    expect(screen.getByText('Items: 5x1, 7x3')).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Clear' }));
+
+    expect(screen.getByText('Items: none')).toBeInTheDocument();
+    expect(screen.getByText('Count: 0')).toBeInTheDocument();
+    expect(readStoredCart()).toEqual([]);
   });
 });
 

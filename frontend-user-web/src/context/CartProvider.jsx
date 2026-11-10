@@ -52,9 +52,20 @@ function CartProvider({ children }) {
     dispatch({ type: 'removed', variantId });
   }
 
+  function clearItems() {
+    dispatch({ type: 'cleared' });
+  }
+
   return (
     <CartContext
-      value={{ items, itemCount, addItem, changeQuantity, removeItem }}
+      value={{
+        items,
+        itemCount,
+        addItem,
+        changeQuantity,
+        removeItem,
+        clearItems,
+      }}
     >
       {children}
     </CartContext>
