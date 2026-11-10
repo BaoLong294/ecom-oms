@@ -104,6 +104,11 @@
   transition: opacity 0.15s;
 }
 
+/* CHECKOUT là <button> khi chưa đăng nhập; <a> đã có con trỏ bàn tay sẵn. */
+.checkout {
+  cursor: pointer;
+}
+
 .continue {
   background-color: var(--color-white);
   color: var(--color-dark);
