@@ -116,6 +116,7 @@ function CategoryPage() {
       <LoginRequiredPopup
         isOpen={isLoginPopupOpen}
         onClose={() => setIsLoginPopupOpen(false)}
+        message="You must be logged in to add to your wishlist."
       />
       <WishlistPopup
         product={wishlistProduct}
