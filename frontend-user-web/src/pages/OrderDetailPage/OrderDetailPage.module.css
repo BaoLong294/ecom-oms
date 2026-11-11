@@ -1,0 +1,155 @@
+/* ==================================== PAGE ===================================== */
+.page {
+  width: 100%;
+  max-width: var(--content-max-width);
+  margin: 0 auto 80px;
+}
+
+/* ============================ BREADCRUMBS & TITLE ============================== */
+.breadcrumbs {
+  font-size: 0.8rem;
+  color: rgb(117, 117, 117);
+  margin-bottom: 50px;
+}
+
+.breadcrumbsLink {
+  color: rgb(117, 117, 117);
+}
+
+.breadcrumbsLink:focus-visible {
+  outline: 1px solid var(--color-focus);
+}
+
+.title {
+  font-size: 2rem;
+  margin-bottom: 85px;
+}
+
+/* ================================== NOT FOUND ================================== */
+.notFoundText {
+  font-size: 1.1rem;
+  margin-bottom: 40px;
+}
+
+.backLink {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-white);
+  background-color: var(--color-dark);
+  display: inline-block;
+  text-decoration: none;
+  text-align: center;
+  padding: 10px 5px;
+  width: 288px;
+  line-height: 25px;
+  transition: opacity 0.15s;
+}
+
+.backLink:hover {
+  opacity: 0.7;
+}
+
+.backLink:focus-visible {
+  outline: 1px solid var(--color-focus);
+  outline-offset: 3px;
+}
+
+/* =================================== LAYOUT ==================================== */
+.filled {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  align-items: start;
+  gap: 50px;
+}
+
+/* ================================ ORDER DETAILS ================================ */
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.date {
+  font-size: 0.95rem;
+  color: var(--color-gray);
+}
+
+.sectionTitle {
+  font-size: 1.6rem;
+  font-weight: 400;
+  margin-bottom: 15px;
+}
+
+.items {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+}
+
+.shippingText {
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* ================================ ORDER SUMMARY ================================ */
+.summary {
+  position: sticky;
+  top: 105px;
+  background-color: rgb(244, 244, 244);
+  padding: 15px 20px;
+}
+
+.summaryRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  font-size: 0.95rem;
+  padding: 12px 0;
+}
+
+.summaryRow.strong {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.summaryRow:first-child {
+  border-bottom: 1px solid rgb(218, 218, 218);
+  margin-bottom: 8px;
+}
+
+/* last-of-type thay cho last-child: phần tử cuối của khối là dòng thanh toán (<p>),
+   hàng ORDER TOTAL là <div> cuối cùng. */
+.summaryRow:last-of-type {
+  border-top: 1px solid rgb(218, 218, 218);
+  margin-top: 8px;
+}
+
+.payment {
+  font-size: 0.9rem;
+  color: var(--color-gray);
+  padding-top: 12px;
+}
+
+/* =================== MEDIA QUERY TO STYLE FOR MOBILE LAYOUT ==================== */
+@media (max-width: 480px) {
+  .page {
+    padding: 0 20px;
+  }
+
+  .title {
+    margin-bottom: 40px;
+  }
+
+  .backLink {
+    max-width: 288px;
+    width: 100%;
+  }
+
+  .filled {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .summary {
+    position: static;
+  }
+}
