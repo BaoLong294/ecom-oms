@@ -48,7 +48,7 @@ const FIELD_VALIDATORS = {
  * Form giao hàng (FormField) báo lỗi khi blur và submit như trang Login;
  * submit lỗi thì focus ô lỗi đầu tiên và giỏ không đổi.
  * Submit hợp lệ thì tạo đơn từ giỏ (chụp lại sản phẩm, ảnh, tên, màu, size, giá lúc đặt),
- * xóa giỏ và hiện xác nhận ngay trong trang.
+ * xóa giỏ và hiện xác nhận ngay trong trang, kèm link tới trang chi tiết đơn vừa đặt.
  * @returns {JSX.Element}
  */
 function CheckoutPage() {
@@ -82,9 +82,14 @@ function CheckoutPage() {
         <p className={styles.confirmText}>
           Your order #{placedOrderId} has been placed.
         </p>
-        <Link to="/" className={styles.emptyContinue}>
-          CONTINUE SHOPPING
-        </Link>
+        <div className={styles.confirmActions}>
+          <Link to={`/orders/${placedOrderId}`} className={styles.viewOrder}>
+            VIEW ORDER
+          </Link>
+          <Link to="/" className={styles.emptyContinue}>
+            CONTINUE SHOPPING
+          </Link>
+        </div>
       </div>
     );
   } else if (items.length === 0) {

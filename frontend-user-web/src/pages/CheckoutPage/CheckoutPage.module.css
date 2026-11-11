@@ -32,10 +32,33 @@
   margin-bottom: 40px;
 }
 
+.confirmActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+/* Nút phụ: viền tối nền trắng, để CONTINUE SHOPPING (nền tối) vẫn là nút chính. */
+.viewOrder {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-dark);
+  background-color: var(--color-white);
+  border: 1px solid var(--color-dark);
+  display: inline-block;
+  text-decoration: none;
+  text-align: center;
+  padding: 10px 5px;
+  width: 288px;
+  line-height: 25px;
+  transition: opacity 0.15s;
+}
+
 .emptyContinue {
   font-size: 1.1rem;
   font-weight: 700;
   color: var(--color-white);
+  border: 1px solid var(--color-dark);
   background-color: var(--color-dark);
   display: inline-block;
   text-decoration: none;
@@ -46,10 +69,12 @@
   transition: opacity 0.15s;
 }
 
+.viewOrder:hover,
 .emptyContinue:hover {
   opacity: 0.7;
 }
 
+.viewOrder:focus-visible,
 .emptyContinue:focus-visible {
   outline: 1px solid var(--color-focus);
   outline-offset: 3px;
@@ -164,6 +189,7 @@
     margin-bottom: 40px;
   }
 
+  .viewOrder,
   .emptyContinue {
     max-width: 288px;
     width: 100%;

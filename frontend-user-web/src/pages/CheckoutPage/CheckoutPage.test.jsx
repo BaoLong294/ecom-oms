@@ -306,4 +306,19 @@ describe('CheckoutPage place order', () => {
       screen.queryByText('Your cart is currently empty.')
     ).not.toBeInTheDocument();
   });
+
+  it('links the confirmation to the placed order', async () => {
+    const user = userEvent.setup();
+    logIn();
+    storeCart(TWO_ITEMS_CART);
+    getVariantsByIds.mockResolvedValue([regularVariant, discountedVariant]);
+    renderCheckoutPage();
+
+    await placeValidOrder(user);
+
+    expect(screen.getByRole('link', { name: 'VIEW ORDER' })).toHaveAttribute(
+      'href',
+      '/orders/1'
+    );
+  });
 });
