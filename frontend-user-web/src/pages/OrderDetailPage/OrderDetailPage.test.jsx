@@ -219,3 +219,45 @@ describe('OrderDetailPage', () => {
     expect(summary.getAllByText('$180.00')).toHaveLength(2);
   });
 });
+
+describe('OrderDetailPage status timeline', () => {
+  it('lists the status steps in order', () => {
+    logIn();
+    renderOrderDetailPage('/orders/3');
+    const timeline = within(screen.getByRole('list', { name: 'Order status' }));
+
+    expect(
+      timeline.getAllByRole('listitem').map((step) => step.textContent)
+    ).toEqual(['Placed', 'Shipped', 'Delivered']);
+  });
+
+  it('marks the placed step as current for a placed order', () => {
+    logIn();
+    renderOrderDetailPage('/orders/3');
+    const timeline = within(screen.getByRole('list', { name: 'Order status' }));
+
+    expect(timeline.getByText('Placed')).toHaveAttribute(
+      'aria-current',
+      'step'
+    );
+    expect(timeline.getByText('Shipped')).not.toHaveAttribute('aria-current');
+  });
+
+  it('marks the shipped step as current for a shipped order', () => {
+    logIn();
+    // Ghi đè đơn đã lưu: cùng đơn #3 nhưng đã chuyển sang shipped.
+    localStorage.setItem(
+      'orders',
+      JSON.stringify([{ ...ORDER, status: 'shipped' }])
+    );
+    renderOrderDetailPage('/orders/3');
+    const timeline = within(screen.getByRole('list', { name: 'Order status' }));
+
+    expect(timeline.getByText('Shipped')).toHaveAttribute(
+      'aria-current',
+      'step'
+    );
+    expect(timeline.getByText('Placed')).not.toHaveAttribute('aria-current');
+    expect(timeline.getByText('Delivered')).not.toHaveAttribute('aria-current');
+  });
+});

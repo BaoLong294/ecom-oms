@@ -5,12 +5,13 @@ import { useOrders } from '../../context/OrdersContext';
 import { formatOrderDate } from '../../utils/date';
 import { formatToUSD } from '../../utils/price';
 import OrderItem from './OrderItem';
+import OrderStatusTimeline from './OrderStatusTimeline';
 
 /**
  * Trang chi tiết một đơn hàng, chỉ vào được qua RequireAuth nên luôn có user.
- * Hiện ngày đặt, các món (mỗi món dẫn tới trang sản phẩm), địa chỉ giao hàng
- * và khối tổng tiền. Đơn không tồn tại, thuộc tài khoản khác, hoặc id trên URL
- * không phải số đều hiện chung một màn not found.
+ * Hiện ngày đặt, timeline trạng thái, các món (mỗi món dẫn tới trang sản phẩm),
+ * địa chỉ giao hàng và khối tổng tiền. Đơn không tồn tại, thuộc tài khoản khác,
+ * hoặc id trên URL không phải số đều hiện chung một màn not found.
  * Không có loading/lỗi vì đơn đọc đồng bộ từ OrdersContext.
  * @returns {JSX.Element}
  */
@@ -56,6 +57,8 @@ function OrderDetailPage() {
           <p className={styles.date}>
             Placed on {formatOrderDate(order.createdAt)}
           </p>
+
+          <OrderStatusTimeline status={order.status} />
 
           <section aria-labelledby="order-items-title">
             <h2 id="order-items-title" className={styles.sectionTitle}>
