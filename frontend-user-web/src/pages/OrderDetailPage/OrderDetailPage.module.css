@@ -101,6 +101,7 @@
 
 .summaryRow {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   gap: 20px;
   font-size: 0.95rem;
