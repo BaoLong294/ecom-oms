@@ -47,7 +47,7 @@ const FIELD_VALIDATORS = {
  * Giỏ rỗng hiện thông báo ngay, xét trước loading vì không cần chờ giá.
  * Form giao hàng (FormField) báo lỗi khi blur và submit như trang Login;
  * submit lỗi thì focus ô lỗi đầu tiên và giỏ không đổi.
- * Submit hợp lệ thì tạo đơn từ giỏ (chụp lại tên, màu, size, giá lúc đặt),
+ * Submit hợp lệ thì tạo đơn từ giỏ (chụp lại sản phẩm, ảnh, tên, màu, size, giá lúc đặt),
  * xóa giỏ và hiện xác nhận ngay trong trang.
  * @returns {JSX.Element}
  */
@@ -242,6 +242,8 @@ function CheckoutPage() {
       return [
         {
           variantId: item.variantId,
+          productId: variant.productId,
+          image: variant.colorImage,
           productName: variant.productName,
           colorName: variant.colorName,
           size: variant.size,

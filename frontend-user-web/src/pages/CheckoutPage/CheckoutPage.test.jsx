@@ -259,6 +259,8 @@ describe('CheckoutPage place order', () => {
         items: [
           {
             variantId: 12,
+            productId: regularVariant.productId,
+            image: regularVariant.colorImage,
             productName: 'Regular Pants',
             colorName: '09 BLACK',
             size: 'M',
@@ -267,6 +269,8 @@ describe('CheckoutPage place order', () => {
           },
           {
             variantId: 7,
+            productId: discountedVariant.productId,
+            image: discountedVariant.colorImage,
             productName: 'Discounted Pants',
             colorName: '31 BEIGE',
             size: 'L',

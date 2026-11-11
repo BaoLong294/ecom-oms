@@ -18,9 +18,9 @@ function readStoredOrders() {
 }
 
 /**
- * Giữ danh sách đơn hàng đã đặt cho toàn app và lưu lại vào localStorage mỗi khi
- * có đơn mới. Mỗi đơn chụp lại tên, màu, size và giá lúc đặt, nên đơn cũ không đổi
- * theo dữ liệu cửa hàng sau này.
+ * Giữ danh sách đơn hàng đã đặt cho toàn app và lưu lại vào localStorage
+ * mỗi khi có đơn mới. Mỗi đơn chụp lại sản phẩm, ảnh, tên, màu, size và
+ * giá lúc đặt, nên đơn cũ không đổi theo dữ liệu cửa hàng sau này.
  * @param {object} props
  * @param {React.ReactNode} props.children - phần app được dùng đơn hàng
  * @returns {JSX.Element}
@@ -32,8 +32,8 @@ function OrdersProvider({ children }) {
    * Tạo đơn mới ở cuối danh sách. Provider tự gán id, trạng thái và thời điểm tạo.
    * @param {{ email: string,
    *   shipping: { firstName: string, lastName: string, address: string, phone: string },
-   *   items: { variantId: number, productName: string, colorName: string, size: string,
-   *     quantity: number, unitPrice: number }[],
+   *   items: { variantId: number, productId: number, image: string, productName: string,
+   *   colorName: string, size: string, quantity: number, unitPrice: number }[],
    *   total: number }} orderInput - dữ liệu đơn do trang Checkout dựng
    * @returns {number} id của đơn vừa tạo
    */
