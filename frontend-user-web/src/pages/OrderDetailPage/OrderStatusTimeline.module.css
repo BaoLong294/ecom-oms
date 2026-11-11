@@ -1,0 +1,60 @@
+/* ================================== TIMELINE =================================== */
+.timeline {
+  display: flex;
+  list-style: none;
+}
+
+/* Mỗi chặng chiếm phần bằng nhau; vòng tròn (::before) ở trên, chữ ở dưới. */
+.step {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: var(--color-gray);
+}
+
+/* Vòng tròn của chặng; z-index để nằm trên đường nối. */
+.step::before {
+  content: '';
+  position: relative;
+  z-index: 1;
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--color-gray-light);
+  border-radius: 50%;
+  background-color: var(--color-white);
+}
+
+/* Đường nối từ tâm chặng trước tới tâm chặng này (chặng đầu không có).
+   top = nửa chiều cao vòng tròn trừ nửa độ dày đường. */
+.step:not(:first-child)::after {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: -50%;
+  right: 50%;
+  height: 2px;
+  background-color: var(--color-gray-light);
+}
+
+/* ===================================== DONE ==================================== */
+.step.done {
+  color: var(--color-dark);
+}
+
+.step.done::before {
+  border-color: var(--color-dark);
+  background-color: var(--color-dark);
+}
+
+.step.done::after {
+  background-color: var(--color-dark);
+}
+
+/* =================================== CURRENT =================================== */
+.step[aria-current='step'] {
+  font-weight: 700;
+}

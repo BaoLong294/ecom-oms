@@ -40,7 +40,10 @@ function OrderItem({ item }) {
         <p className={styles.price}>{formatToUSD(unitPrice)}</p>
         <p className={styles.detail}>Quantity: {quantity}</p>
         <p className={styles.subtotal}>
-          SUBTOTAL: <span>{formatToUSD(unitPrice * quantity)}</span>
+          SUBTOTAL:{' '}
+          <span className={styles.subtotalPrice}>
+            {formatToUSD(unitPrice * quantity)}
+          </span>
         </p>
       </div>
     </li>

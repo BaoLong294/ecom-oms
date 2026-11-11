@@ -1,0 +1,110 @@
+/* =================================== LAYOUT ==================================== */
+/* position: relative làm khung cho lớp phủ ::after của stretched link (phủ cả ảnh). */
+.item {
+  position: relative;
+  display: flex;
+  gap: 20px;
+  height: 220px;
+  padding-bottom: 25px;
+}
+
+.item:not(:last-child) {
+  border-bottom: 1px solid var(--color-gray-light);
+  margin-bottom: 25px;
+}
+
+.imageWrapper {
+  flex-shrink: 0;
+}
+
+.image {
+  height: 100%;
+  width: auto;
+}
+
+/* Không đặt position ở đây: nếu có, lớp phủ của link chỉ phủ khối chữ, không phủ ảnh. */
+.info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ============================== NAME (STRETCHED LINK) ========================== */
+.name {
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+}
+
+.link {
+  color: var(--color-dark);
+  text-decoration: none;
+}
+
+/* Phủ kín cả món: bấm ảnh hay bất kỳ chỗ nào cũng sang trang sản phẩm. */
+.link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+.item:hover .link {
+  text-decoration: underline;
+}
+
+.link:focus-visible {
+  outline: none;
+}
+
+.link:focus-visible::after {
+  outline: 1px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* =================================== DETAILS =================================== */
+.detail {
+  font-size: 1rem;
+  margin-bottom: 8px;
+}
+
+.price {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+/* =================================== SUBTOTAL ================================== */
+/* margin-top: auto đẩy xuống đáy cột, align-self đẩy sang phải: góc phải dưới như Cart. */
+.subtotal {
+  margin-top: auto;
+  align-self: flex-end;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.subtotalPrice {
+  font-size: 1.3rem;
+}
+
+/* =================== MEDIA QUERY TO STYLE FOR MOBILE LAYOUT ==================== */
+@media (max-width: 480px) {
+  .item {
+    height: auto;
+  }
+
+  .imageWrapper {
+    flex: 1;
+  }
+
+  .image {
+    width: 100%;
+    height: auto;
+  }
+
+  .info {
+    flex: 2;
+  }
+
+  .subtotal {
+    margin-top: 8px;
+  }
+}
