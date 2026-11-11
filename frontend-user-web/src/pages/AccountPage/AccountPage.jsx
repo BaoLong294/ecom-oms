@@ -6,7 +6,7 @@ import { useNavigate, Link } from 'react-router-dom';
  * Trang tài khoản của người đã đăng nhập, chỉ vào được qua `RequireAuth`
  * nên luôn có `user`.
  *
- * Hiện email đang đăng nhập, link tới Wishlist và nút LOG OUT.
+ * Hiện email đang đăng nhập, menu link tới Order history và Wishlist, và nút LOG OUT.
  * LOG OUT chờ chuyển về trang chủ (thay mục lịch sử, Back không quay lại
  * trang tài khoản) rồi mới đăng xuất.
  *
@@ -35,6 +35,11 @@ function AccountPage() {
       <h1 className={styles.title}>MEMBERSHIP</h1>
       <p className={styles.email}>Logged in as {user.email}</p>
       <ul className={styles.menu}>
+        <li className={styles.menuItem}>
+          <Link to="/orders" className={styles.menuLink}>
+            Order history
+          </Link>
+        </li>
         <li className={styles.menuItem}>
           <Link to="/wishlist" className={styles.menuLink}>
             Wishlist

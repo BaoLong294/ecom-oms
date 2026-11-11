@@ -11,6 +11,8 @@ import { LANDING_CATEGORIES } from './config/landingCategories';
 import RequireAuth from './components/RequireAuth/RequireAuth';
 import AccountPage from './pages/AccountPage/AccountPage';
 import CheckoutPage from './pages/CheckoutPage/CheckoutPage';
+import OrderHistoryPage from './pages/OrderHistoryPage/OrderHistoryPage';
+import OrderDetailPage from './pages/OrderDetailPage/OrderDetailPage';
 
 export const routes = [
   {
@@ -41,6 +43,8 @@ export const routes = [
         children: [
           { path: '/account', element: <AccountPage /> },
           { path: '/checkout', element: <CheckoutPage /> },
+          { path: '/orders', element: <OrderHistoryPage /> },
+          { path: '/orders/:id', element: <OrderDetailPage /> },
         ],
       },
       { path: '*', element: <NotFoundPage /> },

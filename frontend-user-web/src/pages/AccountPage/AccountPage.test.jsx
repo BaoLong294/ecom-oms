@@ -55,4 +55,17 @@ describe('AccountPage', () => {
       '/wishlist'
     );
   });
+
+  it('lists Order history before Wishlist in the menu', () => {
+    logIn();
+    renderAccountPage();
+
+    expect(screen.getByRole('link', { name: 'Order history' })).toHaveAttribute(
+      'href',
+      '/orders'
+    );
+    expect(
+      screen.getAllByRole('listitem').map((item) => item.textContent)
+    ).toEqual(['Order history', 'Wishlist']);
+  });
 });

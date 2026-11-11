@@ -559,3 +559,49 @@ describe('Checkout route', () => {
     ).toBeInTheDocument();
   });
 });
+
+describe('Order routes', () => {
+  it('sends a guest from /orders to the login page', async () => {
+    const router = renderWithRouter('/orders');
+
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'LOGIN' })
+    ).toBeInTheDocument();
+    expect(router.state.location.pathname).toBe('/login');
+  });
+
+  it('sends a guest from an order detail to the login page', async () => {
+    const router = renderWithRouter('/orders/1');
+
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'LOGIN' })
+    ).toBeInTheDocument();
+    expect(router.state.location.pathname).toBe('/login');
+  });
+
+  it('returns a guest to /orders after logging in', async () => {
+    const user = userEvent.setup();
+    const router = renderWithRouter('/orders');
+
+    await user.type(
+      await screen.findByLabelText(/^email address/i),
+      'john.doe@gmail.com'
+    );
+    await user.type(screen.getByLabelText(/^password/i), 'abcd1234');
+    await user.click(screen.getByRole('button', { name: 'LOG IN' }));
+
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'ORDER HISTORY' })
+    ).toBeInTheDocument();
+    expect(router.state.location.pathname).toBe('/orders');
+  });
+
+  it('shows the order history page to a logged-in user', async () => {
+    logIn();
+    renderWithRouter('/orders');
+
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'ORDER HISTORY' })
+    ).toBeInTheDocument();
+  });
+});
