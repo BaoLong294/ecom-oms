@@ -1,0 +1,14 @@
+/* ============================= ORDER COUNT & LIST ============================== */
+.count {
+  font-size: 0.95rem;
+  color: var(--color-gray);
+  margin-bottom: 15px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-width: 760px;
+  list-style: none;
+}
