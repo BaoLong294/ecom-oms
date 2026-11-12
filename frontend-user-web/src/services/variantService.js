@@ -26,25 +26,29 @@ import { simulateRequest } from './mockApi.js';
  *   hoặc không id nào tồn tại.
  */
 export function getVariantsByIds(variantIds) {
-  const result = variantIds.flatMap((id) => {
-    const variant = variants.find((v) => v.id === id);
+  const variantDetails = variantIds.flatMap((id) => {
+    const variant = variants.find((entry) => entry.id === id);
 
     if (!variant) return [];
 
-    const product = products.find((p) => p.id === variant.productId);
-    const color = product.colors.find((c) => c.code === variant.colorCode);
+    const product = products.find((entry) => entry.id === variant.productId);
+    const color = product.colors.find(
+      (entry) => entry.code === variant.colorCode
+    );
 
-    return {
-      ...variant,
-      productName: product.name,
-      gender: product.gender,
-      price: product.price,
-      discountPercent: product.discountPercent,
-      discountInfo: product.discountInfo,
-      colorName: color.name,
-      colorImage: color.image,
-    };
+    return [
+      {
+        ...variant,
+        productName: product.name,
+        gender: product.gender,
+        price: product.price,
+        discountPercent: product.discountPercent,
+        discountInfo: product.discountInfo,
+        colorName: color.name,
+        colorImage: color.image,
+      },
+    ];
   });
 
-  return simulateRequest(result);
+  return simulateRequest(variantDetails);
 }

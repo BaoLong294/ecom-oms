@@ -42,7 +42,7 @@ function CartPage() {
     content = <StatusMessage variant="error" message={errorMessage} />;
   } else {
     const cartRows = items.flatMap((item) => {
-      const variant = variants.find((v) => v.id === item.variantId);
+      const variant = variants.find((entry) => entry.id === item.variantId);
 
       if (!variant) return [];
 

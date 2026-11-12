@@ -12,7 +12,7 @@ import { getEffectivePrice } from './price';
  */
 export function getCartTotal(items, variants) {
   return items.reduce((total, item) => {
-    const variant = variants.find((v) => v.id === item.variantId);
+    const variant = variants.find((entry) => entry.id === item.variantId);
 
     if (!variant) return total;
 

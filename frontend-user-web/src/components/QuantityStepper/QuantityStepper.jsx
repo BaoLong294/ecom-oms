@@ -15,16 +15,16 @@ function QuantityStepper({ quantity, onQuantityChange, itemName }) {
   const isMinQuantity = quantity === 1;
   const labelSuffix = itemName ? ` of ${itemName}` : '';
 
-  const handleIncrease = () => {
+  function handleIncrease() {
     onQuantityChange(quantity + 1);
-  };
+  }
 
-  const handleDecrease = () => {
+  function handleDecrease() {
     // Nút giảm dùng aria-disabled (không dùng disabled) nên trình duyệt không chặn
     // click; việc giữ số lượng tối thiểu là 1 phải nằm ở đây.
     if (isMinQuantity) return;
     onQuantityChange(quantity - 1);
-  };
+  }
 
   return (
     <div className={styles.quantity}>
