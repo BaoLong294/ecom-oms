@@ -18,6 +18,10 @@ export default defineConfig([
       globals: globals.browser,
       parserOptions: { ecmaFeatures: { jsx: true } },
     },
+    rules: {
+      // Hàm có tên khai báo bằng function; arrow function chỉ dùng cho callback tại chỗ.
+      'func-style': ['error', 'declaration'],
+    },
   },
   {
     files: ['**/*.test.{js,jsx}', 'tests/**/*.js'],
