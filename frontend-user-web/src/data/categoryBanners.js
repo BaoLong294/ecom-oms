@@ -1,3 +1,15 @@
+/**
+ * Một ảnh banner của nhóm sản phẩm trên trang danh sách (mock của bảng
+ * `category_banners` tương lai). Một nhóm có thể có nhiều ảnh, sắp theo position.
+ * @typedef {object} CategoryBanner
+ * @property {number} id
+ * @property {number} categoryId - nhóm (category con) chứa banner
+ * @property {number} position
+ * @property {string} image
+ * @property {string} alt
+ */
+
+/** @type {CategoryBanner[]} */
 const categoryBanners = [
   {
     id: 1,

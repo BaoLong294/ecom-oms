@@ -1,6 +1,20 @@
 import products from '../data/products.js';
 import variants from '../data/variants.js';
 import { simulateRequest } from './mockApi.js';
+/** @import { Variant } from '../data/variants.js' */
+
+/**
+ * Thông tin hiển thị của một variant: variant kèm thông tin product và màu.
+ * @typedef {Variant & {
+ *   productName: string,
+ *   gender: string,
+ *   price: number,
+ *   discountPercent: number | null,
+ *   discountInfo: string | null,
+ *   colorName: string,
+ *   colorImage: string
+ * }} VariantDetails
+ */
 
 /**
  * Lấy thông tin hiển thị của các variant theo danh sách id, dùng cho trang Cart
@@ -9,20 +23,7 @@ import { simulateRequest } from './mockApi.js';
  * Tương ứng với API: GET /api/variants?ids=1,2,3
  *
  * @param {number[]} variantIds - Danh sách variant id lấy từ giỏ hàng hoặc wishlist.
- * @returns {Promise<Array<{
- *   id: number,
- *   productId: number,
- *   colorCode: string,
- *   size: string,
- *   stockQuantity: number,
- *   productName: string,
- *   gender: string,
- *   price: number,
- *   discountPercent: number | null,
- *   discountInfo: string | null,
- *   colorName: string,
- *   colorImage: string
- * }>>} Mảng thông tin variant; mảng rỗng nếu variantIds rỗng
+ * @returns {Promise<VariantDetails[]>} Mảng thông tin variant; mảng rỗng nếu variantIds rỗng
  *   hoặc không id nào tồn tại.
  */
 export function getVariantsByIds(variantIds) {

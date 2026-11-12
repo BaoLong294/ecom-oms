@@ -15,9 +15,18 @@ const PASSWORD_REGEX = /^[A-Za-z0-9!#$%&()'*+,-./:;<=?>@[\]^_`{|}~]{8,20}$/;
 // ^ và $ bắt buộc khớp cả chuỗi, không khớp một đoạn 10 số nằm trong chuỗi dài hơn.
 const PHONE_REGEX = /^0\d{9}$/;
 
+/**
+ * Cách hiển thị lỗi của một ô: isInvalid quyết định viền đỏ (aria-invalid),
+ * message là chữ hiển thị ('' nếu không hiện chữ).
+ * @typedef {object} FieldError
+ * @property {boolean} isInvalid
+ * @property {string} message
+ */
+
 // Kết quả "không hiển thị lỗi" của getFieldError, cũng là giá trị khởi tạo của state lỗi
 // trong các form. Dùng chung một object được vì state chỉ bị thay bằng object mới,
 // không bao giờ bị sửa trực tiếp.
+/** @type {FieldError} */
 export const NO_ERROR = { isInvalid: false, message: '' };
 
 /**
@@ -106,8 +115,7 @@ export function validatePhone(value) {
  * @param {string} value - Giá trị hiện tại của ô
  * @param {string} message - Kết quả của một hàm validate ở trên, '' nếu hợp lệ
  * @param {boolean} isSubmitted - Form đã được submit ít nhất một lần chưa
- * @returns {{ isInvalid: boolean, message: string }} isInvalid quyết định viền đỏ
- *   (aria-invalid), message là chữ hiển thị ('' nếu không hiện chữ)
+ * @returns {FieldError}
  */
 export function getFieldError(value, message, isSubmitted) {
   if (message === '') {

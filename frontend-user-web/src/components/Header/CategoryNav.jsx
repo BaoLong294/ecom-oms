@@ -4,6 +4,8 @@ import { NavLink, Link } from 'react-router-dom';
 import { useFetch } from '../../hooks/useFetch';
 import { getCategoryMenu } from '../../services/categoryService';
 import { LANDING_CATEGORIES } from '../../config/landingCategories';
+/** @import { LandingCategory } from '../../config/landingCategories' */
+/** @import { MenuCategory } from '../../services/categoryService' */
 
 /**
  * Một mục của menu category (WOMEN, MEN, KIDS, BABY): link tới landing của
@@ -13,8 +15,8 @@ import { LANDING_CATEGORIES } from '../../config/landingCategories';
  * Các handler gắn trên <li> vì sự kiện focus/blur/keydown của link con nổi lên <li>,
  * còn mouseleave tính cả phần tử con, nên rê chuột từ chữ xuống bảng không làm đóng menu.
  * @param {object} props
- * @param {{ slug: string, name: string, categoryId: number }} props.category - phần tử của LANDING_CATEGORIES
- * @param {{ id: number, name: string, image: string | null }[]} props.subcategories - category con của mục
+ * @param {LandingCategory} props.category - phần tử của LANDING_CATEGORIES
+ * @param {MenuCategory[]} props.subcategories - category con của mục
  * @param {boolean} props.isLoading - dữ liệu menu đang tải
  * @param {string | null} props.errorMessage - thông báo lỗi khi tải menu thất bại
  * @param {boolean} props.isOpen - mega-menu của mục này đang mở

@@ -3,6 +3,18 @@
 import products from './products';
 
 const DEFAULT_STOCK_QUANTITY = 10;
+
+/**
+ * Một biến thể (màu × size) của sản phẩm, tức món hàng cụ thể được mua.
+ * @typedef {object} Variant
+ * @property {number} id
+ * @property {number} productId
+ * @property {string} colorCode - khớp code của một màu trong product.colors
+ * @property {string} size
+ * @property {number} stockQuantity
+ */
+
+/** @type {Variant[]} */
 const variants = [];
 let id = 1;
 

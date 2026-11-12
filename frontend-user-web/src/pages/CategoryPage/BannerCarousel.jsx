@@ -1,5 +1,6 @@
 import styles from './BannerCarousel.module.css';
 import { useRef, useState } from 'react';
+/** @import { CategoryBanner } from '../../data/categoryBanners' */
 
 /**
  * Dải banner của một nhóm sản phẩm trên trang danh sách: mọi ảnh nằm trong một
@@ -9,8 +10,8 @@ import { useRef, useState } from 'react';
  * Nút bị khóa dùng aria-disabled thay cho disabled để không mất focus khi bấm liên tục.
  * Trạng thái đầu/cuối cập nhật theo sự kiện scroll nên vẫn đúng khi người dùng vuốt tay.
  * Tên của danh sách và của nút kèm tên nhóm để không trùng giữa các nhóm trên cùng trang.
- * @param {Object} props
- * @param {{ id: number, image: string, alt: string }[]} props.banners - banner của nhóm, đã sắp theo position.
+ * @param {object} props
+ * @param {CategoryBanner[]} props.banners - banner của nhóm, đã sắp theo position.
  * @param {string} props.groupName - tên nhóm, dùng trong tên của danh sách và của nút.
  */
 function BannerCarousel({ banners, groupName }) {

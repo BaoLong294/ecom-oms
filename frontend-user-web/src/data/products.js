@@ -1,3 +1,36 @@
+/**
+ * Một màu của sản phẩm.
+ * @typedef {object} Color
+ * @property {string} code - mã màu, khớp colorCode của variant
+ * @property {string} name - tên hiển thị, ví dụ '08 Dark Gray'
+ * @property {string} swatch - ảnh ô màu
+ * @property {string} image - ảnh sản phẩm của màu này
+ */
+
+/**
+ * Một điểm nổi bật trong khối Feature của trang chi tiết.
+ * @typedef {object} Feature
+ * @property {string} img - ảnh minh họa
+ * @property {string} text - mô tả
+ */
+
+/**
+ * Một sản phẩm của cửa hàng (mock của bảng `products` tương lai).
+ * @typedef {object} Product
+ * @property {number} id
+ * @property {string} name
+ * @property {number} categoryId - category con sâu nhất chứa sản phẩm
+ * @property {string} gender - nhãn size ('Women' hoặc 'Unisex')
+ * @property {number} price - giá gốc, đô la nguyên
+ * @property {number | null} discountPercent - phần trăm giảm, null nếu không giảm
+ * @property {string | null} discountInfo - dòng khuyến mãi, null nếu không có
+ * @property {string[]} sizes - các size, dùng để sinh variants
+ * @property {string[]} detailImages - ảnh chi tiết, không gồm ảnh màu
+ * @property {Color[]} colors
+ * @property {Feature[]} features
+ */
+
+/** @type {Product[]} */
 const products = [
   {
     id: 1,

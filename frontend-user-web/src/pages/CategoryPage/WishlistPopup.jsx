@@ -4,6 +4,7 @@ import { useWishlist } from '../../context/WishlistContext';
 import ColorOptions from '../../components/ColorOptions/ColorOptions';
 import Icon from '../../components/Icon/Icon';
 import Modal from '../../components/Modal/Modal';
+/** @import { ProductWithVariants } from '../../services/withVariants' */
 
 /**
  * Nội dung popup wishlist của một sản phẩm: ảnh và tên màu đang chọn, nhóm radio
@@ -15,8 +16,7 @@ import Modal from '../../components/Modal/Modal';
  * Tiêu đề có tên sản phẩm ẩn (visually-hidden) để tên của dialog là
  * "Add to wishlist: {tên sản phẩm}", screen reader biết popup đang mở cho sản phẩm nào.
  * @param {object} props
- * @param {object} props.product - sản phẩm từ getCategoryListing (gồm name, sizes,
- *   colors, variants)
+ * @param {ProductWithVariants} props.product - sản phẩm từ getCategoryListing
  * @param {function(): void} props.onClose - gọi khi bấm × hoặc CLOSE
  */
 function WishlistOptions({ product, onClose }) {
@@ -110,7 +110,7 @@ function WishlistOptions({ product, onClose }) {
  * Modal luôn được render để đóng bằng close() và trả focus về nút tim; mở khi
  * product khác null, nên nơi dùng chỉ cần một state (id sản phẩm đang mở).
  * @param {object} props
- * @param {object | null} props.product - sản phẩm đang mở popup, null khi đóng
+ * @param {ProductWithVariants | null} props.product - sản phẩm đang mở popup, null khi đóng
  * @param {function(): void} props.onClose - gọi khi popup cần đóng (×, CLOSE, Escape)
  */
 function WishlistPopup({ product, onClose }) {

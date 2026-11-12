@@ -2,13 +2,14 @@ import styles from './CartItem.module.css';
 import { formatToUSD, getEffectivePrice } from '../../utils/price';
 import Price from '../../components/Price/Price';
 import QuantityStepper from '../../components/QuantityStepper/QuantityStepper';
+/** @import { VariantDetails } from '../../services/variantService' */
 
 /**
  * Một món trong trang giỏ hàng: ảnh màu, tên, nút xóa, màu, size, giá,
  * bộ chỉnh số lượng và subtotal (giá sau giảm × số lượng).
  * Không đọc giỏ hàng trực tiếp: CartPage truyền sẵn dữ liệu đã ghép và các hàm thao tác.
  * @param {object} props
- * @param {object} props.item - variant từ getVariantsByIds đã ghép thêm quantity từ giỏ hàng
+ * @param {VariantDetails & { quantity: number }} props.item - variant từ getVariantsByIds đã ghép thêm quantity từ giỏ hàng
  * @param {function(number): void} props.onQuantityChange - nhận số lượng mới của món này
  * @param {function(): void} props.onRemove - xóa món này khỏi giỏ
  */

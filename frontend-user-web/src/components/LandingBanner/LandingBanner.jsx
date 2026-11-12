@@ -1,13 +1,14 @@
 import { Link } from 'react-router-dom';
 import { formatToUSD, getEffectivePrice } from '../../utils/price';
 import styles from './LandingBanner.module.css';
+/** @import { LandingBannerData } from '../../data/landingBanners' */
 
 /**
  * Banner toàn màn hình trên trang chủ, bấm vào dẫn tới trang danh sách của category đích.
  * textColor 'dark' gắn class biến thể lên khối chữ để chữ trắng chuyển sang màu tối trên
  * banner nền sáng; chữ đỏ (giá giảm, discountInfo) giữ nguyên màu.
  * @param {object} props
- * @param {object} props.banner - Một banner lấy từ getLandingBanners
+ * @param {LandingBannerData} props.banner - Một banner lấy từ getLandingBanners
  *   ({ targetCategoryId, title, subtitle, description, price, discountPercent, discountInfo,
  *   textColor, image, alt }).
  */

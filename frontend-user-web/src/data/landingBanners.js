@@ -1,3 +1,22 @@
+/**
+ * Một banner trên trang landing (mock của bảng `landing_banners` tương lai).
+ * @typedef {object} LandingBannerData
+ * @property {number} id
+ * @property {number} categoryId - category gốc có landing chứa banner
+ * @property {number} targetCategoryId - category mà banner dẫn tới
+ * @property {number} position - thứ tự trên landing
+ * @property {string} title
+ * @property {string | null} subtitle
+ * @property {string} description
+ * @property {number} price - giá gốc, đô la nguyên
+ * @property {number | null} discountPercent
+ * @property {string | null} discountInfo - gồm cả ngày kết thúc khuyến mãi
+ * @property {'light' | 'dark'} textColor - tông màu chữ trên ảnh
+ * @property {string} image
+ * @property {string} alt
+ */
+
+/** @type {LandingBannerData[]} */
 const landingBanners = [
   // ===== WOMEN =====
   {

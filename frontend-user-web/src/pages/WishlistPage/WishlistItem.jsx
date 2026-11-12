@@ -1,12 +1,13 @@
 import styles from './WishlistItem.module.css';
 import Icon from '../../components/Icon/Icon';
 import Price from '../../components/Price/Price';
+/** @import { VariantDetails } from '../../services/variantService' */
 
 /**
  * Một món trong trang Wishlist: ảnh màu, tên, nút tim xóa khỏi wishlist, màu, size,
  * giá và nút ADD TO CART. Không đọc context: dữ liệu và hành động do WishlistPage truyền vào.
  * @param {object} props
- * @param {object} props.item - variant từ getVariantsByIds (productName, colorName, colorImage, gender, size, price...)
+ * @param {VariantDetails} props.item - variant từ getVariantsByIds
  * @param {function(): void} props.onRemove - gọi khi bấm nút tim để xóa món khỏi wishlist
  * @param {function(): void} props.onAddToCart - gọi khi bấm ADD TO CART
  * @returns {JSX.Element}

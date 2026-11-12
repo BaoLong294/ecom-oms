@@ -1,4 +1,5 @@
 import styles from './ColorOptions.module.css';
+/** @import { Color } from '../../data/products' */
 
 /**
  * Nhóm radio chọn màu của một sản phẩm, dùng ở trang chi tiết và popup wishlist.
@@ -13,8 +14,8 @@ import styles from './ColorOptions.module.css';
  * @param {string} props.name - name của các radio trong nhóm. Bắt buộc và phải khác
  *   nhau giữa các nhóm cùng trang, vì radio cùng name trong cùng document bị trình
  *   duyệt gộp thành một nhóm.
- * @param {Array<{ code: string, name: string, swatch: string }>} props.colors - các màu
- *   của sản phẩm (product.colors); name của màu là alt của swatch, cũng là tên của radio.
+ * @param {Color[]} props.colors - các màu của sản phẩm (product.colors);
+ *   name của màu là alt của swatch, cũng là tên của radio.
  * @param {string} props.selectedColorCode - code của màu đang chọn.
  * @param {function(string): void} props.onColorChange - gọi với code của màu vừa chọn.
  */

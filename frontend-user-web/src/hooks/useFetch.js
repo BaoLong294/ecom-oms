@@ -4,9 +4,13 @@ import { useState, useEffect } from 'react';
  * Gọi một hàm service khi component mount và mỗi khi tham số thay đổi,
  * quản lý 3 trạng thái: dữ liệu trả về, đang tải và thông báo lỗi.
  * Kết quả của lần gọi đã hết hiệu lực (unmount hoặc tham số đổi) bị bỏ qua nhờ cờ ignore.
- * @param {function(number): Promise<*>} fetcher - hàm service nhận 1 tham số và trả về Promise, khai báo ở cấp module để tham chiếu ổn định
- * @param {number} param - tham số truyền vào fetcher, cũng là dependency của effect
- * @returns {{ data: *, isLoading: boolean, errorMessage: string|null }} dữ liệu (null khi chưa có hoặc không tồn tại), trạng thái tải và thông báo lỗi
+ * @template T - kiểu dữ liệu mà fetcher trả về, VS Code tự suy ra từ fetcher
+ * @param {function(any): Promise<T>} fetcher - hàm service nhận tối đa 1 tham số và
+ *   trả về Promise, khai báo ở cấp module để tham chiếu ổn định
+ * @param {number | string} [param] - tham số truyền vào fetcher, cũng là dependency của effect;
+ *   bỏ trống với service không tham số
+ * @returns {{ data: T | null, isLoading: boolean, errorMessage: string | null }} dữ liệu
+ *   (null khi chưa có hoặc không tồn tại), trạng thái tải và thông báo lỗi
  */
 export function useFetch(fetcher, param) {
   const [data, setData] = useState(null);

@@ -9,6 +9,7 @@ import { useWishlist } from '../../context/WishlistContext';
 import { useAuth } from '../../context/AuthContext';
 import LoginRequiredPopup from '../../components/LoginRequiredPopup/LoginRequiredPopup';
 import ColorOptions from '../../components/ColorOptions/ColorOptions';
+/** @import { ProductWithVariants } from '../../services/withVariants' */
 
 /**
  * Phần nội dung của trang chi tiết khi đã có dữ liệu: gallery ảnh, khối thông tin
@@ -19,7 +20,7 @@ import ColorOptions from '../../components/ColorOptions/ColorOptions';
  * Bấm nút tim sẽ thêm hoặc bỏ variant đang chọn khỏi wishlist; khách chưa đăng nhập
  * thì mở popup yêu cầu đăng nhập thay vì đổi wishlist.
  * @param {object} props
- * @param {object} props.product - sản phẩm từ getProductById (gồm colors, sizes, detailImages, features, variants)
+ * @param {ProductWithVariants} props.product - sản phẩm từ getProductById
  */
 function ProductDetails({ product }) {
   const {

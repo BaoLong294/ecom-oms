@@ -2,6 +2,7 @@ import { getLandingBanners } from '../../services/bannerService';
 import LandingBanner from '../../components/LandingBanner/LandingBanner';
 import StatusMessage from '../../components/StatusMessage/StatusMessage';
 import { useFetch } from '../../hooks/useFetch';
+/** @import { LandingCategory } from '../../config/landingCategories' */
 
 /**
  * Trang landing của một category gốc (WOMEN, MEN, KIDS, BABY): lấy banner landing của
@@ -11,8 +12,8 @@ import { useFetch } from '../../hooks/useFetch';
  * Trong lúc chờ dữ liệu hiện thông báo loading, gặp lỗi thì hiện thông báo lỗi.
  * Tiêu đề tab ('{name} | UNIQLO') và <h1> ẩn (tên category viết hoa, dành cho screen reader)
  * luôn được render ở mọi trạng thái, vì đều lấy từ prop, không phải chờ dữ liệu.
- * @param {{ category: { slug: string, name: string, categoryId: number } }} props
- * @param props.category - category gốc của trang, lấy từ LANDING_CATEGORIES
+ * @param {object} props
+ * @param {LandingCategory} props.category - category gốc của trang, lấy từ LANDING_CATEGORIES
  */
 function HomePage({ category }) {
   const { name, categoryId } = category;

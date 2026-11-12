@@ -1,4 +1,5 @@
 import styles from './FormField.module.css';
+/** @import { FieldError } from '../../utils/validation' */
 
 /**
  * Một ô nhập bắt buộc của form: thông báo lỗi (nếu có), label có dấu *, input và gợi ý (nếu có).
@@ -13,7 +14,7 @@ import styles from './FormField.module.css';
  * @param {string} props.value - Giá trị hiện tại (controlled)
  * @param {string} [props.placeholder] - Chữ gợi ý trong ô khi chưa nhập
  * @param {string} [props.hint] - Gợi ý hiển thị dưới input
- * @param {{ isInvalid: boolean, message: string }} props.error - Kết quả của getFieldError
+ * @param {FieldError} props.error - Kết quả của getFieldError
  * @param {function(Event): void} props.onChange - Gọi mỗi lần gõ
  * @param {function(Event): void} props.onBlur - Gọi khi rời ô
  * @param {React.Ref<HTMLInputElement>} [props.ref] - Gắn vào input để form cha gọi focus()

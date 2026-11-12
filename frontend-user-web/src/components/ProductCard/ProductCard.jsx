@@ -2,6 +2,7 @@ import styles from './ProductCard.module.css';
 import Icon from '../Icon/Icon.jsx';
 import { Link } from 'react-router-dom';
 import Price from '../Price/Price.jsx';
+/** @import { ProductWithVariants } from '../../services/withVariants.js' */
 
 /**
  * Card sản phẩm trong trang danh sách: ảnh màu đầu tiên, các swatch màu, nút tim,
@@ -11,9 +12,8 @@ import Price from '../Price/Price.jsx';
  * cha quyết định mở popup nào (đăng nhập hoặc wishlist), nên card không đọc context.
  * Có giảm giá thì hiện giá sau giảm màu đỏ kèm discountInfo, không hiện giá gốc.
  * @param {object} props
- * @param {object} props.product - sản phẩm trả về từ service, gồm id, name, gender,
- *   sizes, price, discountPercent, discountInfo và colors ({ code, name, swatch, image })
- * @param {function(object): void} props.onWishlistClick - gọi với product khi bấm nút tim.
+ * @param {ProductWithVariants} props.product - sản phẩm từ getCategoryListing
+ * @param {function(ProductWithVariants): void} props.onWishlistClick - gọi với product khi bấm nút tim.
  */
 function ProductCard({ product, onWishlistClick }) {
   const { id, name, gender, sizes, colors } = product;

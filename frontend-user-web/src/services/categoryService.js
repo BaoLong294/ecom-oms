@@ -3,6 +3,41 @@ import categoryBanners from '../data/categoryBanners.js';
 import products from '../data/products.js';
 import { withVariants } from './withVariants.js';
 import { simulateRequest } from './mockApi.js';
+/** @import { CategoryBanner } from '../data/categoryBanners.js' */
+/** @import { ProductWithVariants } from './withVariants.js' */
+
+/**
+ * Một nhóm trên trang danh sách: category con kèm banner và sản phẩm của nó.
+ * @typedef {object} ListingGroup
+ * @property {number} id
+ * @property {string} name
+ * @property {CategoryBanner[]} banners - đã sắp theo position
+ * @property {ProductWithVariants[]} products
+ */
+
+/**
+ * Dữ liệu trang danh sách của một category.
+ * @typedef {object} CategoryListing
+ * @property {number} id
+ * @property {string} name
+ * @property {ListingGroup[]} groups - mảng rỗng nếu category không có con
+ */
+
+/**
+ * Một category con trong mega-menu.
+ * @typedef {object} MenuCategory
+ * @property {number} id
+ * @property {string} name
+ * @property {string | null} image - ảnh packshot, null khi chưa có
+ */
+
+/**
+ * Một category gốc trong mega-menu kèm các category con trực tiếp.
+ * @typedef {object} MenuRoot
+ * @property {number} id
+ * @property {string} name
+ * @property {MenuCategory[]} children - mảng rỗng nếu gốc không có con
+ */
 
 /**
  * Lấy dữ liệu cho trang danh sách của một category: thông tin category
@@ -13,17 +48,8 @@ import { simulateRequest } from './mockApi.js';
  *
  * @param {number} categoryId - ID của category cần lấy, ví dụ 5 (Casual Pants Collection).
  *   Phải là số; giá trị lấy từ URL là chuỗi, nơi gọi phải chuyển sang số trước.
- * @returns {Promise<{
- *   id: number,
- *   name: string,
- *   groups: Array<{
- *     id: number,
- *     name: string,
- *     banners: object[],
- *     products: Array<object & { variants: object[] }>
- *   }>
- * } | null>} Object category kèm mảng groups; groups là mảng rỗng nếu category
- *   không có con. Trả null nếu category không tồn tại.
+ * @returns {Promise<CategoryListing | null>} Object category kèm mảng groups;
+ *   groups là mảng rỗng nếu category không có con. Trả null nếu category không tồn tại.
  */
 export function getCategoryListing(categoryId) {
   const category = categories.find((item) => item.id === categoryId);
@@ -59,11 +85,7 @@ export function getCategoryListing(categoryId) {
  * Chỉ lấy id, tên và ảnh, không kèm sản phẩm.
  * Tương ứng với API: GET /api/categories/menu
  *
- * @returns {Promise<Array<{
- *   id: number,
- *   name: string,
- *   children: Array<{ id: number, name: string, image: string | null }>
- * }>>} Mảng category gốc; children là mảng rỗng nếu gốc không có con.
+ * @returns {Promise<MenuRoot[]>} Mảng category gốc; children là mảng rỗng nếu gốc không có con.
  */
 export function getCategoryMenu() {
   const rootCategories = categories
