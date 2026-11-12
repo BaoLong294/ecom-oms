@@ -54,7 +54,7 @@
   justify-content: center;
   position: absolute;
   top: -6px;
-  right: -6px;
+  right: 0;
   cursor: pointer;
   transition: color 0.15s ease;
 }
