@@ -4,9 +4,15 @@ import { AuthContext } from './AuthContext';
 const USER_STORAGE_KEY = 'user';
 
 /**
+ * Người dùng đang đăng nhập (đăng nhập giả lập chỉ lưu email).
+ * @typedef {object} User
+ * @property {string} email
+ */
+
+/**
  * Đọc user đã lưu trong localStorage để khôi phục đăng nhập khi tải lại trang.
  * Dữ liệu hỏng (không parse được) được coi như chưa đăng nhập.
- * @returns {{ email: string } | null} User đã lưu, hoặc null nếu không có hoặc dữ liệu hỏng
+ * @returns {User | null} User đã lưu, hoặc null nếu không có hoặc dữ liệu hỏng
  */
 function readStoredUser() {
   try {

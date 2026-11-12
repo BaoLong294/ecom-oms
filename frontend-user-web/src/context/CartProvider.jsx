@@ -1,13 +1,14 @@
 import { useReducer, useEffect } from 'react';
 import { cartReducer } from './cartReducer.js';
 import { CartContext } from './CartContext.js';
+/** @import { CartEntry } from './cartReducer.js' */
 
 const CART_STORAGE_KEY = 'cart';
 
 /**
  * Đọc giỏ hàng đã lưu trong localStorage để khôi phục khi tải lại trang.
  * Không có dữ liệu hoặc dữ liệu hỏng (không parse được) thì coi như giỏ rỗng.
- * @returns {Array<{ variantId: number, quantity: number }>} Giỏ hàng đã lưu, hoặc [] nếu không có hoặc dữ liệu hỏng
+ * @returns {CartEntry[]} Giỏ hàng đã lưu, hoặc [] nếu không có hoặc dữ liệu hỏng
  */
 function readStoredCart() {
   try {
