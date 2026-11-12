@@ -19,7 +19,7 @@ import styles from './FormField.module.css';
  * @param {function(Event): void} props.onBlur - Gọi khi rời ô
  * @param {React.Ref<HTMLInputElement>} [props.ref] - Gắn vào input để form cha gọi focus()
  *   (React 19 nhận ref như một prop thường)
- * @returns {JSX.Element}
+ * @returns {React.JSX.Element}
  */
 function FormField({
   id,

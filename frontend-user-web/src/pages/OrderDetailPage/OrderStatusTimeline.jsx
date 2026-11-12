@@ -7,7 +7,7 @@ import { ORDER_STATUSES } from '../../config/orderStatuses';
  * các chặng đã qua và chặng hiện tại được tô màu, các chặng sau để xám.
  * @param {object} props
  * @param {string} props.status - status của đơn ('placed', 'shipped' hoặc 'delivered')
- * @returns {JSX.Element}
+ * @returns {React.JSX.Element}
  */
 function OrderStatusTimeline({ status }) {
   // Vị trí của chặng hiện tại: chặng có index nhỏ hơn hoặc bằng là đã tới.

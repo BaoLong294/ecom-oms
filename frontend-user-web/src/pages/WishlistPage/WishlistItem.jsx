@@ -10,7 +10,7 @@ import Price from '../../components/Price/Price';
  * @param {VariantDetails} props.item - variant từ getVariantsByIds
  * @param {function(): void} props.onRemove - gọi khi bấm nút tim để xóa món khỏi wishlist
  * @param {function(): void} props.onAddToCart - gọi khi bấm ADD TO CART
- * @returns {JSX.Element}
+ * @returns {React.JSX.Element}
  */
 function WishlistItem({ item, onRemove, onAddToCart }) {
   const { colorImage, productName, colorName, gender, size } = item;

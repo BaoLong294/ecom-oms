@@ -13,7 +13,7 @@ import OrderStatusTimeline from './OrderStatusTimeline';
  * địa chỉ giao hàng và khối tổng tiền. Đơn không tồn tại, thuộc tài khoản khác,
  * hoặc id trên URL không phải số đều hiện chung một màn not found.
  * Không có loading/lỗi vì đơn đọc đồng bộ từ OrdersContext.
- * @returns {JSX.Element}
+ * @returns {React.JSX.Element}
  */
 function OrderDetailPage() {
   const { id } = useParams();

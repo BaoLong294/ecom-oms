@@ -10,7 +10,7 @@ import { useNavigate, Link } from 'react-router-dom';
  * LOG OUT chờ chuyển về trang chủ (thay mục lịch sử, Back không quay lại
  * trang tài khoản) rồi mới đăng xuất.
  *
- * @returns {JSX.Element} Trang tài khoản.
+ * @returns {React.JSX.Element} Trang tài khoản.
  */
 function AccountPage() {
   const { user, logout } = useAuth();

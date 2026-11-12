@@ -11,7 +11,7 @@ import { Link, useLocation } from 'react-router-dom';
  * @param {boolean} props.isOpen - popup đang mở hay không
  * @param {function(): void} props.onClose - gọi khi popup cần đóng (CANCEL, Escape)
  * @param {string} props.message - Câu giải thích vì sao cần đăng nhập
- * @returns {JSX.Element}
+ * @returns {React.JSX.Element}
  */
 function LoginRequiredPopup({ isOpen, onClose, message }) {
   // Popup tự đọc trang hiện tại thay vì nhận qua prop: trang nào mở popup thì pathname

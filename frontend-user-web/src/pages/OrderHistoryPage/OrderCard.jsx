@@ -11,7 +11,7 @@ import { ORDER_STATUSES } from '../../config/orderStatuses';
  * là link tới trang chi tiết). Không đọc context, chỉ hiển thị đơn nhận qua prop.
  * @param {object} props
  * @param {Order} props.order - đơn đã lưu trong OrdersContext
- * @returns {JSX.Element}
+ * @returns {React.JSX.Element}
  */
 function OrderCard({ order }) {
   const { id, createdAt, items, total, status } = order;

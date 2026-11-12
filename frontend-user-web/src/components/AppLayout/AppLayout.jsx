@@ -7,9 +7,11 @@ import BottomNav from '../BottomNav/BottomNav.jsx';
  * Khung bọc mọi trang: Header, vùng nội dung chính (Outlet) và BottomNav.
  * Mỗi layout route trong routes.jsx truyền prop khác nhau để chọn biến thể header
  * và quyết định có hiện BottomNav hay không.
- * @param {{ headerVariant: 'landing' | 'default', hasBottomNav: boolean }} props
- * @param props.headerVariant - biến thể header truyền xuống Header: 'landing' cho trang chủ, 'default' cho các trang còn lại
- * @param props.hasBottomNav - true thì render BottomNav ở đáy màn hình, false thì ẩn (Cart, Wishlist, Login, 404)
+ * @param {object} props
+ * @param {'landing' | 'default'} props.headerVariant - biến thể header truyền xuống Header:
+ *   'landing' cho trang chủ, 'default' cho các trang còn lại
+ * @param {boolean} props.hasBottomNav - true thì render BottomNav ở đáy màn hình,
+ *   false thì ẩn (Cart, Wishlist, Login, 404)
  */
 function AppLayout({ headerVariant, hasBottomNav }) {
   const isDefault = headerVariant === 'default';

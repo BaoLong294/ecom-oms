@@ -22,7 +22,7 @@ const PASSWORD_HINT =
  * hoặc trang chủ nếu người dùng vào thẳng /login.
  * Submit thất bại thì focus vào ô lỗi đầu tiên.
  * Hai ô nhập dùng FormField; quy tắc hiển thị lỗi nằm ở getFieldError (utils/validation).
- * @returns {JSX.Element}
+ * @returns {React.JSX.Element}
  */
 function LoginPage() {
   const [email, setEmail] = useState('');

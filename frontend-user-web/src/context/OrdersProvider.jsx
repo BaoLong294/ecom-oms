@@ -58,7 +58,7 @@ function readStoredOrders() {
  * duyệt nằm chung một danh sách; lọc theo email là việc của nơi hiển thị.
  * @param {object} props
  * @param {React.ReactNode} props.children - phần app được dùng đơn hàng
- * @returns {JSX.Element}
+ * @returns {React.JSX.Element}
  */
 function OrdersProvider({ children }) {
   const [orders, setOrders] = useState(readStoredOrders);

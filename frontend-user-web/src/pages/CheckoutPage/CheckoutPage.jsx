@@ -49,7 +49,7 @@ const FIELD_VALIDATORS = {
  * submit lỗi thì focus ô lỗi đầu tiên và giỏ không đổi.
  * Submit hợp lệ thì tạo đơn từ giỏ (chụp lại sản phẩm, ảnh, tên, màu, size, giá lúc đặt),
  * xóa giỏ và hiện xác nhận ngay trong trang, kèm link tới trang chi tiết đơn vừa đặt.
- * @returns {JSX.Element}
+ * @returns {React.JSX.Element}
  */
 function CheckoutPage() {
   const { items, itemCount, variants, isLoading, errorMessage } =

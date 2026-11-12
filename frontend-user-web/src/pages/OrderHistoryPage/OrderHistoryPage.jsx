@@ -9,7 +9,7 @@ import OrderCard from './OrderCard';
  * Chỉ hiện đơn của người đang đăng nhập, đơn mới nhất đứng đầu; mỗi đơn là
  * một thẻ dẫn tới trang chi tiết. Chưa có đơn thì hiện thông báo trống.
  * Không có loading/lỗi vì đơn đọc đồng bộ từ OrdersContext.
- * @returns {JSX.Element}
+ * @returns {React.JSX.Element}
  */
 function OrderHistoryPage() {
   const { user } = useAuth();

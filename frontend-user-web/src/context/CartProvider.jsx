@@ -24,8 +24,8 @@ function readStoredCart() {
  * Giữ giỏ hàng (chỉ gồm variantId và quantity) và cung cấp cho toàn bộ cây con qua CartContext.
  * Mọi thay đổi giỏ hàng đi qua cartReducer; value chỉ lộ các hàm thao tác, không lộ dispatch.
  * Giỏ hàng được lưu vào localStorage để giữ nguyên sau khi tải lại trang.
- * @param {{ children: React.ReactNode }} props
- * @param {React.ReactNode} props.children Phần app được bọc, có thể đọc context bằng useCart
+ * @param {object} props
+ * @param {React.ReactNode} props.children - Phần app được bọc, có thể đọc context bằng useCart
  */
 function CartProvider({ children }) {
   const [items, dispatch] = useReducer(cartReducer, null, readStoredCart);

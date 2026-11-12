@@ -10,7 +10,7 @@ import { formatToUSD } from '../../utils/price';
  * @param {{ productId: number, image: string, productName: string,
  *   colorName: string, size: string, quantity: number, unitPrice: number }} props.item
  *   - một món trong đơn đã lưu
- * @returns {JSX.Element}
+ * @returns {React.JSX.Element}
  */
 function OrderItem({ item }) {
   const {

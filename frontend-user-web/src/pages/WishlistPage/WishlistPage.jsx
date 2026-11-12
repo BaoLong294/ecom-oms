@@ -16,7 +16,7 @@ const WISHLIST_ADD_QUANTITY = 1;
  * Mỗi món có nút tim để xóa khỏi wishlist và nút ADD TO CART thêm 1 cái vào giỏ hàng
  * rồi mở popup xác nhận; món vẫn giữ trong wishlist sau khi thêm vào giỏ.
  * Wishlist rỗng được xét trước loading vì biết ngay từ storage, không cần chờ fetch.
- * @returns {JSX.Element}
+ * @returns {React.JSX.Element}
  */
 function WishlistPage() {
   const { items, removeItem } = useWishlist();

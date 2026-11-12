@@ -26,8 +26,8 @@ function readStoredUser() {
 /**
  * Giữ trạng thái đăng nhập giả lập và cung cấp cho toàn bộ cây con qua AuthContext.
  * login và logout ghi thẳng vào localStorage để trạng thái giữ nguyên sau khi tải lại trang.
- * @param {{ children: React.ReactNode }} props
- * @param {React.ReactNode} props.children Phần app được bọc, có thể đọc context bằng useAuth
+ * @param {object} props
+ * @param {React.ReactNode} props.children - Phần app được bọc, có thể đọc context bằng useAuth
  */
 function AuthProvider({ children }) {
   const [user, setUser] = useState(readStoredUser);

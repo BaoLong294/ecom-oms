@@ -16,8 +16,8 @@ import { useAuth } from '../../context/AuthContext.js';
  * /login kèm state.from là trang hiện tại để quay lại sau khi đăng nhập.
  * Link Cart hiện badge tổng số lượng trong giỏ; badge có aria-hidden nên số lượng được đưa
  * vào tên của link (ví dụ 'Cart, 4 items') để screen reader vẫn đọc được.
- * @param {{ headerVariant?: 'landing' | 'default' }} props
- * @param props.headerVariant - biến thể header, mặc định 'default'
+ * @param {object} props
+ * @param {'landing' | 'default'} [props.headerVariant='default'] - biến thể header
  */
 function Header({ headerVariant = 'default' }) {
   const location = useLocation();

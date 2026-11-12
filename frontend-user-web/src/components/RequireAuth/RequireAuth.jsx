@@ -12,7 +12,7 @@ import { useAuth } from '../../context/AuthContext';
  * Đánh giá lại ở mỗi lần render, nên đăng xuất khi đang ở trang được bảo vệ
  * cũng bị chuyển đi.
  *
- * @returns {JSX.Element} Route con hoặc lệnh chuyển hướng tới trang Login.
+ * @returns {React.JSX.Element} Route con hoặc lệnh chuyển hướng tới trang Login.
  */
 function RequireAuth() {
   const { isLoggedIn } = useAuth();

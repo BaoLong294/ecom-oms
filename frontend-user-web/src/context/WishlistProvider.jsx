@@ -22,7 +22,7 @@ function readStoredWishlist() {
  * mỗi khi thêm hoặc xóa.
  * @param {object} props
  * @param {React.ReactNode} props.children - phần app được dùng wishlist
- * @returns {JSX.Element}
+ * @returns {React.JSX.Element}
  */
 function WishlistProvider({ children }) {
   const [items, setItems] = useState(readStoredWishlist);
