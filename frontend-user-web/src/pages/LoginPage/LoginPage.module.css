@@ -115,7 +115,8 @@ loginButton (.createButton:hover và .createButton:focus-visible vì 2 nút này
 .createButton {
   font-size: 1.1rem;
   font-weight: 700;
-  width: 300px;
+  width: 100%;
+  max-width: 300px;
   padding: 10px 5px;
   color: var(--color-white);
   background-color: var(--color-dark);
@@ -173,7 +174,7 @@ loginButton (.createButton:hover và .createButton:focus-visible vì 2 nút này
   .loginButton,
   .createButton {
     padding: 15px;
-    width: 100%;
+    max-width: none;
     border-radius: 25px;
   }
 }
