@@ -40,32 +40,50 @@ erDiagram
     %% Catalog tables
     categories {
         int id PK
+        varchar name
+        int position
         int parent_id FK
+        text image
     }
     products {
         int id PK
+        varchar name
         int category_id FK
+        varchar gender
+        numeric price
+        int discount_percent
+        text discount_info
     }
     product_colors {
-        int id PK
-        int product_id FK
+        int product_id PK, FK
+        varchar code PK
+        varchar name
+        text swatch
+        text image
     }
     product_images {
         int id PK
         int product_id FK
+        text image
+        int position
     }
     product_features {
         int id PK
         int product_id FK
+        text image
+        text text
+        int position
     }
     sizes {
         varchar code PK
+        int position
     }
     variants {
         int id PK
         int product_id FK
-        int color_id FK
+        varchar color_code FK
         varchar size_code FK
+        int stock_quantity
     }
 
     %% Banner tables
