@@ -1,17 +1,18 @@
 -- =====================================================================
 -- Ecom-OMS – dữ liệu thử (PostgreSQL)
--- Chạy SAU schema.sql, trên cùng database. Dữ liệu lấy từ mock của
--- storefront (frontend-user-web/src/data/), chỉ một phần nhỏ của nhóm
--- cửa hàng và nhóm banner, dùng để kiểm tra ràng buộc và để các truy vấn
--- trong queries.sql có kết quả kiểm chứng được. Seed đầy đủ (id khớp
--- mock) làm ở 6.2–6.3.
+-- Chạy SAU schema.sql, trên cùng database. Chỉ một phần nhỏ của nhóm
+-- cửa hàng, nhóm banner và nhóm người dùng, dùng để kiểm tra ràng buộc
+-- và để các truy vấn trong queries.sql có kết quả kiểm chứng được.
+-- Dữ liệu cửa hàng và banner lấy từ mock của storefront
+-- (frontend-user-web/src/data/); tài khoản, giỏ hàng, wishlist là dữ
+-- liệu tự đặt. Seed đầy đủ (id khớp mock) làm ở 6.2–6.3.
 --
 -- Cột id là GENERATED ALWAYS AS IDENTITY: không ghi id, PostgreSQL cấp
 -- 1, 2, 3... theo thứ tự chèn. Comment "id N" bên cạnh mỗi dòng là id
 -- dự tính, dùng để điền FK ở các bảng sau.
 --
--- Một số dòng cố ý chèn lệch position, để truy vấn quên ORDER BY
--- position sẽ ra sai thứ tự.
+-- Một số dòng cố ý chèn lệch position hoặc lệch thời gian, để truy vấn
+-- quên ORDER BY sẽ ra sai thứ tự.
 -- =====================================================================
 
 
@@ -162,3 +163,33 @@ VALUES
     '/images/all-products/women/casual-pants/knit/knit-banner-1.avif',
     'Smiling woman on a seaside boardwalk in a beige cap, an open blue shirt over a navy top, and cream ribbed knit wide-leg pants with a drawstring.'
   ); -- id 3: Knit, position 1
+
+-- ---------------------------------------------------------------------
+-- NHÓM NGƯỜI DÙNG (Phần 4)
+-- created_at ghi tay thay vì để DEFAULT now(): now() là thời điểm bắt
+-- đầu giao dịch, mọi dòng chèn cùng lúc sẽ trùng giá trị và truy vấn
+-- sắp theo thời gian không kiểm tra được gì.
+-- ---------------------------------------------------------------------
+
+-- 4 tài khoản đủ 3 vai trò, 2 khách hàng để thử lọc theo user.
+-- password_hash là chuỗi giả; hash thật do bcrypt tạo ở 6.3.
+INSERT INTO users (email, password_hash, role) VALUES
+    ('long@example.com', 'hash-placeholder', DEFAULT),  -- id 1: role DEFAULT, phải ra 'customer'
+    ('admin@example.com', 'hash-placeholder', 'admin'),  -- id 2
+    ('shipper@example.com', 'hash-placeholder', 'shipper'),  -- id 3: hồ sơ shipper thêm ở Phần 5
+    ('mai@example.com', 'hash-placeholder', 'customer');  -- id 4: khách thứ 2
+
+-- Giỏ của user 1: tổng phải là 112.00 (40 × 2 + 32 × 1, sản phẩm 2 giảm
+-- 20%). Quên trừ giảm giá ra 120, quên nhân số lượng ra 72.
+INSERT INTO cart_items (user_id, variant_id, quantity, created_at) VALUES
+    (1, 2, 2, '2026-11-20 10:00:00+07'),  -- sản phẩm 1, không giảm: 40 × 2 = 80
+    (1, 4, 1, '2026-11-21 09:00:00+07'),  -- sản phẩm 2, giảm 20%: 32 × 1 = 32
+    (4, 5, 3, '2026-11-21 15:00:00+07');  -- giỏ của user 4, không được lọt vào giỏ user 1
+
+-- Wishlist của user 1 chèn lệch thời gian: mới nhất trước phải ra
+-- variant 8, 5, 1.
+INSERT INTO wishlist_items (user_id, variant_id, created_at) VALUES
+    (1, 1, '2026-11-20 08:00:00+07'),  -- cũ nhất
+    (1, 8, '2026-11-22 20:00:00+07'),  -- mới nhất, chèn giữa
+    (1, 5, '2026-11-21 12:00:00+07'),
+    (4, 1, '2026-11-23 10:00:00+07');  -- wishlist của user 4

@@ -119,3 +119,38 @@ FROM landing_banners AS lb
 JOIN categories AS lc ON lb.category_id = lc.id
 JOIN categories AS tc ON lb.target_category_id = tc.id
 ORDER BY lc.position, lc.id, lb.position, lb.id;
+
+-- 10. Giỏ hàng của một user (id 1), kèm giá sau giảm và thành tiền từng món.
+--     Dùng cho: trang Cart (6.4: giỏ hàng gắn với user trong JWT)
+--     Mong đợi: variant 2 (2 × 40.00 = 80.00) rồi 4 (1 × 32.00 = 32.00);
+--     không có dòng của user 4. Giá sau giảm dùng COALESCE vì
+--     discount_percent NULL khi không giảm.
+SELECT 
+  ci.variant_id,
+  p.name AS product_name,
+  v.size_code,
+  ci.quantity,
+  ROUND(p.price * (100 - COALESCE(p.discount_percent, 0)) / 100, 2) AS unit_price,
+  ROUND(p.price * (100 - COALESCE(p.discount_percent, 0)) / 100, 2) * ci.quantity AS line_total
+FROM cart_items AS ci
+JOIN variants AS v ON ci.variant_id = v.id
+JOIN products AS p ON v.product_id = p.id
+WHERE ci.user_id = 1
+ORDER BY ci.created_at, ci.variant_id;
+
+-- 11. Wishlist của một user (id 1), món mới lưu lên đầu.
+--     Dùng cho: trang Wishlist (6.4: wishlist gắn với user trong JWT)
+--     Mong đợi: variant 8, 5, 1 (created_at giảm dần); không có dòng
+--     của user 4. Tên màu JOIN product_colors theo cả cặp (product_id, code).
+SELECT
+  wi.variant_id,
+  p.name AS product_name,
+  pc.name AS color_name,
+  v.size_code,
+  wi.created_at
+FROM wishlist_items AS wi
+JOIN variants AS v ON wi.variant_id = v.id
+JOIN products AS p ON v.product_id = p.id
+JOIN product_colors AS pc ON v.product_id = pc.product_id AND v.color_code = pc.code
+WHERE wi.user_id = 1
+ORDER BY wi.created_at DESC, wi.variant_id;

@@ -1,7 +1,7 @@
 -- =====================================================================
 -- Ecom-OMS – database schema (PostgreSQL)
--- Phần 2–3: nhóm cửa hàng (catalog) và nhóm banner. Các nhóm người dùng,
--- đơn hàng được thêm ở Phần 4–5. Sơ đồ quan hệ: docs/erd.md.
+-- Phần 2–4: nhóm cửa hàng (catalog), nhóm banner và nhóm người dùng.
+-- Nhóm đơn hàng được thêm ở Phần 5. Sơ đồ quan hệ: docs/erd.md.
 -- =====================================================================
 
 
@@ -12,6 +12,9 @@
 -- IF EXISTS để lần chạy đầu (chưa có bảng nào) không báo lỗi; nhờ phần
 -- này file chạy lại bao nhiêu lần cũng được.
 -- ---------------------------------------------------------------------
+DROP TABLE IF EXISTS wishlist_items;
+DROP TABLE IF EXISTS cart_items;
+DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS category_banners;
 DROP TABLE IF EXISTS landing_banners;
 DROP TABLE IF EXISTS variants;
@@ -149,4 +152,42 @@ CREATE TABLE category_banners (
     position    INT NOT NULL CHECK (position > 0),
     image       TEXT NOT NULL,
     alt         TEXT NOT NULL
+);
+
+-- ---------------------------------------------------------------------
+-- NHÓM NGƯỜI DÙNG (Phần 4)
+-- Thay cho user, cart, wishlist trong localStorage của storefront.
+-- ---------------------------------------------------------------------
+
+-- Tài khoản của mọi người dùng: khách hàng, admin, shipper.
+-- Không lưu mật khẩu nguyên văn, chỉ lưu hash một chiều (tạo ở 6.3).
+-- UNIQUE của email phân biệt hoa thường: API phải lưu email chữ thường.
+CREATE TABLE users (
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    email VARCHAR(254) NOT NULL UNIQUE,
+    password_hash TEXT NOT NULL,
+    -- Khách tự đăng ký là customer; tài khoản shipper do admin tạo.
+    role VARCHAR(10) NOT NULL DEFAULT 'customer' CHECK (role IN ('customer', 'admin', 'shipper')),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- Giỏ hàng: mỗi dòng là một variant trong giỏ của một user.
+-- PK ghép (user_id, variant_id): mỗi cặp chỉ một dòng, thêm trùng thì
+-- cộng quantity (như cartReducer). Không có id vì không bảng nào trỏ tới.
+CREATE TABLE cart_items (
+    user_id INT NOT NULL REFERENCES users(id),
+    variant_id INT NOT NULL REFERENCES variants(id),
+    -- Số lượng về 0 thì xóa dòng, không lưu 0.
+    quantity INT NOT NULL CHECK (quantity > 0),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    PRIMARY KEY (user_id, variant_id)
+);
+
+-- Wishlist: mỗi dòng là một variant được user lưu lại.
+-- created_at để sắp món mới lưu lên đầu (database không giữ thứ tự chèn).
+CREATE TABLE wishlist_items (
+    user_id INT NOT NULL REFERENCES users(id),
+    variant_id INT NOT NULL REFERENCES variants(id),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    PRIMARY KEY (user_id, variant_id)
 );
