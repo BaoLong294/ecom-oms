@@ -113,20 +113,25 @@ erDiagram
     %% User tables
     users {
         int id PK
+        varchar email UK
+        text password_hash
+        varchar role
+        timestamptz created_at
     }
     shippers {
         int id PK
         int user_id FK
     }
     cart_items {
-        int id PK
-        int user_id FK
-        int variant_id FK
+        int user_id PK, FK
+        int variant_id PK, FK
+        int quantity
+        timestamptz created_at
     }
     wishlist_items {
-        int id PK
-        int user_id FK
-        int variant_id FK
+        int user_id PK, FK
+        int variant_id PK, FK
+        timestamptz created_at
     }
 
     %% Order tables
