@@ -91,10 +91,23 @@ erDiagram
         int id PK
         int category_id FK
         int target_category_id FK
+        int position
+        varchar title
+        varchar subtitle
+        text description
+        numeric price
+        int discount_percent
+        text discount_info
+        varchar text_color
+        text image
+        text alt
     }
     category_banners {
         int id PK
         int category_id FK
+        int position
+        text image
+        text alt
     }
 
     %% User tables
