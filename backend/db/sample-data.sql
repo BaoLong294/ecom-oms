@@ -1,9 +1,10 @@
 -- =====================================================================
 -- Ecom-OMS – dữ liệu thử (PostgreSQL)
 -- Chạy SAU schema.sql, trên cùng database. Dữ liệu lấy từ mock của
--- storefront (frontend-user-web/src/data/), chỉ một phần nhỏ, dùng để
--- kiểm tra ràng buộc và để các truy vấn trong queries.sql có kết quả
--- kiểm chứng được. Seed đầy đủ (id khớp mock) làm ở 6.2–6.3.
+-- storefront (frontend-user-web/src/data/), chỉ một phần nhỏ của nhóm
+-- cửa hàng và nhóm banner, dùng để kiểm tra ràng buộc và để các truy vấn
+-- trong queries.sql có kết quả kiểm chứng được. Seed đầy đủ (id khớp
+-- mock) làm ở 6.2–6.3.
 --
 -- Cột id là GENERATED ALWAYS AS IDENTITY: không ghi id, PostgreSQL cấp
 -- 1, 2, 3... theo thứ tự chèn. Comment "id N" bên cạnh mỗi dòng là id
@@ -72,3 +73,92 @@ INSERT INTO variants (product_id, color_code, size_code, stock_quantity) VALUES
     (2, '01', 'XL', 8),   -- id 6
     (3, '66', 'M',  4),   -- id 7: ngay trên ngưỡng
     (3, '66', 'L',  0);   -- id 8: hết hàng
+
+-- ---------------------------------------------------------------------
+-- NHÓM BANNER (Phần 3)
+-- category_id dùng id của dữ liệu thử ở trên: Men 1, Women 2,
+-- Casual Pants 3, Knit 4, Cotton 5, Flannel 6.
+-- ---------------------------------------------------------------------
+
+-- 2 banner landing của Women chèn lệch position (banner position 2 chèn
+-- trước), 1 banner của Men để thử lọc theo category gốc. Banner 1 không
+-- có subtitle và không giảm giá; banner 2, 3 có đủ.
+INSERT INTO landing_banners (
+  category_id,
+  target_category_id,
+  position,
+  title,
+  subtitle,
+  description,
+  price,
+  discount_percent,
+  discount_info,
+  text_color,
+  image,
+  alt
+)
+VALUES
+  (
+    2,
+    4,
+    2,
+    'Knit Collection',
+    NULL,
+    'Explore our lineup of comfy sweaters and cardigans, perfect for effortless layering.',
+    50,
+    NULL,
+    NULL,
+    'light',
+    '/images/banners/women/women-knit-collection.jpg',
+    'Smiling young woman standing in front of a brick building and a black fence, wearing a dark brown knitted cardigan, white turtleneck, and casual trousers.'
+  ), -- id 1: Women, position 2, chèn trước banner position 1
+  (
+    2,
+    3,
+    1,
+    'Casual Pants Collection',
+    'Easy Stretch Pants | Jersey Fabric',
+    'Comfortable by your side no matter where you are.',
+    60,
+    50,
+    'Online + App-Only Offer',
+    'light',
+    '/images/banners/women/women-casual-pants.jpg',
+    'Smiling woman walking outdoors wearing casual gray knit wide-leg pants and a white long-sleeve top while carrying flowers.'
+  ), -- id 2: Women, position 1
+  (
+    1,
+    6,
+    1,
+    'Bottoms Collection',
+    'Smart Ankle Pants | 2WAY Stretch',
+    'Sharp enough for the office, easy enough for the commute home.',
+    50,
+    20,
+    'Limited Offer until 10/31',
+    'dark',
+    '/images/banners/men/men-bottoms-collection.jpg',
+    'Man walking through a bright glass-walled lobby in a charcoal gray suit, rust-brown sweater, and light blue shirt, carrying a black bag.'
+  ); -- id 3: Men; đích thật là Bottoms (không có trong dữ liệu thử), trỏ tạm Flannel
+
+-- Knit có 2 ảnh banner (carousel) chèn lệch position, Cotton có 1 ảnh.
+INSERT INTO category_banners (category_id, position, image, alt)
+VALUES
+  (
+    5,
+    1,
+    '/images/all-products/women/casual-pants/cotton/cotton-banner.jpg',
+    'Smiling woman stepping out of a café in a navy short-sleeve knit polo and beige relaxed cotton pants, holding an iced coffee and a brown bag.'
+  ), -- id 1: Cotton
+  (
+    4,
+    2,
+    '/images/all-products/women/casual-pants/knit/knit-banner-2.avif',
+    'Woman standing by an open car door in a lilac hooded jacket, pink T-shirt, and beige cable knit wide-leg pants.'
+  ), -- id 2: Knit, position 2, chèn trước ảnh position 1
+  (
+    4,
+    1,
+    '/images/all-products/women/casual-pants/knit/knit-banner-1.avif',
+    'Smiling woman on a seaside boardwalk in a beige cap, an open blue shirt over a navy top, and cream ribbed knit wide-leg pants with a drawstring.'
+  ); -- id 3: Knit, position 1

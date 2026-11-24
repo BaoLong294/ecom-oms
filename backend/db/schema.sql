@@ -1,7 +1,7 @@
 -- =====================================================================
 -- Ecom-OMS – database schema (PostgreSQL)
--- Phần 2: nhóm cửa hàng (catalog). Các nhóm banner, người dùng, đơn hàng
--- được thêm ở Phần 3–5. Sơ đồ quan hệ: docs/erd.md.
+-- Phần 2–3: nhóm cửa hàng (catalog) và nhóm banner. Các nhóm người dùng,
+-- đơn hàng được thêm ở Phần 4–5. Sơ đồ quan hệ: docs/erd.md.
 -- =====================================================================
 
 
@@ -12,6 +12,8 @@
 -- IF EXISTS để lần chạy đầu (chưa có bảng nào) không báo lỗi; nhờ phần
 -- này file chạy lại bao nhiêu lần cũng được.
 -- ---------------------------------------------------------------------
+DROP TABLE IF EXISTS category_banners;
+DROP TABLE IF EXISTS landing_banners;
 DROP TABLE IF EXISTS variants;
 DROP TABLE IF EXISTS sizes;
 DROP TABLE IF EXISTS product_features;
@@ -107,4 +109,44 @@ CREATE TABLE variants (
     FOREIGN KEY (product_id, color_code) REFERENCES product_colors(product_id, code),
     -- Cùng sản phẩm, màu, size là cùng một món hàng: chỉ được một dòng.
     UNIQUE (product_id, color_code, size_code)
+);
+
+-- ---------------------------------------------------------------------
+-- NHÓM BANNER (Phần 3)
+-- Chỉ trỏ vào categories nên đặt sau nhóm cửa hàng.
+-- ---------------------------------------------------------------------
+
+-- Banner lớn trên trang landing của một category gốc (Women, Men...).
+-- Có 2 FK cùng trỏ categories: category_id là landing chứa banner,
+-- target_category_id là category mà bấm banner sẽ dẫn tới.
+-- "category_id phải là gốc" không kiểm tra được bằng CHECK (CHECK chỉ
+-- nhìn các cột trong cùng một dòng); seed và API đảm bảo quy tắc này.
+-- Giá và giảm giá dùng cùng ràng buộc với products.
+CREATE TABLE landing_banners (
+    id                 INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    category_id        INT NOT NULL REFERENCES categories(id),
+    target_category_id INT NOT NULL REFERENCES categories(id),
+    position           INT NOT NULL CHECK (position > 0),
+    title              VARCHAR(100) NOT NULL,
+    subtitle           VARCHAR(100),
+    description        TEXT NOT NULL,
+    price              NUMERIC(12, 2) NOT NULL CHECK (price >= 0),
+    discount_percent   INT CHECK (discount_percent BETWEEN 1 AND 99),
+    discount_info      TEXT,
+    -- Chữ trên ảnh sáng hay tối, do người làm nội dung chọn theo ảnh.
+    text_color         VARCHAR(5) NOT NULL CHECK (text_color IN ('light', 'dark')),
+    image              TEXT NOT NULL,
+    alt                TEXT NOT NULL,
+    -- Có chữ khuyến mãi thì phải có phần trăm giảm giá (như products).
+    CHECK (discount_percent IS NOT NULL OR discount_info IS NULL)
+);
+
+-- Ảnh banner của một nhóm trên trang danh sách (dải carousel phía trên
+-- lưới sản phẩm); một category có thể có nhiều ảnh, thứ tự theo position.
+CREATE TABLE category_banners (
+    id          INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    category_id INT NOT NULL REFERENCES categories(id),
+    position    INT NOT NULL CHECK (position > 0),
+    image       TEXT NOT NULL,
+    alt         TEXT NOT NULL
 );

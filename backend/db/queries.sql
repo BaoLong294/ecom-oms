@@ -76,3 +76,46 @@ FROM categories AS r
 LEFT JOIN categories AS c ON r.id = c.parent_id
 WHERE r.parent_id IS NULL
 ORDER BY r.position, r.id, c.position, c.id;
+
+-- 7. Banner landing của một category gốc (Women, id 2), theo thứ tự hiển thị.
+--    Dùng cho: GET /api/landing-banners?categoryId=2
+--    Mong đợi: banner 2 (Casual Pants Collection) rồi 1 (Knit Collection);
+--    không có banner 3 của Men.
+SELECT
+  id,
+  target_category_id,
+  title,
+  subtitle,
+  description,
+  price,
+  discount_percent,
+  discount_info,
+  text_color,
+  image,
+  alt
+FROM landing_banners
+WHERE category_id = 2
+ORDER BY position, id;
+
+-- 8. Ảnh banner của một nhóm (Knit, id 4) cho carousel trên trang danh sách.
+--    Dùng cho: GET /api/categories/:id/listing (banners của từng nhóm)
+--    Mong đợi: ảnh 3 (knit-banner-1) rồi 2 (knit-banner-2).
+--    Cotton (id 5) → ảnh 1; Flannel (id 6) → 0 dòng.
+SELECT id, image, alt
+FROM category_banners
+WHERE category_id = 4
+ORDER BY position, id;
+
+-- 9. Mọi banner landing kèm tên category của landing và của đích (admin).
+--    Dùng cho: trang quản lý banner của Admin Dashboard (Giai đoạn 7)
+--    Mong đợi: banner 2, 1 (Women, theo position) rồi 3 (Men).
+--    JOIN categories 2 lần vì 2 FK trỏ tới 2 dòng khác nhau của bảng này.
+SELECT 
+  lb.id, 
+  lb.title, 
+  lc.name AS landing_name,
+  tc.name AS target_name
+FROM landing_banners AS lb
+JOIN categories AS lc ON lb.category_id = lc.id
+JOIN categories AS tc ON lb.target_category_id = tc.id
+ORDER BY lc.position, lc.id, lb.position, lb.id;
