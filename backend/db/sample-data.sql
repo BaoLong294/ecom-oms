@@ -1,11 +1,11 @@
 -- =====================================================================
 -- Ecom-OMS – dữ liệu thử (PostgreSQL)
 -- Chạy SAU schema.sql, trên cùng database. Chỉ một phần nhỏ của nhóm
--- cửa hàng, nhóm banner và nhóm người dùng, dùng để kiểm tra ràng buộc
--- và để các truy vấn trong queries.sql có kết quả kiểm chứng được.
+-- cửa hàng, nhóm banner, nhóm người dùng và nhóm đơn hàng, dùng để kiểm tra
+-- ràng buộc và để các truy vấn trong queries.sql có kết quả kiểm chứng được.
 -- Dữ liệu cửa hàng và banner lấy từ mock của storefront
--- (frontend-user-web/src/data/); tài khoản, giỏ hàng, wishlist là dữ
--- liệu tự đặt. Seed đầy đủ (id khớp mock) làm ở 6.2–6.3.
+-- (frontend-user-web/src/data/); tài khoản, giỏ hàng, wishlist, đơn hàng
+-- là dữ liệu tự đặt. Seed đầy đủ (id khớp mock) làm ở 6.2–6.3.
 --
 -- Cột id là GENERATED ALWAYS AS IDENTITY: không ghi id, PostgreSQL cấp
 -- 1, 2, 3... theo thứ tự chèn. Comment "id N" bên cạnh mỗi dòng là id
@@ -193,3 +193,58 @@ INSERT INTO wishlist_items (user_id, variant_id, created_at) VALUES
     (1, 8, '2026-11-22 20:00:00+07'),  -- mới nhất, chèn giữa
     (1, 5, '2026-11-21 12:00:00+07'),
     (4, 1, '2026-11-23 10:00:00+07');  -- wishlist của user 4
+    
+-- ---------------------------------------------------------------------
+-- NHÓM ĐƠN HÀNG (Phần 5)
+-- Id tham chiếu: user 1 (Long), 3 (shipper), 4 (Mai); variant 1, 2 thuộc
+-- sản phẩm 1, variant 4, 5 thuộc sản phẩm 2.
+-- ---------------------------------------------------------------------
+
+-- Hồ sơ shipper của user 3.
+INSERT INTO shippers (user_id, name, phone)
+VALUES
+    (3, 'Nguyen Bao Long', '0914634225'); -- id 1
+
+-- 5 đơn, chèn lệch thời gian: đơn của user 1 mới nhất trước phải ra
+-- 1, 4, 2. Đủ các trạng thái, placed có 2 đơn để thử đếm theo trạng thái.
+-- Đơn shipped/delivered có shipper (CHECK cấp bảng của orders).
+INSERT INTO orders (
+    user_id,
+    shipper_id,
+    status,
+    shipping_first_name,
+    shipping_last_name,
+    shipping_address,
+    shipping_phone,
+    total,
+    created_at
+)
+VALUES
+    (1, NULL, 'placed',    'Long', 'Nguyen', '12 Nguyen Hue, District 1, Ho Chi Minh City', '0912345678', 112.00, '2026-11-22 09:00:00+07'), -- id 1: user 1, chưa gán shipper
+    (1, 1,    'delivered', 'Long', 'Nguyen', '12 Nguyen Hue, District 1, Ho Chi Minh City', '0912345678',  35.00, '2026-11-15 14:00:00+07'), -- id 2: user 1, đã giao; mua lúc giá sản phẩm 1 còn 35.00
+    (4, 1,    'shipped',   'Mai',  'Tran',   '45 Le Loi, District 3, Ho Chi Minh City',     '0987654321',  64.00, '2026-11-20 18:00:00+07'), -- id 3: user 4, đang giao (đơn cần giao của shipper 1)
+    (1, NULL, 'cancelled', 'Long', 'Nguyen', '12 Nguyen Hue, District 1, Ho Chi Minh City', '0912345678',  32.00, '2026-11-18 10:00:00+07'), -- id 4: user 1, đã hủy
+    (4, NULL, 'placed',    'Mai',  'Tran',   '45 Le Loi, District 3, Ho Chi Minh City',     '0987654321',  40.00, '2026-11-23 08:00:00+07'); -- id 5: user 4
+
+-- Món trong đơn là bản chụp lúc đặt: món 3 giữ giá 35.00 dù giá hiện tại
+-- của sản phẩm 1 là 40.00. Tổng mỗi đơn khớp với các món của nó.
+-- Bán chạy: tính cả đơn hủy thì 2 sản phẩm hòa (4 – 4); loại đơn hủy thì
+-- sản phẩm 1 bán 4, sản phẩm 2 bán 3.
+INSERT INTO order_items (
+    order_id,
+    variant_id,
+    product_id,
+    product_name,
+    color_name,
+    size,
+    image,
+    quantity,
+    unit_price
+)
+VALUES
+    (1, 2, 1, 'Cotton Relaxed Ankle Pants', '09 Black', 'M', '/images/product-details/cotton-relaxed/09-black.avif', 2, 40.00), -- id 1: đơn 1
+    (1, 4, 2, 'Jersey Easy Cargo Pants', '09 Black', 'M', '/images/product-details/jersey-easy/09-black.avif', 1, 32.00), -- id 2: đơn 1
+    (2, 1, 1, 'Cotton Relaxed Ankle Pants', '09 Black', 'S', '/images/product-details/cotton-relaxed/09-black.avif', 1, 35.00), -- id 3: đơn 2, giá cũ
+    (3, 4, 2, 'Jersey Easy Cargo Pants', '09 Black', 'M', '/images/product-details/jersey-easy/09-black.avif', 2, 32.00), -- id 4: đơn 3
+    (4, 5, 2, 'Jersey Easy Cargo Pants', '01 Off White', 'L', '/images/product-details/jersey-easy/01-off-white.avif', 1, 32.00), -- id 5: đơn 4 (đã hủy)
+    (5, 2, 1, 'Cotton Relaxed Ankle Pants', '09 Black', 'M', '/images/product-details/cotton-relaxed/09-black.avif', 1, 40.00); -- id 6: đơn 5

@@ -154,3 +154,60 @@ JOIN products AS p ON v.product_id = p.id
 JOIN product_colors AS pc ON v.product_id = pc.product_id AND v.color_code = pc.code
 WHERE wi.user_id = 1
 ORDER BY wi.created_at DESC, wi.variant_id;
+
+-- 12. Lịch sử đơn của một user (id 1), đơn mới nhất trước.
+--     Dùng cho: GET /api/orders (6.4: chỉ đơn của user trong JWT)
+--     Mong đợi: đơn 1, 4, 2 (created_at giảm dần, có cả đơn đã hủy);
+--     không có đơn 3, 5 của user 4.
+SELECT 
+  id, 
+  status, 
+  total, 
+  created_at
+FROM orders
+WHERE user_id = 1
+ORDER BY created_at DESC, id;
+
+-- 13. Chi tiết một đơn (id 2), chỉ khi đơn thuộc user đang xem (id 1).
+--     Dùng cho: GET /api/orders/:id (6.4: WHERE o.id = $1 AND o.user_id = $2)
+--     Mong đợi: 1 dòng, giá 35.00 (bản chụp, không phải giá hiện tại 40.00).
+--     Đơn 3 với user 1 → 0 dòng: không phải chủ thì giống như không tồn tại.
+SELECT 
+  o.id, 
+  o.status, 
+  o.total, 
+  i.product_name,
+  i.color_name,
+  i.size,
+  i.quantity,
+  i.unit_price
+FROM orders AS o
+JOIN order_items AS i ON o.id = i.order_id
+WHERE o.id = 2 AND o.user_id = 1
+ORDER BY i.id;
+
+-- 14. Số đơn theo trạng thái (tổng quan cho admin).
+--     Dùng cho: trang Dashboard của Admin (Giai đoạn 7)
+--     Mong đợi: placed 2, rồi cancelled, delivered, shipped mỗi trạng thái 1.
+--     Không có dòng confirmed: GROUP BY chỉ tạo nhóm từ giá trị có trong bảng.
+SELECT
+  status,
+  COUNT(*) AS order_count
+FROM orders
+GROUP BY status
+ORDER BY order_count DESC, status;
+
+-- 15. Sản phẩm bán chạy: tổng số lượng đã bán, không tính đơn đã hủy.
+--     Dùng cho: trang Dashboard của Admin (Giai đoạn 7)
+--     Mong đợi: sản phẩm 1 bán 4, sản phẩm 2 bán 3.
+--     Tính cả đơn hủy thì ra 4 – 4: lọc status bằng WHERE trước GROUP BY.
+SELECT
+  p.id,
+  p.name,
+  SUM(i.quantity) AS total_sold
+FROM order_items AS i
+JOIN orders AS o ON i.order_id = o.id
+JOIN products AS p ON i.product_id = p.id
+WHERE o.status <> 'cancelled'
+GROUP BY p.id, p.name
+ORDER BY total_sold DESC, p.id;

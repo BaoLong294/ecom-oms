@@ -1,7 +1,7 @@
 -- =====================================================================
 -- Ecom-OMS – database schema (PostgreSQL)
--- Phần 2–4: nhóm cửa hàng (catalog), nhóm banner và nhóm người dùng.
--- Nhóm đơn hàng được thêm ở Phần 5. Sơ đồ quan hệ: docs/erd.md.
+-- Đủ 15 bảng của 4 nhóm: cửa hàng (catalog), banner, người dùng và đơn
+-- hàng (Phần 2–5). Sơ đồ quan hệ: docs/erd.md.
 -- =====================================================================
 
 
@@ -12,6 +12,9 @@
 -- IF EXISTS để lần chạy đầu (chưa có bảng nào) không báo lỗi; nhờ phần
 -- này file chạy lại bao nhiêu lần cũng được.
 -- ---------------------------------------------------------------------
+DROP TABLE IF EXISTS order_items;
+DROP TABLE IF EXISTS orders;
+DROP TABLE IF EXISTS shippers;
 DROP TABLE IF EXISTS wishlist_items;
 DROP TABLE IF EXISTS cart_items;
 DROP TABLE IF EXISTS users;
@@ -163,22 +166,22 @@ CREATE TABLE category_banners (
 -- Không lưu mật khẩu nguyên văn, chỉ lưu hash một chiều (tạo ở 6.3).
 -- UNIQUE của email phân biệt hoa thường: API phải lưu email chữ thường.
 CREATE TABLE users (
-    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    email VARCHAR(254) NOT NULL UNIQUE,
+    id            INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    email         VARCHAR(254) NOT NULL UNIQUE,
     password_hash TEXT NOT NULL,
     -- Khách tự đăng ký là customer; tài khoản shipper do admin tạo.
-    role VARCHAR(10) NOT NULL DEFAULT 'customer' CHECK (role IN ('customer', 'admin', 'shipper')),
-    created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+    role          VARCHAR(10) NOT NULL DEFAULT 'customer' CHECK (role IN ('customer', 'admin', 'shipper')),
+    created_at    TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
 -- Giỏ hàng: mỗi dòng là một variant trong giỏ của một user.
 -- PK ghép (user_id, variant_id): mỗi cặp chỉ một dòng, thêm trùng thì
 -- cộng quantity (như cartReducer). Không có id vì không bảng nào trỏ tới.
 CREATE TABLE cart_items (
-    user_id INT NOT NULL REFERENCES users(id),
+    user_id    INT NOT NULL REFERENCES users(id),
     variant_id INT NOT NULL REFERENCES variants(id),
     -- Số lượng về 0 thì xóa dòng, không lưu 0.
-    quantity INT NOT NULL CHECK (quantity > 0),
+    quantity   INT NOT NULL CHECK (quantity > 0),
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     PRIMARY KEY (user_id, variant_id)
 );
@@ -186,8 +189,62 @@ CREATE TABLE cart_items (
 -- Wishlist: mỗi dòng là một variant được user lưu lại.
 -- created_at để sắp món mới lưu lên đầu (database không giữ thứ tự chèn).
 CREATE TABLE wishlist_items (
-    user_id INT NOT NULL REFERENCES users(id),
+    user_id    INT NOT NULL REFERENCES users(id),
     variant_id INT NOT NULL REFERENCES variants(id),
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     PRIMARY KEY (user_id, variant_id)
+);
+
+-- ---------------------------------------------------------------------
+-- NHÓM ĐƠN HÀNG (Phần 5)
+-- Thay cho đơn hàng trong localStorage (OrdersContext) của storefront.
+-- ---------------------------------------------------------------------
+
+-- Hồ sơ của user có vai trò shipper; tài khoản đăng nhập nằm ở users.
+-- user_id UNIQUE: mỗi user có không hoặc một hồ sơ shipper (1:1).
+CREATE TABLE shippers (
+    id      INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    user_id INT NOT NULL UNIQUE REFERENCES users(id),
+    name    VARCHAR(100) NOT NULL,
+    phone   VARCHAR(15) NOT NULL
+);
+
+-- Một đơn hàng. Thông tin người nhận chụp lại vào chính đơn (quan hệ 1:1
+-- luôn có nên gộp vào bảng), không trỏ tới sổ địa chỉ.
+-- user_id, shipper_id giữ mặc định (từ chối xóa): không xóa được user hay
+-- shipper còn đơn, để lịch sử đơn không bị mất.
+CREATE TABLE orders (
+    id                  INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    user_id             INT NOT NULL REFERENCES users(id),
+    -- NULL khi chưa gán shipper.
+    shipper_id          INT REFERENCES shippers(id),
+    -- Đơn mới luôn bắt đầu ở placed.
+    status              VARCHAR(10) NOT NULL DEFAULT 'placed' CHECK (status IN ('placed', 'confirmed', 'shipped', 'delivered', 'cancelled')),
+    shipping_first_name VARCHAR(100) NOT NULL,
+    shipping_last_name  VARCHAR(100) NOT NULL,
+    shipping_address    TEXT NOT NULL,
+    shipping_phone      VARCHAR(15) NOT NULL,
+    total               NUMERIC(12, 2) NOT NULL CHECK (total >= 0),
+    created_at          TIMESTAMPTZ NOT NULL DEFAULT now(),
+    -- Đơn đang giao hoặc đã giao phải có shipper ("nếu B thì A").
+    CHECK (status IN ('placed', 'confirmed', 'cancelled') OR shipper_id IS NOT NULL)
+);
+
+-- Các món trong đơn. Tên, màu, size, ảnh, giá đơn vị là bản chụp lúc đặt
+-- hàng (không có REFERENCES): giá hay tên sản phẩm đổi sau này không làm
+-- sai đơn cũ.
+-- Giữ id riêng vì variant_id có thể thành NULL (cột PK không được NULL).
+CREATE TABLE order_items (
+    id           INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    -- Xóa đơn thì xóa luôn các món của đơn.
+    order_id     INT NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
+    -- Sản phẩm bị xóa thì món vẫn còn (đọc từ bản chụp), chỉ mất liên kết.
+    variant_id   INT REFERENCES variants(id) ON DELETE SET NULL,
+    product_id   INT REFERENCES products(id) ON DELETE SET NULL,
+    product_name VARCHAR(100) NOT NULL,
+    color_name   VARCHAR(100) NOT NULL,
+    size         VARCHAR(3) NOT NULL,
+    image        TEXT NOT NULL,
+    quantity     INT NOT NULL CHECK (quantity > 0),
+    unit_price   NUMERIC(12, 2) NOT NULL CHECK (unit_price >= 0)
 );
