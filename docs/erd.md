@@ -1,6 +1,6 @@
 # Ecom-OMS – Entity Relationship Diagram
 
-Conceptual ERD of the Ecom-OMS PostgreSQL database: 15 tables with their primary keys, foreign keys and relationships. Regular columns are added as each group of tables is designed.
+ERD of the Ecom-OMS PostgreSQL database: 15 tables with all their columns, primary keys (PK), foreign keys (FK), unique keys (UK) and relationships. Column types show the type name only; exact sizes and constraints are in `backend/db/schema.sql`.
 
 - **Catalog**: categories (self-referencing tree), products, their colors, detail images and features, the shared size lookup, and variants (one row per product × color × size, the unit that is stocked and sold).
 - **Banners**: landing banners and category banners, both attached to categories.
@@ -34,8 +34,8 @@ erDiagram
     users ||--o{ orders : "places"
     shippers |o--o{ orders : "delivers"
     orders ||--|{ order_items : "contains"
-    variants ||--o{ order_items : "ordered as"
-    products ||--o{ order_items : "referenced by"
+    variants |o--o{ order_items : "ordered as"
+    products |o--o{ order_items : "referenced by"
 
     %% Catalog tables
     categories {
@@ -120,7 +120,9 @@ erDiagram
     }
     shippers {
         int id PK
-        int user_id FK
+        int user_id FK, UK
+        varchar name
+        varchar phone
     }
     cart_items {
         int user_id PK, FK
@@ -139,11 +141,24 @@ erDiagram
         int id PK
         int user_id FK
         int shipper_id FK
+        varchar status
+        varchar shipping_first_name
+        varchar shipping_last_name
+        text shipping_address
+        varchar shipping_phone
+        numeric total
+        timestamptz created_at
     }
     order_items {
         int id PK
         int order_id FK
         int variant_id FK
         int product_id FK
+        varchar product_name
+        varchar color_name
+        varchar size
+        text image
+        int quantity
+        numeric unit_price
     }
 ```
