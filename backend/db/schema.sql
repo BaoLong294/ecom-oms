@@ -67,7 +67,7 @@ CREATE TABLE products (
 -- ở nhiều sản phẩm) nên khóa là cặp (product_id, code); variants trỏ tới
 -- màu bằng đúng cặp này.
 CREATE TABLE product_colors (
-    product_id INT NOT NULL REFERENCES products(id),
+    product_id INT NOT NULL REFERENCES products(id) ON DELETE CASCADE,
     code       VARCHAR(3) NOT NULL,
     name       VARCHAR(100) NOT NULL,
     swatch     TEXT NOT NULL,           -- ảnh ô màu nhỏ
@@ -79,7 +79,7 @@ CREATE TABLE product_colors (
 -- trong mock (thứ tự dòng trong bảng không được bảo đảm).
 CREATE TABLE product_images (
     id         INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    product_id INT NOT NULL REFERENCES products(id),
+    product_id INT NOT NULL REFERENCES products(id) ON DELETE CASCADE,
     image      TEXT NOT NULL,
     position   INT NOT NULL CHECK (position > 0)
 );
@@ -87,7 +87,7 @@ CREATE TABLE product_images (
 -- Đặc điểm của sản phẩm (ảnh + chữ), thứ tự theo position.
 CREATE TABLE product_features (
     id         INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    product_id INT NOT NULL REFERENCES products(id),
+    product_id INT NOT NULL REFERENCES products(id) ON DELETE CASCADE,
     image      TEXT NOT NULL,
     text       TEXT NOT NULL,
     position   INT NOT NULL CHECK (position > 0)
@@ -105,14 +105,14 @@ CREATE TABLE sizes (
 -- variant_id (một số gọn hơn bộ 3 cột).
 CREATE TABLE variants (
     id             INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    product_id     INT NOT NULL REFERENCES products(id),
+    product_id     INT NOT NULL REFERENCES products(id) ON DELETE CASCADE,
     color_code     VARCHAR(3) NOT NULL,
     size_code      VARCHAR(3) NOT NULL REFERENCES sizes(code),
     -- Hết hàng là 0, không phải NULL.
     stock_quantity INT NOT NULL DEFAULT 0 CHECK (stock_quantity >= 0),
     -- FK ghép: màu phải là màu của chính sản phẩm này, nên variant không
     -- thể trỏ nhầm sang màu của sản phẩm khác.
-    FOREIGN KEY (product_id, color_code) REFERENCES product_colors(product_id, code),
+    FOREIGN KEY (product_id, color_code) REFERENCES product_colors(product_id, code) ON DELETE CASCADE,
     -- Cùng sản phẩm, màu, size là cùng một món hàng: chỉ được một dòng.
     UNIQUE (product_id, color_code, size_code)
 );
@@ -130,8 +130,8 @@ CREATE TABLE variants (
 -- Giá và giảm giá dùng cùng ràng buộc với products.
 CREATE TABLE landing_banners (
     id                 INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    category_id        INT NOT NULL REFERENCES categories(id),
-    target_category_id INT NOT NULL REFERENCES categories(id),
+    category_id        INT NOT NULL REFERENCES categories(id) ON DELETE CASCADE,
+    target_category_id INT NOT NULL REFERENCES categories(id) ON DELETE CASCADE,
     position           INT NOT NULL CHECK (position > 0),
     title              VARCHAR(100) NOT NULL,
     subtitle           VARCHAR(100),
@@ -151,7 +151,7 @@ CREATE TABLE landing_banners (
 -- lưới sản phẩm); một category có thể có nhiều ảnh, thứ tự theo position.
 CREATE TABLE category_banners (
     id          INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    category_id INT NOT NULL REFERENCES categories(id),
+    category_id INT NOT NULL REFERENCES categories(id) ON DELETE CASCADE,
     position    INT NOT NULL CHECK (position > 0),
     image       TEXT NOT NULL,
     alt         TEXT NOT NULL
@@ -178,8 +178,8 @@ CREATE TABLE users (
 -- PK ghép (user_id, variant_id): mỗi cặp chỉ một dòng, thêm trùng thì
 -- cộng quantity (như cartReducer). Không có id vì không bảng nào trỏ tới.
 CREATE TABLE cart_items (
-    user_id    INT NOT NULL REFERENCES users(id),
-    variant_id INT NOT NULL REFERENCES variants(id),
+    user_id    INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    variant_id INT NOT NULL REFERENCES variants(id) ON DELETE CASCADE,
     -- Số lượng về 0 thì xóa dòng, không lưu 0.
     quantity   INT NOT NULL CHECK (quantity > 0),
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
@@ -189,8 +189,8 @@ CREATE TABLE cart_items (
 -- Wishlist: mỗi dòng là một variant được user lưu lại.
 -- created_at để sắp món mới lưu lên đầu (database không giữ thứ tự chèn).
 CREATE TABLE wishlist_items (
-    user_id    INT NOT NULL REFERENCES users(id),
-    variant_id INT NOT NULL REFERENCES variants(id),
+    user_id    INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    variant_id INT NOT NULL REFERENCES variants(id) ON DELETE CASCADE,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     PRIMARY KEY (user_id, variant_id)
 );
@@ -248,3 +248,30 @@ CREATE TABLE order_items (
     quantity     INT NOT NULL CHECK (quantity > 0),
     unit_price   NUMERIC(12, 2) NOT NULL CHECK (unit_price >= 0)
 );
+
+-- ---------------------------------------------------------------------
+-- INDEX (Phần 6)
+-- PostgreSQL tự tạo index cho PRIMARY KEY và UNIQUE, không tạo cho FK.
+-- Mỗi cột FK có một index, trừ khi nó đã là cột đứng đầu của một PK hoặc
+-- UNIQUE (index nhiều cột dùng được cho cột đầu, như danh bạ sắp theo họ):
+-- product_colors.product_id, variants.product_id và (product_id,
+-- color_code), cart_items.user_id, wishlist_items.user_id,
+-- shippers.user_id đã có sẵn.
+-- Index giúp JOIN/lọc theo FK nhanh và giúp ON DELETE tìm dòng con mà
+-- không phải quét cả bảng. Không cần DROP: xóa bảng là xóa luôn index.
+-- ---------------------------------------------------------------------
+CREATE INDEX idx_categories_parent_id ON categories (parent_id);
+CREATE INDEX idx_products_category_id ON products (category_id);
+CREATE INDEX idx_product_images_product_id ON product_images (product_id);
+CREATE INDEX idx_product_features_product_id ON product_features (product_id);
+CREATE INDEX idx_variants_size_code ON variants (size_code);
+CREATE INDEX idx_landing_banners_category_id ON landing_banners (category_id);
+CREATE INDEX idx_landing_banners_target_category_id ON landing_banners (target_category_id);
+CREATE INDEX idx_category_banners_category_id ON category_banners (category_id);
+CREATE INDEX idx_cart_items_variant_id ON cart_items (variant_id);
+CREATE INDEX idx_wishlist_items_variant_id ON wishlist_items (variant_id);
+CREATE INDEX idx_orders_user_id ON orders (user_id);
+CREATE INDEX idx_orders_shipper_id ON orders (shipper_id);
+CREATE INDEX idx_order_items_order_id ON order_items (order_id);
+CREATE INDEX idx_order_items_variant_id ON order_items (variant_id);
+CREATE INDEX idx_order_items_product_id ON order_items (product_id);
